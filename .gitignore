@@ -1,6 +1,10 @@
 # Secrets
 .env
 
+# Claude Code (local settings, cache) but keep CLAUDE.md
+.claude/
+!.claude/CLAUDE.md
+
 # Python
 __pycache__/
 *.pyc
