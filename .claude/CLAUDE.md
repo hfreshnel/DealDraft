@@ -76,7 +76,7 @@ Ports exposés sur `127.0.0.1` uniquement (API 8000, n8n 5678).
 ## 6. Structure du dépôt
 
 ```
-api/app/        main.py · schemas.py · tool_schema.py · pricing.py      (finance.py : à créer, jour 3)
+api/app/        main.py · schemas.py · tool_schema.py · extraction_prompt.py · excerpt_check.py · pricing.py · finance.py
 api/scripts/    export_schema.py
 api/tests/      test_schemas.py · test_pricing.py
 pricing/        works-grid.example.yaml
@@ -95,12 +95,12 @@ cp .env.example .env                                   # renseigner N8N_VERSION 
 docker compose build api
 docker compose run --rm api uv lock                    # écrit api/uv.lock sur l'hôte
 docker compose build api
-docker compose run --rm api pytest                     # 65 tests attendus verts
+docker compose run --rm api pytest                     # 86 tests attendus verts
 docker compose run --rm api python scripts/export_schema.py
 docker compose up -d                                   # API :8000 · n8n :5678
 ```
 
-Points d'accès : `GET /health`, `GET /extraction-tool`, `POST /analyze` (**501 tant que `finance.py` n'existe pas**). Les erreurs de validation renvoient un 422 structuré (`error`, `details[]`) que n8n réinjecte dans le prompt correctif.
+Points d'accès : `GET /health`, `GET /extraction-tool` (schéma, prompt, versions), `POST /validate-extraction`, `POST /analyze`. Les erreurs de validation renvoient un 422 structuré (`error`, `details[]`) que n8n réinjecte dans le prompt correctif.
 
 ---
 
@@ -111,7 +111,7 @@ Points d'accès : `GET /health`, `GET /extraction-tool`, `POST /analyze` (**501 
 | J1 | Docker, schéma v2, grille de prix, gabarit de fiche, 4 cas annotés, 57 tests | **Fait** (code) |
 | J1 (reste) | `.env`, clé OpenAI, client OAuth Google, annotation de 16 cas | **À faire par l'utilisateur** |
 | J2 | Prompt système (`extraction_prompt.py`), `POST /validate-extraction`, `wf-ingest-listing` (formulaire n8n → OpenAI `gpt-4o` → validation) | **Fait** : 4 cas sur 4 valides ; écarts et instabilité à traiter au J5 |
-| J3 | `finance.py`, chargement de la grille, `/analyze`, modèle Google Docs | |
+| J3 | `finance.py`, chargement de la grille, `/analyze`, branché dans `wf-ingest-listing` | **Fait** : recoupement 13,50 % vérifié ; modèle Google Docs reporté au J4 (client OAuth Google non créé) |
 | J4 | `wf-approve-and-draft`, `wf-error-handler`, nouvelle tentative, journal | |
 | J5 | `run_eval.py`, itérations, comparaison `gpt-4o-mini`/`gpt-4o`, `eval/report.md` | |
 | J6 | Page Next.js, démo rejouée, déploiement Vercel, vidéo | |

@@ -294,6 +294,8 @@ class AnalysisResult(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     status: AnalysisStatus
+    pricingGridStatus: str
+    pricingGridVersion: int
     purchasePrice: float | None
     worksCost: float | None
     worksPricingMode: WorksPricingMode

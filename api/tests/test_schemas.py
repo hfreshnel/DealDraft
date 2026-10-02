@@ -225,9 +225,10 @@ def test_analyzeRejectsInvalidPayloadWithStructuredError():
     assert response.json()["error"] == "validationFailed"
 
 
-def test_analyzeAcceptsValidPayloadButIsNotImplementedYet():
+def test_analyzeAcceptsValidPayload():
     response = client.post("/analyze", json={"extraction": VALID_EXTRACTION, "assumptions": VALID_ASSUMPTIONS})
-    assert response.status_code == 501
+    assert response.status_code == 200
+    assert response.json()["status"] in ("readyForReview", "incomplete")
 
 
 def listingIds():

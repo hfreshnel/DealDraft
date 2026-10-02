@@ -20,6 +20,11 @@
             {
                 "fieldLabel": "expectedMonthlyRent",
                 "fieldType": "number"
+            },
+            {
+                "fieldLabel": "notaryFeeRatePercent",
+                "fieldType": "number",
+                "requiredField": true
             }
           ]
         },
@@ -48,7 +53,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const MODEL = 'gpt-4o';\nconst form = $('Listing form').first().json;\nconst config = $input.first().json;\nconst neutralize = (value) => String(value || '').replace(new RegExp('<(/?)(listing_text|visit_notes)', 'gi'), '&lt;$1$2').trim();\nconst listingText = neutralize(form.listingText);\nconst visitNotes = neutralize(form.visitNotes);\nlet userContent = '<listing_text>\\n' + listingText + '\\n</listing_text>';\nif (visitNotes) {\n    userContent += '\\n\\n<visit_notes>\\n' + visitNotes + '\\n</visit_notes>';\n}\nreturn [{\n    json: {\n        requestBody: {\n            model: MODEL,\n            temperature: 0,\n            messages: [\n                { role: 'system', content: config.systemPrompt },\n                { role: 'user', content: userContent },\n            ],\n            response_format: config.responseFormat,\n        },\n        sourceTexts: { listingText: String(form.listingText || ''), visitNotes: String(form.visitNotes || '') },\n        schemaVersion: config.schemaVersion,\n        promptVersion: config.promptVersion,\n        expectedMonthlyRent: form.expectedMonthlyRent === undefined || form.expectedMonthlyRent === '' ? null : form.expectedMonthlyRent,\n    },\n}];"
+        "jsCode": "const MODEL = 'gpt-4o';\nconst form = $('Listing form').first().json;\nconst config = $input.first().json;\nconst neutralize = (value) => String(value || '').replace(new RegExp('<(/?)(listing_text|visit_notes)', 'gi'), '&lt;$1$2').trim();\nconst listingText = neutralize(form.listingText);\nconst visitNotes = neutralize(form.visitNotes);\nlet userContent = '<listing_text>\\n' + listingText + '\\n</listing_text>';\nif (visitNotes) {\n    userContent += '\\n\\n<visit_notes>\\n' + visitNotes + '\\n</visit_notes>';\n}\nreturn [{\n    json: {\n        requestBody: {\n            model: MODEL,\n            temperature: 0,\n            messages: [\n                { role: 'system', content: config.systemPrompt },\n                { role: 'user', content: userContent },\n            ],\n            response_format: config.responseFormat,\n        },\n        sourceTexts: { listingText: String(form.listingText || ''), visitNotes: String(form.visitNotes || '') },\n        schemaVersion: config.schemaVersion,\n        promptVersion: config.promptVersion,\n        expectedMonthlyRent: form.expectedMonthlyRent === undefined || form.expectedMonthlyRent === '' ? null : form.expectedMonthlyRent,\n        notaryFeeRatePercent: form.notaryFeeRatePercent,\n    },\n}];"
       },
       "id": "5b0e7a64-3f1d-4c0a-9a55-0f1b7a2d1003",
       "name": "Build OpenAI request",
@@ -88,7 +93,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const context = $('Build OpenAI request').first().json;\nconst body = $input.first().json;\nconst base = {\n    model: body.model || context.requestBody.model,\n    usage: body.usage || null,\n    schemaVersion: context.schemaVersion,\n    promptVersion: context.promptVersion,\n    expectedMonthlyRent: context.expectedMonthlyRent,\n};\nconst fail = (stage, error) => {\n    console.error(JSON.stringify({ event: 'extractionFailed', stage, error, ...base }));\n    return [{ json: { ...base, ok: false, stage, error } }];\n};\ntry {\n    if (body.error) {\n        return fail('openai', body.error.message || 'OpenAI returned an error');\n    }\n    const choice = body.choices && body.choices[0];\n    if (!choice || !choice.message) {\n        return fail('openai', 'No choice in the OpenAI response');\n    }\n    if (choice.message.refusal) {\n        return fail('refusal', choice.message.refusal);\n    }\n    if (choice.finish_reason !== 'stop') {\n        return fail('openai', 'Unexpected finish_reason: ' + choice.finish_reason);\n    }\n    const extraction = JSON.parse(choice.message.content);\n    console.log(JSON.stringify({ event: 'extractionReceived', ...base }));\n    return [{ json: { ...base, ok: true, extraction } }];\n} catch (error) {\n    return fail('parse', String(error && error.message ? error.message : error));\n}"
+        "jsCode": "const context = $('Build OpenAI request').first().json;\nconst body = $input.first().json;\nconst base = {\n    model: body.model || context.requestBody.model,\n    usage: body.usage || null,\n    schemaVersion: context.schemaVersion,\n    promptVersion: context.promptVersion,\n    expectedMonthlyRent: context.expectedMonthlyRent,\n    notaryFeeRatePercent: context.notaryFeeRatePercent,\n};\nconst fail = (stage, error) => {\n    console.error(JSON.stringify({ event: 'extractionFailed', stage, error, ...base }));\n    return [{ json: { ...base, ok: false, stage, error } }];\n};\ntry {\n    if (body.error) {\n        return fail('openai', body.error.message || 'OpenAI returned an error');\n    }\n    const choice = body.choices && body.choices[0];\n    if (!choice || !choice.message) {\n        return fail('openai', 'No choice in the OpenAI response');\n    }\n    if (choice.message.refusal) {\n        return fail('refusal', choice.message.refusal);\n    }\n    if (choice.finish_reason !== 'stop') {\n        return fail('openai', 'Unexpected finish_reason: ' + choice.finish_reason);\n    }\n    const extraction = JSON.parse(choice.message.content);\n    console.log(JSON.stringify({ event: 'extractionReceived', ...base }));\n    return [{ json: { ...base, ok: true, extraction } }];\n} catch (error) {\n    return fail('parse', String(error && error.message ? error.message : error));\n}"
       },
       "id": "5b0e7a64-3f1d-4c0a-9a55-0f1b7a2d1005",
       "name": "Parse OpenAI response",
@@ -151,13 +156,76 @@
     },
     {
       "parameters": {
-        "jsCode": "const parsed = $('Parse OpenAI response').first().json;\nconst validation = $input.first().json;\nconst valid = validation.status === 'valid';\nconst result = {\n    valid,\n    validationErrors: valid ? [] : (validation.details || [{ message: validation.message || 'Validation service error' }]),\n    extraction: parsed.extraction,\n    model: parsed.model,\n    usage: parsed.usage,\n    schemaVersion: parsed.schemaVersion,\n    promptVersion: parsed.promptVersion,\n    expectedMonthlyRent: parsed.expectedMonthlyRent,\n};\nconsole.log(JSON.stringify({ event: 'extractionValidated', valid, errorCount: result.validationErrors.length, model: result.model, usage: result.usage }));\nreturn [{ json: result }];"
+        "jsCode": "const parsed = $('Parse OpenAI response').first().json;\nconst validation = $input.first().json;\nconst valid = validation.status === 'valid';\nconst result = {\n    valid,\n    validationErrors: valid ? [] : (validation.details || [{ message: validation.message || 'Validation service error' }]),\n    extraction: parsed.extraction,\n    model: parsed.model,\n    usage: parsed.usage,\n    schemaVersion: parsed.schemaVersion,\n    promptVersion: parsed.promptVersion,\n    expectedMonthlyRent: parsed.expectedMonthlyRent,\n    notaryFeeRatePercent: parsed.notaryFeeRatePercent,\n};\nconsole.log(JSON.stringify({ event: 'extractionValidated', valid, errorCount: result.validationErrors.length, model: result.model, usage: result.usage }));\nreturn [{ json: result }];"
       },
       "id": "5b0e7a64-3f1d-4c0a-9a55-0f1b7a2d1008",
       "name": "Validation result",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [1680, -100]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "7d2f1a10-1c11-4a9e-8f10-aa0000000002",
+              "leftValue": "={{ $json.valid }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "5b0e7a64-3f1d-4c0a-9a55-0f1b7a2d1010",
+      "name": "Extraction valid?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [1920, -100]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://api:8000/analyze",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ extraction: $json.extraction, assumptions: { notaryFeeRate: Number($json.notaryFeeRatePercent) / 100, expectedMonthlyRent: $json.expectedMonthlyRent, furnitureBudget: null, financing: null } }) }}",
+        "options": {
+          "timeout": 15000,
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "5b0e7a64-3f1d-4c0a-9a55-0f1b7a2d1011",
+      "name": "Analyze",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2160, -200]
+    },
+    {
+      "parameters": {
+        "jsCode": "const validated = $('Validation result').first().json;\nconst analysis = $input.first().json;\nconst analysisFailed = Boolean(analysis.error);\nconsole.log(JSON.stringify({ event: 'analysisDone', failed: analysisFailed, status: analysis.status, pricingGridStatus: analysis.pricingGridStatus, warningCount: (analysis.warnings || []).length }));\nreturn [{ json: {\n    valid: true,\n    analysisFailed,\n    analysis,\n    extraction: validated.extraction,\n    model: validated.model,\n    usage: validated.usage,\n    schemaVersion: validated.schemaVersion,\n    promptVersion: validated.promptVersion,\n} }];"
+      },
+      "id": "5b0e7a64-3f1d-4c0a-9a55-0f1b7a2d1012",
+      "name": "Analysis result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2400, -200]
     },
     {
       "parameters": {
@@ -194,6 +262,18 @@
     },
     "Validate extraction": {
       "main": [[{ "node": "Validation result", "type": "main", "index": 0 }]]
+    },
+    "Validation result": {
+      "main": [[{ "node": "Extraction valid?", "type": "main", "index": 0 }]]
+    },
+    "Extraction valid?": {
+      "main": [
+        [{ "node": "Analyze", "type": "main", "index": 0 }],
+        []
+      ]
+    },
+    "Analyze": {
+      "main": [[{ "node": "Analysis result", "type": "main", "index": 0 }]]
     }
   },
   "settings": {

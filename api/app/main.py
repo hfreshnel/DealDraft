@@ -1,4 +1,6 @@
 import logging
+import os
+from pathlib import Path
 
 from fastapi import FastAPI, Request, status
 from fastapi.exceptions import RequestValidationError
@@ -6,11 +8,16 @@ from fastapi.responses import JSONResponse
 
 from app.excerpt_check import findExcerptProblems
 from app.extraction_prompt import EXTRACTION_SYSTEM_PROMPT, computePromptVersion
+from app.finance import analyze
+from app.pricing import loadWorksPriceGrid
 from app.schemas import AnalysisRequest, AnalysisResult, ExtractionCheckRequest, HealthResponse
 from app.tool_schema import buildOpenAiResponseFormat, buildToolDefinition, computeSchemaVersion
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s")
 logger = logging.getLogger("deal-analyzer-api")
+
+PRICING_DIR = Path(os.environ.get("PRICING_DIR", Path(__file__).resolve().parents[2] / "pricing"))
+PRICING_GRID_FILE = os.environ.get("PRICING_GRID_FILE", "works-grid.example.yaml")
 
 app = FastAPI(title="AI Deal Analyzer API", version="0.1.0")
 
@@ -18,6 +25,12 @@ try:
     SCHEMA_VERSION = computeSchemaVersion()
 except Exception:
     logger.exception("Failed to build extraction schema at startup")
+    raise
+
+try:
+    PRICING_GRID = loadWorksPriceGrid(PRICING_DIR / PRICING_GRID_FILE)
+except Exception:
+    logger.exception("Failed to load the pricing grid at startup")
     raise
 
 
@@ -91,9 +104,9 @@ def postValidateExtraction(request: ExtractionCheckRequest) -> JSONResponse:
 
 
 @app.post("/analyze", response_model=AnalysisResult, status_code=status.HTTP_200_OK)
-def postAnalyze(request: AnalysisRequest) -> JSONResponse:
-    # Validation already runs on the request body; financial computation lands on day 3.
-    return JSONResponse(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        content={"error": "notImplemented", "message": "Financial analysis is implemented on day 3"},
-    )
+def postAnalyze(request: AnalysisRequest) -> AnalysisResult:
+    try:
+        return analyze(request, PRICING_GRID)
+    except Exception:
+        logger.exception("Analysis failed")
+        raise
