@@ -11,6 +11,23 @@ TOOL_DESCRIPTION = (
     "Every field is required: set it to null when the listing does not explicitly state the information. "
     "Never infer, estimate or compute a value that is not written in the listing."
 )
+RESPONSE_FORMAT_NAME = "listing_extraction"
+STRICT_UNSUPPORTED_KEYWORDS = frozenset(
+    {
+        "default",
+        "pattern",
+        "minLength",
+        "maxLength",
+        "minimum",
+        "maximum",
+        "exclusiveMinimum",
+        "exclusiveMaximum",
+        "multipleOf",
+        "minItems",
+        "maxItems",
+        "uniqueItems",
+    }
+)
 
 
 def inlineRefs(node: Any, defs: dict[str, Any], depth: int = 0) -> Any:
@@ -49,6 +66,33 @@ def buildToolDefinition() -> dict[str, Any]:
     }
 
 
+def stripUnsupportedKeywords(node: Any, parentKey: str = "") -> Any:
+    # Strict mode support for value constraints is partial and version dependent, so they are dropped
+    # here and enforced afterwards by Pydantic (a violation becomes a 422 and a corrective retry).
+    if isinstance(node, dict):
+        if parentKey == "properties":
+            return {key: stripUnsupportedKeywords(value, key) for key, value in node.items()}
+        return {
+            key: stripUnsupportedKeywords(value, key)
+            for key, value in node.items()
+            if key not in STRICT_UNSUPPORTED_KEYWORDS
+        }
+    if isinstance(node, list):
+        return [stripUnsupportedKeywords(item, parentKey) for item in node]
+    return node
+
+
+def buildOpenAiResponseFormat() -> dict[str, Any]:
+    return {
+        "type": "json_schema",
+        "json_schema": {
+            "name": RESPONSE_FORMAT_NAME,
+            "strict": True,
+            "schema": stripUnsupportedKeywords(buildInputSchema()),
+        },
+    }
+
+
 def computeSchemaVersion() -> str:
-    serialized = json.dumps(buildToolDefinition(), sort_keys=True, ensure_ascii=False)
+    serialized = json.dumps(buildOpenAiResponseFormat(), sort_keys=True, ensure_ascii=False)
     return hashlib.sha256(serialized.encode("utf-8")).hexdigest()[:12]

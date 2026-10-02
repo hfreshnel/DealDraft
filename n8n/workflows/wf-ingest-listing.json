@@ -1,0 +1,202 @@
+{
+  "id": "wfIngestListing01",
+  "name": "wf-ingest-listing",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Analyse d'annonce",
+        "formDescription": "Brouillon d'étude de rendement : à relire et valider par le chasseur.",
+        "formFields": {
+          "values": [
+            {
+                "fieldLabel": "listingText",
+                "fieldType": "textarea",
+                "requiredField": true
+            },
+            {
+                "fieldLabel": "visitNotes",
+                "fieldType": "textarea"
+            },
+            {
+                "fieldLabel": "expectedMonthlyRent",
+                "fieldType": "number"
+            }
+          ]
+        },
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "5b0e7a64-3f1d-4c0a-9a55-0f1b7a2d1001",
+      "name": "Listing form",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [0, 0],
+      "webhookId": "9c1f6f1e-6a0b-4a52-8d7a-2b6c1e5d1001"
+    },
+    {
+      "parameters": {
+        "url": "http://api:8000/extraction-tool",
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "5b0e7a64-3f1d-4c0a-9a55-0f1b7a2d1002",
+      "name": "Get extraction config",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [240, 0]
+    },
+    {
+      "parameters": {
+        "jsCode": "const MODEL = 'gpt-4o';\nconst form = $('Listing form').first().json;\nconst config = $input.first().json;\nconst neutralize = (value) => String(value || '').replace(new RegExp('<(/?)(listing_text|visit_notes)', 'gi'), '&lt;$1$2').trim();\nconst listingText = neutralize(form.listingText);\nconst visitNotes = neutralize(form.visitNotes);\nlet userContent = '<listing_text>\\n' + listingText + '\\n</listing_text>';\nif (visitNotes) {\n    userContent += '\\n\\n<visit_notes>\\n' + visitNotes + '\\n</visit_notes>';\n}\nreturn [{\n    json: {\n        requestBody: {\n            model: MODEL,\n            temperature: 0,\n            messages: [\n                { role: 'system', content: config.systemPrompt },\n                { role: 'user', content: userContent },\n            ],\n            response_format: config.responseFormat,\n        },\n        sourceTexts: { listingText: String(form.listingText || ''), visitNotes: String(form.visitNotes || '') },\n        schemaVersion: config.schemaVersion,\n        promptVersion: config.promptVersion,\n        expectedMonthlyRent: form.expectedMonthlyRent === undefined || form.expectedMonthlyRent === '' ? null : form.expectedMonthlyRent,\n    },\n}];"
+      },
+      "id": "5b0e7a64-3f1d-4c0a-9a55-0f1b7a2d1003",
+      "name": "Build OpenAI request",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [480, 0]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/chat/completions",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.requestBody) }}",
+        "options": {
+          "timeout": 90000,
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "5b0e7a64-3f1d-4c0a-9a55-0f1b7a2d1004",
+      "name": "OpenAI extraction",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [720, 0],
+      "credentials": {
+        "openAiApi": {
+          "id": "1QdIYWGdWXJKMCsb",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const context = $('Build OpenAI request').first().json;\nconst body = $input.first().json;\nconst base = {\n    model: body.model || context.requestBody.model,\n    usage: body.usage || null,\n    schemaVersion: context.schemaVersion,\n    promptVersion: context.promptVersion,\n    expectedMonthlyRent: context.expectedMonthlyRent,\n};\nconst fail = (stage, error) => {\n    console.error(JSON.stringify({ event: 'extractionFailed', stage, error, ...base }));\n    return [{ json: { ...base, ok: false, stage, error } }];\n};\ntry {\n    if (body.error) {\n        return fail('openai', body.error.message || 'OpenAI returned an error');\n    }\n    const choice = body.choices && body.choices[0];\n    if (!choice || !choice.message) {\n        return fail('openai', 'No choice in the OpenAI response');\n    }\n    if (choice.message.refusal) {\n        return fail('refusal', choice.message.refusal);\n    }\n    if (choice.finish_reason !== 'stop') {\n        return fail('openai', 'Unexpected finish_reason: ' + choice.finish_reason);\n    }\n    const extraction = JSON.parse(choice.message.content);\n    console.log(JSON.stringify({ event: 'extractionReceived', ...base }));\n    return [{ json: { ...base, ok: true, extraction } }];\n} catch (error) {\n    return fail('parse', String(error && error.message ? error.message : error));\n}"
+      },
+      "id": "5b0e7a64-3f1d-4c0a-9a55-0f1b7a2d1005",
+      "name": "Parse OpenAI response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [960, 0]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "7d2f1a10-1c11-4a9e-8f10-aa0000000001",
+              "leftValue": "={{ $json.ok }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "5b0e7a64-3f1d-4c0a-9a55-0f1b7a2d1006",
+      "name": "Extraction received?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [1200, 0]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://api:8000/validate-extraction",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ extraction: $json.extraction, listingText: $('Build OpenAI request').first().json.sourceTexts.listingText, visitNotes: $('Build OpenAI request').first().json.sourceTexts.visitNotes }) }}",
+        "options": {
+          "timeout": 15000,
+          "response": {
+            "response": {
+              "neverError": true
+            }
+          }
+        }
+      },
+      "id": "5b0e7a64-3f1d-4c0a-9a55-0f1b7a2d1007",
+      "name": "Validate extraction",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1440, -100]
+    },
+    {
+      "parameters": {
+        "jsCode": "const parsed = $('Parse OpenAI response').first().json;\nconst validation = $input.first().json;\nconst valid = validation.status === 'valid';\nconst result = {\n    valid,\n    validationErrors: valid ? [] : (validation.details || [{ message: validation.message || 'Validation service error' }]),\n    extraction: parsed.extraction,\n    model: parsed.model,\n    usage: parsed.usage,\n    schemaVersion: parsed.schemaVersion,\n    promptVersion: parsed.promptVersion,\n    expectedMonthlyRent: parsed.expectedMonthlyRent,\n};\nconsole.log(JSON.stringify({ event: 'extractionValidated', valid, errorCount: result.validationErrors.length, model: result.model, usage: result.usage }));\nreturn [{ json: result }];"
+      },
+      "id": "5b0e7a64-3f1d-4c0a-9a55-0f1b7a2d1008",
+      "name": "Validation result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1680, -100]
+    },
+    {
+      "parameters": {
+        "jsCode": "const failed = $input.first().json;\nreturn [{ json: { valid: false, stage: failed.stage, error: failed.error, model: failed.model, usage: failed.usage, schemaVersion: failed.schemaVersion, promptVersion: failed.promptVersion } }];"
+      },
+      "id": "5b0e7a64-3f1d-4c0a-9a55-0f1b7a2d1009",
+      "name": "Extraction failure result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1440, 100]
+    }
+  ],
+  "connections": {
+    "Listing form": {
+      "main": [[{ "node": "Get extraction config", "type": "main", "index": 0 }]]
+    },
+    "Get extraction config": {
+      "main": [[{ "node": "Build OpenAI request", "type": "main", "index": 0 }]]
+    },
+    "Build OpenAI request": {
+      "main": [[{ "node": "OpenAI extraction", "type": "main", "index": 0 }]]
+    },
+    "OpenAI extraction": {
+      "main": [[{ "node": "Parse OpenAI response", "type": "main", "index": 0 }]]
+    },
+    "Parse OpenAI response": {
+      "main": [[{ "node": "Extraction received?", "type": "main", "index": 0 }]]
+    },
+    "Extraction received?": {
+      "main": [
+        [{ "node": "Validate extraction", "type": "main", "index": 0 }],
+        [{ "node": "Extraction failure result", "type": "main", "index": 0 }]
+      ]
+    },
+    "Validate extraction": {
+      "main": [[{ "node": "Validation result", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

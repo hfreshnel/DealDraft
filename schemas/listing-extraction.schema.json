@@ -1,0 +1,863 @@
+{
+  "schemaVersion": "db8e2c8248a1",
+  "responseFormat": {
+    "type": "json_schema",
+    "json_schema": {
+      "name": "listing_extraction",
+      "strict": true,
+      "schema": {
+        "additionalProperties": false,
+        "properties": {
+          "listingTitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Headline of the listing or message. Use null if the text does not explicitly state it. Never guess, never compute."
+          },
+          "city": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "City name only, without postal code. Use null if the text does not explicitly state it. Never guess, never compute."
+          },
+          "district": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Neighbourhood or area. No exact street address. Use null if the text does not explicitly state it. Never guess, never compute."
+          },
+          "propertyType": {
+            "anyOf": [
+              {
+                "enum": [
+                  "studio",
+                  "apartment",
+                  "house",
+                  "building",
+                  "office",
+                  "commercial",
+                  "other"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "'building' means a whole building sold with several lots. Use null if the text does not explicitly state it. Never guess, never compute."
+          },
+          "livingAreaSqm": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Living area in square meters; an approximate value ('about 30') is kept as is. Use null if the text does not explicitly state it. Never guess, never compute."
+          },
+          "roomCount": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Main rooms (T2 = 2, studio = 1). Use null if the text does not explicitly state it. Never guess, never compute."
+          },
+          "floorNumber": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Floor number, 0 for ground floor. Use null if the text does not explicitly state it. Never guess, never compute."
+          },
+          "hasElevator": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "True or false only if the text says so. Use null if the text does not explicitly state it. Never guess, never compute."
+          },
+          "lotCount": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Number of lots included in this sale (buildings only). Use null if the text does not explicitly state it. Never guess, never compute."
+          },
+          "askingPrice": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Total asking price in euros ('28k' = 28000). Whole price for multi-lot sales. Use null if the text does not explicitly state it. Never guess, never compute."
+          },
+          "agencyFeesIncluded": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "True only if fees are explicitly included, false only if explicitly on top. Ambiguous wording ('net seller') = null. Use null if the text does not explicitly state it. Never guess, never compute."
+          },
+          "occupancyStatus": {
+            "anyOf": [
+              {
+                "enum": [
+                  "vacant",
+                  "rented",
+                  "ownerOccupied",
+                  "mixed"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "'mixed' when some lots are vacant and others rented. Use null if the text does not explicitly state it. Never guess, never compute."
+          },
+          "currentMonthlyRent": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Current monthly rent of a single rented unit. Several rents in the text = null, never add them. Use null if the text does not explicitly state it. Never guess, never compute."
+          },
+          "rentIncludesCharges": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "True if rent includes charges ('CC'). Use null if the text does not explicitly state it. Never guess, never compute."
+          },
+          "leaseEndDate": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "End of the current lease, YYYY-MM or YYYY-MM-DD. Use null if the text does not explicitly state it. Never guess, never compute."
+          },
+          "annualCondoFees": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Yearly co-ownership charges in euros. Convert monthly amounts to yearly. Use null if the text does not explicitly state it. Never guess, never compute."
+          },
+          "annualPropertyTax": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Yearly property tax in euros. Use null if the text does not explicitly state it. Never guess, never compute."
+          },
+          "energyClass": {
+            "anyOf": [
+              {
+                "enum": [
+                  "A",
+                  "B",
+                  "C",
+                  "D",
+                  "E",
+                  "F",
+                  "G"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Energy performance class. Use null if the text does not explicitly state it. Never guess, never compute."
+          },
+          "overallCondition": {
+            "anyOf": [
+              {
+                "enum": [
+                  "good",
+                  "refresh",
+                  "renovation",
+                  "heavyRenovation"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Only from an explicit statement about the whole property: good = nothing to do, refresh = paint and floors, renovation = complete renovation, heavyRenovation = structural works. Partial work lists alone give null. Never guess."
+          },
+          "worksItems": {
+            "description": "One entry per work explicitly mentioned in the listing or visit notes. Empty list if none.",
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "category": {
+                  "enum": [
+                    "windows",
+                    "painting",
+                    "flooring",
+                    "bathroom",
+                    "kitchen",
+                    "electricity",
+                    "plumbing",
+                    "heating",
+                    "insulation",
+                    "partitions",
+                    "roofing",
+                    "facade",
+                    "entranceDoor",
+                    "other"
+                  ],
+                  "type": "string",
+                  "description": "Closed list of work categories. Use 'other' only if none fits."
+                },
+                "quantity": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Quantity if the text states it (3 windows, 25 sqm). null otherwise. Never estimate."
+                },
+                "unit": {
+                  "anyOf": [
+                    {
+                      "enum": [
+                        "sqm",
+                        "linearMeter",
+                        "unit",
+                        "lumpSum"
+                      ],
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Unit of the quantity. Required when quantity is set, null otherwise."
+                },
+                "note": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Short precision. Mandatory when category is 'other', null otherwise."
+                },
+                "excerpt": {
+                  "description": "Passage copied verbatim from the source text that mentions this work.",
+                  "type": "string"
+                },
+                "source": {
+                  "enum": [
+                    "listing",
+                    "visitNotes"
+                  ],
+                  "type": "string",
+                  "description": "Which input text the excerpt comes from."
+                }
+              },
+              "required": [
+                "category",
+                "quantity",
+                "unit",
+                "note",
+                "excerpt",
+                "source"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "riskFlags": {
+            "description": "Factual points an investor must check (uncertain figures, humidity, non-compliant wiring, ambiguity). Empty list if none.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "sourceExcerpts": {
+            "description": "One verbatim excerpt for each non-null field, except listingTitle.",
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "field": {
+                  "enum": [
+                    "listingTitle",
+                    "city",
+                    "district",
+                    "propertyType",
+                    "livingAreaSqm",
+                    "roomCount",
+                    "floorNumber",
+                    "hasElevator",
+                    "lotCount",
+                    "askingPrice",
+                    "agencyFeesIncluded",
+                    "occupancyStatus",
+                    "currentMonthlyRent",
+                    "rentIncludesCharges",
+                    "leaseEndDate",
+                    "annualCondoFees",
+                    "annualPropertyTax",
+                    "energyClass",
+                    "overallCondition"
+                  ],
+                  "type": "string",
+                  "description": "Name of the extracted field this excerpt supports."
+                },
+                "excerpt": {
+                  "description": "Passage copied verbatim from the source text that justifies the value.",
+                  "type": "string"
+                },
+                "source": {
+                  "enum": [
+                    "listing",
+                    "visitNotes"
+                  ],
+                  "type": "string",
+                  "description": "Which input text the excerpt comes from."
+                }
+              },
+              "required": [
+                "field",
+                "excerpt",
+                "source"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "listingTitle",
+          "city",
+          "district",
+          "propertyType",
+          "livingAreaSqm",
+          "roomCount",
+          "floorNumber",
+          "hasElevator",
+          "lotCount",
+          "askingPrice",
+          "agencyFeesIncluded",
+          "occupancyStatus",
+          "currentMonthlyRent",
+          "rentIncludesCharges",
+          "leaseEndDate",
+          "annualCondoFees",
+          "annualPropertyTax",
+          "energyClass",
+          "overallCondition",
+          "worksItems",
+          "riskFlags",
+          "sourceExcerpts"
+        ],
+        "type": "object"
+      }
+    }
+  },
+  "tool": {
+    "name": "record_listing_extraction",
+    "description": "Record the structured data extracted from a French real estate listing. Every field is required: set it to null when the listing does not explicitly state the information. Never infer, estimate or compute a value that is not written in the listing.",
+    "input_schema": {
+      "additionalProperties": false,
+      "properties": {
+        "listingTitle": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Headline of the listing or message. Use null if the text does not explicitly state it. Never guess, never compute."
+        },
+        "city": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "City name only, without postal code. Use null if the text does not explicitly state it. Never guess, never compute."
+        },
+        "district": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Neighbourhood or area. No exact street address. Use null if the text does not explicitly state it. Never guess, never compute."
+        },
+        "propertyType": {
+          "anyOf": [
+            {
+              "enum": [
+                "studio",
+                "apartment",
+                "house",
+                "building",
+                "office",
+                "commercial",
+                "other"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "'building' means a whole building sold with several lots. Use null if the text does not explicitly state it. Never guess, never compute."
+        },
+        "livingAreaSqm": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Living area in square meters; an approximate value ('about 30') is kept as is. Use null if the text does not explicitly state it. Never guess, never compute."
+        },
+        "roomCount": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Main rooms (T2 = 2, studio = 1). Use null if the text does not explicitly state it. Never guess, never compute."
+        },
+        "floorNumber": {
+          "anyOf": [
+            {
+              "maximum": 60,
+              "minimum": -1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Floor number, 0 for ground floor. Use null if the text does not explicitly state it. Never guess, never compute."
+        },
+        "hasElevator": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "True or false only if the text says so. Use null if the text does not explicitly state it. Never guess, never compute."
+        },
+        "lotCount": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Number of lots included in this sale (buildings only). Use null if the text does not explicitly state it. Never guess, never compute."
+        },
+        "askingPrice": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Total asking price in euros ('28k' = 28000). Whole price for multi-lot sales. Use null if the text does not explicitly state it. Never guess, never compute."
+        },
+        "agencyFeesIncluded": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "True only if fees are explicitly included, false only if explicitly on top. Ambiguous wording ('net seller') = null. Use null if the text does not explicitly state it. Never guess, never compute."
+        },
+        "occupancyStatus": {
+          "anyOf": [
+            {
+              "enum": [
+                "vacant",
+                "rented",
+                "ownerOccupied",
+                "mixed"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "'mixed' when some lots are vacant and others rented. Use null if the text does not explicitly state it. Never guess, never compute."
+        },
+        "currentMonthlyRent": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Current monthly rent of a single rented unit. Several rents in the text = null, never add them. Use null if the text does not explicitly state it. Never guess, never compute."
+        },
+        "rentIncludesCharges": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "True if rent includes charges ('CC'). Use null if the text does not explicitly state it. Never guess, never compute."
+        },
+        "leaseEndDate": {
+          "anyOf": [
+            {
+              "pattern": "^\\d{4}-(0[1-9]|1[0-2])(-(0[1-9]|[12]\\d|3[01]))?$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "End of the current lease, YYYY-MM or YYYY-MM-DD. Use null if the text does not explicitly state it. Never guess, never compute."
+        },
+        "annualCondoFees": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Yearly co-ownership charges in euros. Convert monthly amounts to yearly. Use null if the text does not explicitly state it. Never guess, never compute."
+        },
+        "annualPropertyTax": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Yearly property tax in euros. Use null if the text does not explicitly state it. Never guess, never compute."
+        },
+        "energyClass": {
+          "anyOf": [
+            {
+              "enum": [
+                "A",
+                "B",
+                "C",
+                "D",
+                "E",
+                "F",
+                "G"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Energy performance class. Use null if the text does not explicitly state it. Never guess, never compute."
+        },
+        "overallCondition": {
+          "anyOf": [
+            {
+              "enum": [
+                "good",
+                "refresh",
+                "renovation",
+                "heavyRenovation"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "description": "Only from an explicit statement about the whole property: good = nothing to do, refresh = paint and floors, renovation = complete renovation, heavyRenovation = structural works. Partial work lists alone give null. Never guess."
+        },
+        "worksItems": {
+          "description": "One entry per work explicitly mentioned in the listing or visit notes. Empty list if none.",
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "category": {
+                "enum": [
+                  "windows",
+                  "painting",
+                  "flooring",
+                  "bathroom",
+                  "kitchen",
+                  "electricity",
+                  "plumbing",
+                  "heating",
+                  "insulation",
+                  "partitions",
+                  "roofing",
+                  "facade",
+                  "entranceDoor",
+                  "other"
+                ],
+                "type": "string",
+                "description": "Closed list of work categories. Use 'other' only if none fits."
+              },
+              "quantity": {
+                "anyOf": [
+                  {
+                    "exclusiveMinimum": 0,
+                    "type": "number"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Quantity if the text states it (3 windows, 25 sqm). null otherwise. Never estimate."
+              },
+              "unit": {
+                "anyOf": [
+                  {
+                    "enum": [
+                      "sqm",
+                      "linearMeter",
+                      "unit",
+                      "lumpSum"
+                    ],
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Unit of the quantity. Required when quantity is set, null otherwise."
+              },
+              "note": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Short precision. Mandatory when category is 'other', null otherwise."
+              },
+              "excerpt": {
+                "description": "Passage copied verbatim from the source text that mentions this work.",
+                "maxLength": 300,
+                "minLength": 1,
+                "type": "string"
+              },
+              "source": {
+                "enum": [
+                  "listing",
+                  "visitNotes"
+                ],
+                "type": "string",
+                "description": "Which input text the excerpt comes from."
+              }
+            },
+            "required": [
+              "category",
+              "quantity",
+              "unit",
+              "note",
+              "excerpt",
+              "source"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "riskFlags": {
+          "description": "Factual points an investor must check (uncertain figures, humidity, non-compliant wiring, ambiguity). Empty list if none.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "sourceExcerpts": {
+          "description": "One verbatim excerpt for each non-null field, except listingTitle.",
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "field": {
+                "enum": [
+                  "listingTitle",
+                  "city",
+                  "district",
+                  "propertyType",
+                  "livingAreaSqm",
+                  "roomCount",
+                  "floorNumber",
+                  "hasElevator",
+                  "lotCount",
+                  "askingPrice",
+                  "agencyFeesIncluded",
+                  "occupancyStatus",
+                  "currentMonthlyRent",
+                  "rentIncludesCharges",
+                  "leaseEndDate",
+                  "annualCondoFees",
+                  "annualPropertyTax",
+                  "energyClass",
+                  "overallCondition"
+                ],
+                "type": "string",
+                "description": "Name of the extracted field this excerpt supports."
+              },
+              "excerpt": {
+                "description": "Passage copied verbatim from the source text that justifies the value.",
+                "maxLength": 300,
+                "minLength": 1,
+                "type": "string"
+              },
+              "source": {
+                "enum": [
+                  "listing",
+                  "visitNotes"
+                ],
+                "type": "string",
+                "description": "Which input text the excerpt comes from."
+              }
+            },
+            "required": [
+              "field",
+              "excerpt",
+              "source"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "listingTitle",
+        "city",
+        "district",
+        "propertyType",
+        "livingAreaSqm",
+        "roomCount",
+        "floorNumber",
+        "hasElevator",
+        "lotCount",
+        "askingPrice",
+        "agencyFeesIncluded",
+        "occupancyStatus",
+        "currentMonthlyRent",
+        "rentIncludesCharges",
+        "leaseEndDate",
+        "annualCondoFees",
+        "annualPropertyTax",
+        "energyClass",
+        "overallCondition",
+        "worksItems",
+        "riskFlags",
+        "sourceExcerpts"
+      ],
+      "type": "object"
+    }
+  }
+}

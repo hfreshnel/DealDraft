@@ -124,6 +124,18 @@ Ces hypothèses seront listées dans le README sous le titre « Hypothèses sur 
 | Jeu de test | 20 annonces propres | 8 annonces de portail, 8 messages informels, 4 pièges |
 | Validation de cohérence | Aucune | Recoupement avec leur cas publié (tolérance ±0,2 point) |
 
+### Fournisseur LLM : OpenAI `gpt-4o` au lieu de Claude (2 octobre 2026)
+
+| Point | Détail |
+|---|---|
+| Raison | Contrainte de budget : crédits OpenAI disponibles, pas de crédits API Anthropic |
+| Mécanisme | `response_format` de type `json_schema` en mode `strict` sur `/v1/chat/completions`, appelé par un nœud HTTP Request de n8n |
+| Schéma | Généré depuis Pydantic (`buildOpenAiResponseFormat`). Les mots-clés de contrainte (`pattern`, `minLength`, `minimum`...) sont retirés du schéma envoyé et vérifiés ensuite par Pydantic (422, nouvelle tentative) |
+| Conservé | Le format outil Claude reste généré (`buildToolDefinition`) pour un retour éventuel à Claude |
+| Inchangé | Les invariants : le LLM extrait, le code calcule, `null` si absent |
+| Non vérifié | Acceptation du schéma par le mode strict (`anyOf` avec `null`, objets imbriqués) : à tester au premier appel réel. Support de `gpt-4o` en mode strict à confirmer dans la documentation OpenAI |
+| Comparaison J5 | `gpt-4o-mini` contre `gpt-4o` remplace Haiku contre Sonnet |
+
 ## 9. Sources
 
 - https://monthimmo.fr/nos-prestations/

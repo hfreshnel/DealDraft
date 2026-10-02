@@ -4,7 +4,7 @@
   "district": null,
   "propertyType": "studio",
   "livingAreaSqm": 32,
-  "roomCount": null,
+  "roomCount": 1,
   "floorNumber": null,
   "hasElevator": null,
   "lotCount": null,
@@ -70,6 +70,11 @@
     {
       "field": "livingAreaSqm",
       "excerpt": "environ 32 m²",
+      "source": "listing"
+    },
+    {
+      "field": "roomCount",
+      "excerpt": "Studio",
       "source": "listing"
     },
     {

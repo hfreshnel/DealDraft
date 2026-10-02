@@ -5,7 +5,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from app.tool_schema import buildToolDefinition, computeSchemaVersion  # noqa: E402
+from app.tool_schema import buildOpenAiResponseFormat, buildToolDefinition, computeSchemaVersion  # noqa: E402
 
 OUTPUT_DIR = Path(os.environ.get("SCHEMA_OUTPUT_DIR", "/schemas"))
 OUTPUT_FILE = "listing-extraction.schema.json"
@@ -14,7 +14,11 @@ OUTPUT_FILE = "listing-extraction.schema.json"
 def main() -> int:
     try:
         OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-        payload = {"schemaVersion": computeSchemaVersion(), "tool": buildToolDefinition()}
+        payload = {
+            "schemaVersion": computeSchemaVersion(),
+            "responseFormat": buildOpenAiResponseFormat(),
+            "tool": buildToolDefinition(),
+        }
         outputPath = OUTPUT_DIR / OUTPUT_FILE
         outputPath.write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
         print(f"Schema {payload['schemaVersion']} written to {outputPath}")

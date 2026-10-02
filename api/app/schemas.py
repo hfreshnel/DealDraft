@@ -223,6 +223,14 @@ class ListingExtraction(BaseModel):
     )
 
 
+class ExtractionCheckRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    extraction: ListingExtraction
+    listingText: str
+    visitNotes: str = ""
+
+
 class YieldBase(str, Enum):
     ACQUISITION_AND_WORKS = "acquisitionAndWorks"
     TOTAL_BUDGET = "totalBudget"

@@ -1,6 +1,4 @@
 # CLAUDE.md — AI Deal Analyzer
-
-> **Utilisation.** Claude Code : placer ce fichier à la racine du dépôt (`ai-deal-analyzer/CLAUDE.md`). Claude (claude.ai) : l'ajouter aux connaissances du projet ou coller les sections 1, 3, 8, 10 et 11 dans les instructions.
 > Détails complets : `docs/cahier-des-charges.md` (spécification), `docs/decision-log.md` (justification des choix), `docs/report-template.md` (fiche), `eval/README.md` (annotation).
 
 ---
@@ -29,7 +27,7 @@ Projet de démonstration pour une candidature en alternance « AI Builder » che
 
 ## 3. Invariants de conception (ne pas les contourner)
 
-1. **Le LLM extrait, le code calcule.** Claude ne fixe aucun prix, n'estime aucun loyer, n'additionne aucun montant.
+1. **Le LLM extrait, le code calcule.** Le LLM ne fixe aucun prix, n'estime aucun loyer, n'additionne aucun montant.
 2. **Champ absent du texte = `null`.** Jamais de valeur devinée ni calculée.
 3. **Aucun prix sans source** dans la grille (`pricing/`). Un prix `null` signifie « inconnu » et reste non chiffré.
 4. **Grille `illustrative`** : jamais présentée comme un barème. Le statut s'affiche sur la fiche.
@@ -47,13 +45,13 @@ Projet de démonstration pour une candidature en alternance « AI Builder » che
 |---|---|
 | API | Python 3.12, FastAPI, Pydantic v2, PyYAML ; gestionnaire `uv` ; tout tourne dans Docker |
 | Orchestration | n8n (version **épinglée** via `N8N_VERSION`, jamais `latest`), SQLite, auto-hébergé |
-| LLM | API Claude Messages en tool use (`tool_choice` forçant l'outil), appelée par un nœud HTTP Request de n8n. `claude-haiku-4-5-20251001` par défaut, `claude-sonnet-5-5` en repli. Identifiants à revérifier dans https://docs.claude.com |
+| LLM | API OpenAI Chat Completions avec `response_format` `json_schema` en mode `strict`, appelée par un nœud HTTP Request de n8n. `gpt-4o` (budget : crédits OpenAI, pas de crédits Anthropic). Support du mode strict et identifiants à revérifier dans la documentation OpenAI. Le format outil Claude reste généré (`buildToolDefinition`) pour un retour éventuel |
 | Données | Google Sheets (suivi + journal), Google Docs (fiche), Gmail (brouillon) |
 | Web | Next.js statique sur Vercel (à construire, jour 6) |
 
 ```
 Texte + notes de visite + loyer estimé
-  → n8n → Claude (extraction, schéma imposé)
+  → n8n → OpenAI (extraction, schéma strict imposé)
         → FastAPI /analyze (validation, chiffrage par grille, budget, rendements)
         → Google Docs (fiche) + Sheets (suivi) → validation humaine → brouillon Gmail
 ```
@@ -71,7 +69,7 @@ Ports exposés sur `127.0.0.1` uniquement (API 8000, n8n 5678).
 - `sourceExcerpts[]` : un extrait **textuel** par champ non nul, hors `listingTitle`.
 - `AnalysisAssumptions` : `notaryFeeRate`, `expectedMonthlyRent`, `furnitureBudget`, `financing` sont **requis mais nullables, sans valeur par défaut** (l'appelant doit déclarer l'inconnu). Défauts sourcés : apport 10 % (FAQ), vacance 1/12.
 - `AnalysisResult` : budget (achat, notaire, travaux, ameublement, autres frais), deux rendements, durée de chantier estimée, financement optionnel, postes non chiffrés, données manquantes, avertissements.
-- Le schéma d'outil Claude est **généré** depuis Pydantic (`tool_schema.py`) ; sa version est une empreinte SHA-256. Ne jamais l'éditer à la main.
+- Le schéma envoyé au LLM est **généré** depuis Pydantic (`tool_schema.py` : `buildOpenAiResponseFormat`, `buildToolDefinition`) ; sa version est une empreinte SHA-256 du format OpenAI. Ne jamais l'éditer à la main. Les contraintes de valeur (`pattern`, bornes, longueurs) sont retirées du schéma strict et vérifiées par Pydantic.
 
 ---
 
@@ -97,7 +95,7 @@ cp .env.example .env                                   # renseigner N8N_VERSION 
 docker compose build api
 docker compose run --rm api uv lock                    # écrit api/uv.lock sur l'hôte
 docker compose build api
-docker compose run --rm api pytest                     # 57 tests attendus verts
+docker compose run --rm api pytest                     # 65 tests attendus verts
 docker compose run --rm api python scripts/export_schema.py
 docker compose up -d                                   # API :8000 · n8n :5678
 ```
@@ -111,11 +109,11 @@ Points d'accès : `GET /health`, `GET /extraction-tool`, `POST /analyze` (**501 
 | Jour | Contenu | État |
 |---|---|---|
 | J1 | Docker, schéma v2, grille de prix, gabarit de fiche, 4 cas annotés, 57 tests | **Fait** (code) |
-| J1 (reste) | `.env`, clé Anthropic, client OAuth Google, annotation de 16 cas | **À faire par l'utilisateur** |
-| J2 | Prompt système, premier appel réel à Claude, `wf-ingest-listing` | Prochain |
+| J1 (reste) | `.env`, clé OpenAI, client OAuth Google, annotation de 16 cas | **À faire par l'utilisateur** |
+| J2 | Prompt système (`extraction_prompt.py`), `POST /validate-extraction`, `wf-ingest-listing` (formulaire n8n → OpenAI `gpt-4o` → validation) | **Fait** : 4 cas sur 4 valides ; écarts et instabilité à traiter au J5 |
 | J3 | `finance.py`, chargement de la grille, `/analyze`, modèle Google Docs | |
 | J4 | `wf-approve-and-draft`, `wf-error-handler`, nouvelle tentative, journal | |
-| J5 | `run_eval.py`, itérations, comparaison Haiku/Sonnet, `eval/report.md` | |
+| J5 | `run_eval.py`, itérations, comparaison `gpt-4o-mini`/`gpt-4o`, `eval/report.md` | |
 | J6 | Page Next.js, démo rejouée, déploiement Vercel, vidéo | |
 | J7 | README, guide, note stratégique, envoi de la candidature | |
 
@@ -129,8 +127,9 @@ Priorité si retard : le bonus saute d'abord, puis la comparaison de modèles. V
 
 ## 9. Non vérifié (à ne pas affirmer comme acquis)
 
-- La chaîne **Docker n'a jamais été exécutée** (images, build, healthcheck, montages).
-- La compatibilité du schéma (`anyOf` avec `null`, objets imbriqués) avec l'API Claude n'est **pas testée par un appel réel**.
+- Vérifié le 2 oct. 2026 : build Docker, healthcheck, n8n 2.41.6, et schéma strict accepté par OpenAI (`gpt-4o-2024-08-06`).
+- **Instabilité** : à `temperature: 0`, deux runs du même cas peuvent différer (ex. `annualCondoFees` 400 puis 4800). Seule l'évaluation multi-runs du J5 la mesure.
+- Le schéma ne garantit pas la fidélité des extraits : `POST /validate-extraction` (`excerpt_check.py`) la contrôle (extraits mot pour mot, un extrait par champ non nul, aucun sur un champ nul) et renvoie un 422 structuré.
 - Version de n8n et balise de l'image `uv` non épinglées.
 - Limites de l'API Coda gratuite non vérifiées (Sheets utilisé par défaut).
 - Taux de notaire, de crédit et d'assurance : **à sourcer**, aucune valeur par défaut.
