@@ -1,0 +1,91 @@
+{
+  "listingTitle": "Immeuble de rapport - Saint-Étienne (42100) - 4 appartements",
+  "city": "Saint-Étienne",
+  "district": null,
+  "propertyType": "building",
+  "livingAreaSqm": 215,
+  "roomCount": null,
+  "floorNumber": null,
+  "hasElevator": null,
+  "lotCount": 4,
+  "askingPrice": 185000,
+  "agencyFeesIncluded": false,
+  "occupancyStatus": "mixed",
+  "currentMonthlyRent": null,
+  "rentIncludesCharges": false,
+  "leaseEndDate": null,
+  "annualCondoFees": null,
+  "annualPropertyTax": 2150,
+  "energyClass": null,
+  "overallCondition": null,
+  "worksItems": [
+    {
+      "category": "roofing",
+      "quantity": null,
+      "unit": null,
+      "note": null,
+      "excerpt": "Toiture à prévoir dans les 5 ans",
+      "source": "listing"
+    },
+    {
+      "category": "other",
+      "quantity": null,
+      "unit": null,
+      "note": "Rénovation des 2 lots vacants",
+      "excerpt": "les deux autres sont vacants et à rénover",
+      "source": "listing"
+    }
+  ],
+  "riskFlags": [
+    "Deux loyers distincts (380 € et 410 €) : ne pas additionner",
+    "DPE non réalisé sur les lots",
+    "Toiture à prévoir dans les 5 ans"
+  ],
+  "sourceExcerpts": [
+    {
+      "field": "city",
+      "excerpt": "Saint-Étienne",
+      "source": "listing"
+    },
+    {
+      "field": "propertyType",
+      "excerpt": "Immeuble de rapport",
+      "source": "listing"
+    },
+    {
+      "field": "livingAreaSqm",
+      "excerpt": "215 m² habitables",
+      "source": "listing"
+    },
+    {
+      "field": "lotCount",
+      "excerpt": "4 lots",
+      "source": "listing"
+    },
+    {
+      "field": "askingPrice",
+      "excerpt": "185 000 € pour l'ensemble",
+      "source": "listing"
+    },
+    {
+      "field": "agencyFeesIncluded",
+      "excerpt": "honoraires à la charge de l'acquéreur en sus",
+      "source": "listing"
+    },
+    {
+      "field": "occupancyStatus",
+      "excerpt": "Deux lots sont loués",
+      "source": "listing"
+    },
+    {
+      "field": "rentIncludesCharges",
+      "excerpt": "hors charges",
+      "source": "listing"
+    },
+    {
+      "field": "annualPropertyTax",
+      "excerpt": "Taxe foncière : 2 150 €",
+      "source": "listing"
+    }
+  ]
+}

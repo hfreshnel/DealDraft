@@ -1,0 +1,115 @@
+{
+  "listingTitle": "Appartement T2 de 48 m² - Saint-Étienne Centre-ville (42000)",
+  "city": "Saint-Étienne",
+  "district": "Centre-ville",
+  "propertyType": "apartment",
+  "livingAreaSqm": 48,
+  "roomCount": 2,
+  "floorNumber": 2,
+  "hasElevator": true,
+  "lotCount": null,
+  "askingPrice": 39500,
+  "agencyFeesIncluded": true,
+  "occupancyStatus": "vacant",
+  "currentMonthlyRent": null,
+  "rentIncludesCharges": null,
+  "leaseEndDate": null,
+  "annualCondoFees": 840,
+  "annualPropertyTax": 560,
+  "energyClass": "E",
+  "overallCondition": null,
+  "worksItems": [
+    {
+      "category": "painting",
+      "quantity": null,
+      "unit": null,
+      "note": null,
+      "excerpt": "peintures à refaire dans l'ensemble du logement",
+      "source": "listing"
+    },
+    {
+      "category": "flooring",
+      "quantity": null,
+      "unit": null,
+      "note": null,
+      "excerpt": "remplacement du revêtement de sol du séjour et de la chambre",
+      "source": "listing"
+    },
+    {
+      "category": "kitchen",
+      "quantity": null,
+      "unit": null,
+      "note": null,
+      "excerpt": "cuisine à rénover",
+      "source": "listing"
+    }
+  ],
+  "riskFlags": [],
+  "sourceExcerpts": [
+    {
+      "field": "city",
+      "excerpt": "Saint-Étienne",
+      "source": "listing"
+    },
+    {
+      "field": "district",
+      "excerpt": "Centre-ville",
+      "source": "listing"
+    },
+    {
+      "field": "propertyType",
+      "excerpt": "Appartement T2",
+      "source": "listing"
+    },
+    {
+      "field": "livingAreaSqm",
+      "excerpt": "48 m²",
+      "source": "listing"
+    },
+    {
+      "field": "roomCount",
+      "excerpt": "T2",
+      "source": "listing"
+    },
+    {
+      "field": "floorNumber",
+      "excerpt": "2e étage",
+      "source": "listing"
+    },
+    {
+      "field": "hasElevator",
+      "excerpt": "avec ascenseur",
+      "source": "listing"
+    },
+    {
+      "field": "askingPrice",
+      "excerpt": "39 500 €",
+      "source": "listing"
+    },
+    {
+      "field": "agencyFeesIncluded",
+      "excerpt": "honoraires d'agence inclus",
+      "source": "listing"
+    },
+    {
+      "field": "occupancyStatus",
+      "excerpt": "libre de toute occupation",
+      "source": "listing"
+    },
+    {
+      "field": "annualCondoFees",
+      "excerpt": "840 € par an",
+      "source": "listing"
+    },
+    {
+      "field": "annualPropertyTax",
+      "excerpt": "Taxe foncière : 560 €",
+      "source": "listing"
+    },
+    {
+      "field": "energyClass",
+      "excerpt": "DPE : E",
+      "source": "listing"
+    }
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "listingTitle": "Studio avec mezzanine d'environ 32 m² - Saint-Étienne",
+  "city": "Saint-Étienne",
+  "district": null,
+  "propertyType": "studio",
+  "livingAreaSqm": 32,
+  "roomCount": null,
+  "floorNumber": null,
+  "hasElevator": null,
+  "lotCount": null,
+  "askingPrice": 24000,
+  "agencyFeesIncluded": null,
+  "occupancyStatus": "vacant",
+  "currentMonthlyRent": null,
+  "rentIncludesCharges": null,
+  "leaseEndDate": null,
+  "annualCondoFees": null,
+  "annualPropertyTax": null,
+  "energyClass": null,
+  "overallCondition": "renovation",
+  "worksItems": [
+    {
+      "category": "windows",
+      "quantity": null,
+      "unit": null,
+      "note": null,
+      "excerpt": "fenêtres à changer",
+      "source": "listing"
+    },
+    {
+      "category": "painting",
+      "quantity": null,
+      "unit": null,
+      "note": null,
+      "excerpt": "peinture à refaire entièrement",
+      "source": "listing"
+    },
+    {
+      "category": "flooring",
+      "quantity": null,
+      "unit": null,
+      "note": null,
+      "excerpt": "parquet à poncer et à vitrifier",
+      "source": "listing"
+    },
+    {
+      "category": "bathroom",
+      "quantity": null,
+      "unit": null,
+      "note": null,
+      "excerpt": "salle de bains à rénover entièrement",
+      "source": "listing"
+    }
+  ],
+  "riskFlags": [
+    "Surface approximative (environ 32 m²)",
+    "Moisissure signalée"
+  ],
+  "sourceExcerpts": [
+    {
+      "field": "city",
+      "excerpt": "Saint-Étienne",
+      "source": "listing"
+    },
+    {
+      "field": "propertyType",
+      "excerpt": "Studio",
+      "source": "listing"
+    },
+    {
+      "field": "livingAreaSqm",
+      "excerpt": "environ 32 m²",
+      "source": "listing"
+    },
+    {
+      "field": "askingPrice",
+      "excerpt": "24 000 €",
+      "source": "listing"
+    },
+    {
+      "field": "occupancyStatus",
+      "excerpt": "Libre de toute occupation",
+      "source": "listing"
+    },
+    {
+      "field": "overallCondition",
+      "excerpt": "L'appartement est dans un sale état",
+      "source": "listing"
+    }
+  ]
+}

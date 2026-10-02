@@ -1,0 +1,20 @@
+# Secrets
+.env
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+
+# Web
+node_modules/
+.next/
+.vercel/
+
+# Raw listings before anonymization: never committed
+eval/raw/
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,50 @@
+# Works price grid — FORMAT EXAMPLE, status "illustrative".
+#
+# Rules enforced by the loader:
+#   - every non-null price must carry a source;
+#   - every category / condition / property type must be present;
+#   - a null price means "unknown": the work item stays unpriced and the study is flagged incomplete.
+#
+# Only two values below come from a public source (a single case of the company website).
+# They are data points, not tariffs. Replace this file with the company's own grid.
+
+gridVersion: 1
+status: illustrative
+currency: EUR
+
+itemPrices:
+  windows:      {unit: unit,     value: null, source: null}
+  painting:     {unit: sqm,      value: null, source: null}
+  flooring:     {unit: sqm,      value: null, source: null}
+  bathroom:     {unit: lumpSum,  value: null, source: null}
+  kitchen:      {unit: lumpSum,  value: null, source: null}
+  electricity:  {unit: lumpSum,  value: null, source: null}
+  plumbing:     {unit: lumpSum,  value: null, source: null}
+  heating:      {unit: lumpSum,  value: null, source: null}
+  insulation:   {unit: sqm,      value: null, source: null}
+  partitions:   {unit: sqm,      value: null, source: null}
+  roofing:      {unit: sqm,      value: null, source: null}
+  facade:       {unit: sqm,      value: null, source: null}
+  entranceDoor: {unit: unit,     value: null, source: null}
+  other:        {unit: lumpSum,  value: null, source: null}
+
+# Used when the text gives an overall condition but no itemised works.
+# 656.25 = 21000 EUR / 32 sqm (complete renovation of a studio in Saint-Etienne).
+# Mapping this case to "renovation" rather than "heavyRenovation" is an assumption.
+fallbackPerSqmByCondition:
+  good:            {value: null,   source: null}
+  refresh:         {value: null,   source: null}
+  renovation:      {value: 656.25, source: "https://monthimmo.fr/realisations/studio-meuble-mezzanine-32m/ (single case, 21000 EUR for 32 sqm)"}
+  heavyRenovation: {value: null,   source: null}
+
+furnitureBudgetByPropertyType:
+  studio:     {value: 4000, source: "https://monthimmo.fr/realisations/studio-meuble-mezzanine-32m/ (single case)"}
+  apartment:  {value: null, source: null}
+  house:      {value: null, source: null}
+  building:   {value: null, source: null}
+  office:     {value: null, source: null}
+  commercial: {value: null, source: null}
+  other:      {value: null, source: null}
+
+# Rough order of magnitude given by the company FAQ: 10000 EUR of works is about one month of site work.
+worksDurationMonthsPer10kEur: {value: 1.0, source: "https://monthimmo.fr/faq/ (order of magnitude)"}

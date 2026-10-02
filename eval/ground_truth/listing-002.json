@@ -1,0 +1,136 @@
+{
+  "listingTitle": null,
+  "city": "Saint-Étienne",
+  "district": "Jacquard",
+  "propertyType": "studio",
+  "livingAreaSqm": 30,
+  "roomCount": 1,
+  "floorNumber": 3,
+  "hasElevator": false,
+  "lotCount": null,
+  "askingPrice": 28000,
+  "agencyFeesIncluded": null,
+  "occupancyStatus": "vacant",
+  "currentMonthlyRent": null,
+  "rentIncludesCharges": null,
+  "leaseEndDate": null,
+  "annualCondoFees": 400,
+  "annualPropertyTax": null,
+  "energyClass": null,
+  "overallCondition": "renovation",
+  "worksItems": [
+    {
+      "category": "windows",
+      "quantity": 3,
+      "unit": "unit",
+      "note": null,
+      "excerpt": "Fenêtres bois simple vitrage à changer, il y en a trois",
+      "source": "visitNotes"
+    },
+    {
+      "category": "flooring",
+      "quantity": 25,
+      "unit": "sqm",
+      "note": null,
+      "excerpt": "parquet dessous à poncer et vitrifier, environ 25 m²",
+      "source": "visitNotes"
+    },
+    {
+      "category": "bathroom",
+      "quantity": null,
+      "unit": null,
+      "note": null,
+      "excerpt": "Salle de bain à refaire en entier",
+      "source": "visitNotes"
+    },
+    {
+      "category": "painting",
+      "quantity": null,
+      "unit": null,
+      "note": null,
+      "excerpt": "Peinture partout",
+      "source": "visitNotes"
+    },
+    {
+      "category": "electricity",
+      "quantity": null,
+      "unit": null,
+      "note": null,
+      "excerpt": "Électricité pas aux normes, tableau à refaire",
+      "source": "visitNotes"
+    },
+    {
+      "category": "kitchen",
+      "quantity": null,
+      "unit": null,
+      "note": null,
+      "excerpt": "Cuisine : juste un évier, il faut tout créer",
+      "source": "visitNotes"
+    }
+  ],
+  "riskFlags": [
+    "Surface approximative (environ 30 m²)",
+    "Charges de copropriété à confirmer",
+    "Prix 'net vendeur' ambigu sur les honoraires",
+    "Électricité non conforme",
+    "Humidité dans l'angle de la chambre",
+    "DPE inconnu"
+  ],
+  "sourceExcerpts": [
+    {
+      "field": "city",
+      "excerpt": "Saint-Etienne",
+      "source": "listing"
+    },
+    {
+      "field": "district",
+      "excerpt": "Jacquard",
+      "source": "listing"
+    },
+    {
+      "field": "propertyType",
+      "excerpt": "Studio",
+      "source": "listing"
+    },
+    {
+      "field": "livingAreaSqm",
+      "excerpt": "environ 30 m²",
+      "source": "listing"
+    },
+    {
+      "field": "roomCount",
+      "excerpt": "Studio",
+      "source": "listing"
+    },
+    {
+      "field": "floorNumber",
+      "excerpt": "3e étage",
+      "source": "listing"
+    },
+    {
+      "field": "hasElevator",
+      "excerpt": "pas d'ascenseur",
+      "source": "listing"
+    },
+    {
+      "field": "askingPrice",
+      "excerpt": "28k net vendeur",
+      "source": "listing"
+    },
+    {
+      "field": "occupancyStatus",
+      "excerpt": "Pas de loc en cours, c'est vide",
+      "source": "listing"
+    },
+    {
+      "field": "annualCondoFees",
+      "excerpt": "Copro 400 balles/an je crois",
+      "source": "listing"
+    },
+    {
+      "field": "overallCondition",
+      "excerpt": "Bien dans un sale état, tout est à reprendre",
+      "source": "visitNotes"
+    }
+  ]
+}

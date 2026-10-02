@@ -1,0 +1,48 @@
+name: ai-deal-analyzer
+
+services:
+  api:
+    build: ./api
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      SCHEMA_OUTPUT_DIR: /schemas
+      EVAL_DIR: /eval
+      PRICING_DIR: /pricing
+    volumes:
+      - ./api:/app
+      - ./schemas:/schemas
+      - ./eval:/eval:ro
+      - ./pricing:/pricing:ro
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+  n8n:
+    image: docker.n8n.io/n8nio/n8n:${N8N_VERSION:?Set N8N_VERSION in .env}
+    ports:
+      - "127.0.0.1:5678:5678"
+    environment:
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY:?Set N8N_ENCRYPTION_KEY in .env}
+      N8N_HOST: localhost
+      N8N_PORT: "5678"
+      N8N_PROTOCOL: http
+      WEBHOOK_URL: http://localhost:5678/
+      GENERIC_TIMEZONE: Europe/Paris
+      TZ: Europe/Paris
+      N8N_DIAGNOSTICS_ENABLED: "false"
+    volumes:
+      - n8n_data:/home/node/.n8n
+      - ./n8n/workflows:/workflows
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  n8n_data:
