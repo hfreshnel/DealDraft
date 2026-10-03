@@ -1,5 +1,6 @@
 import logging
 
+from app.localization import CONDITION_LABELS, FIELD_LABELS, formatNumber
 from app.pricing import WorksPriceGrid
 from app.schemas import (
     CRITICAL_FIELDS,
@@ -78,8 +79,8 @@ def computeWorks(
         perSqm = grid.fallbackPerSqmByCondition[condition].value
         if perSqm is not None:
             warnings.append(
-                f"Travaux estimés au m² d'après l'état général ({condition.value}, {perSqm:g} €/m²), "
-                "pas poste par poste."
+                f"Travaux estimés au m² d'après l'état général ({CONDITION_LABELS[condition.value].lower()}, "
+                f"{formatNumber(perSqm, 2)} €/m²), pas poste par poste."
             )
             return perSqm * area, WorksPricingMode.PER_SQM_FALLBACK, unpriced
     warnings.append("Travaux non chiffrés : aucun prix de grille applicable (postes ou état général).")
@@ -146,7 +147,8 @@ def flagPricePerSqm(label: str, amount: float | None, area: float | None, warnin
     perSqm = amount / area
     if not PRICE_PER_SQM_MIN <= perSqm <= PRICE_PER_SQM_MAX:
         warnings.append(
-            f"{label} de {perSqm:,.0f} €/m² hors de la plage attendue ({PRICE_PER_SQM_MIN} à {PRICE_PER_SQM_MAX} €/m²) : "
+            f"{label} de {formatNumber(perSqm)} €/m² hors de la plage attendue "
+            f"({formatNumber(PRICE_PER_SQM_MIN)} à {formatNumber(PRICE_PER_SQM_MAX)} €/m²) : "
             "vérifier les données."
         )
 
@@ -159,13 +161,15 @@ def analyze(request: AnalysisRequest, grid: WorksPriceGrid) -> AnalysisResult:
     missingCritical: list[ExtractedField] = [
         field for field in CRITICAL_FIELDS if getattr(extraction, field.value) is None
     ]
-    missingImportant = [field.value for field in IMPORTANT_FIELDS if getattr(extraction, field.value) is None]
+    missingImportant = [
+        FIELD_LABELS[field.value] for field in IMPORTANT_FIELDS if getattr(extraction, field.value) is None
+    ]
     if missingImportant:
         warnings.append("Informations non trouvées dans les textes : " + ", ".join(missingImportant) + ".")
     if extraction.occupancyStatus is OccupancyStatus.RENTED:
         for field in ("currentMonthlyRent", "rentIncludesCharges"):
             if getattr(extraction, field) is None:
-                warnings.append(f"Bien loué : {field} non trouvé dans les textes.")
+                warnings.append(f"Bien loué : « {FIELD_LABELS[field]} » non trouvé dans les textes.")
 
     purchasePrice = extraction.askingPrice
     notaryFees = purchasePrice * assumptions.notaryFeeRate if purchasePrice is not None else None

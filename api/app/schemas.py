@@ -1,3 +1,4 @@
+from datetime import datetime
 from enum import Enum
 from typing import Annotated
 
@@ -6,6 +7,7 @@ from pydantic import BaseModel, ConfigDict, Field, model_validator
 PositiveFloat = Annotated[float, Field(gt=0)]
 NonNegativeFloat = Annotated[float, Field(ge=0)]
 PositiveInt = Annotated[int, Field(gt=0)]
+NonNegativeInt = Annotated[int, Field(ge=0)]
 Rate = Annotated[float, Field(ge=0, le=1)]
 FloorNumber = Annotated[int, Field(ge=-1, le=60)]
 
@@ -314,6 +316,37 @@ class AnalysisResult(BaseModel):
     unpricedWorkItems: list[WorkCategory]
     missingCriticalFields: list[ExtractedField]
     warnings: list[str]
+
+
+class ReportMeta(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    studyId: str = Field(min_length=1, max_length=64)
+    createdAt: datetime
+    revision: PositiveInt
+    revisionNote: str | None = Field(max_length=500)
+    model: str | None
+    schemaVersion: str | None
+    promptVersion: str | None
+    attempts: PositiveInt | None
+    promptTokens: NonNegativeInt | None
+    completionTokens: NonNegativeInt | None
+
+
+class ReportRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    extraction: ListingExtraction
+    assumptions: AnalysisAssumptions
+    meta: ReportMeta
+
+
+class ReportResponse(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    title: str
+    html: str
+    analysis: AnalysisResult
 
 
 class HealthResponse(BaseModel):

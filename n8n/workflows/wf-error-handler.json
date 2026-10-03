@@ -1,0 +1,97 @@
+{
+  "id": "wfErrorHandler01",
+  "name": "wf-error-handler",
+  "active": true,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "c3000000-0000-4000-8000-000000000049",
+      "name": "Error trigger",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.first().json;\nconst execution = data.execution || {};\nconst workflow = data.workflow || {};\nconst error = execution.error || data.trigger?.error || {};\nconst message = [error.message || 'Unknown error', execution.lastNodeExecuted ? 'at node ' + execution.lastNodeExecuted : '', execution.url || '']\n    .filter(Boolean)\n    .join(' · ');\nconsole.error(JSON.stringify({ event: 'workflowError', workflow: workflow.name, executionId: execution.id, message }));\nreturn [{\n    json: {\n        loggedAt: $now.toFormat('yyyy-MM-dd HH:mm:ss'),\n        executionId: execution.id || '',\n        workflow: workflow.name || '',\n        studyId: '',\n        outcome: 'workflowError',\n        stage: execution.lastNodeExecuted || '',\n        attempts: '',\n        model: '',\n        promptTokens: '',\n        completionTokens: '',\n        schemaVersion: '',\n        promptVersion: '',\n        message: message.slice(0, 500),\n    },\n}];"
+      },
+      "id": "c3000000-0000-4000-8000-000000000050",
+      "name": "Build journal entry",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "__CONFIG_googleSpreadsheetId__",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Journal",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {
+          "cellFormat": "RAW",
+          "useAppend": true
+        }
+      },
+      "id": "c3000000-0000-4000-8000-000000000051",
+      "name": "Append journal",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        440,
+        0
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "QhA83KpdlXvciZPk",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Error trigger": {
+      "main": [
+        [
+          {
+            "node": "Build journal entry",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build journal entry": {
+      "main": [
+        [
+          {
+            "node": "Append journal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

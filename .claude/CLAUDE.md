@@ -52,11 +52,15 @@ Projet de démonstration pour une candidature en alternance « AI Builder » che
 ```
 Texte + notes de visite + loyer estimé
   → n8n → OpenAI (extraction, schéma strict imposé)
-        → FastAPI /analyze (validation, chiffrage par grille, budget, rendements)
-        → Google Docs (fiche) + Sheets (suivi) → validation humaine → brouillon Gmail
+        → FastAPI /validate-extraction (échec → jusqu'à 2 nouvelles tentatives avec les erreurs)
+        → FastAPI /report (analyse + fiche HTML) → Drive (HTML converti en Google Doc)
+        → Sheets « Suivi » (À valider) + « Journal »
+        → formulaire de validation : Valider (brouillon Gmail, jamais d'envoi) · Corriger les hypothèses (loyer, notaire :
+          fiche recalculée depuis `extractionJson` sans LLM, même lien, révision n+1) · Rejeter
 ```
 
-Workflows prévus : `wf-ingest-listing`, `wf-approve-and-draft`, `wf-error-handler`.
+Workflows : `wf-setup-google` (crée le dossier Drive et le Sheet, manuel), `wf-ingest-listing`, `wf-approve-and-draft`, `wf-error-handler` (doit être **publié** dans n8n 2.x pour se déclencher).
+Les identifiants Google sont des jetons `__CONFIG_x__` dans les workflows, remplacés à l'import par `n8n/render-workflows.mjs` depuis `n8n/config.local.json` (ignoré par git). Compte Google : fresh.kushimaru@gmail.com (consentement OAuth en mode test, jeton à reconnecter tous les 7 jours environ).
 Ports exposés sur `127.0.0.1` uniquement (API 8000, n8n 5678).
 
 ---
@@ -76,13 +80,15 @@ Ports exposés sur `127.0.0.1` uniquement (API 8000, n8n 5678).
 ## 6. Structure du dépôt
 
 ```
-api/app/        main.py · schemas.py · tool_schema.py · extraction_prompt.py · excerpt_check.py · pricing.py · finance.py
+api/app/        main.py · schemas.py · tool_schema.py · extraction_prompt.py · excerpt_check.py · pricing.py · finance.py · report.py
+                localization.py (libellés FR, format des nombres) · templates/report.html.j2
 api/scripts/    export_schema.py
 api/tests/      test_schemas.py · test_pricing.py
 pricing/        works-grid.example.yaml
 schemas/        schéma d'outil généré (jamais édité à la main)
 eval/           dataset/ · ground_truth/ · manifest.csv · README.md      (run_eval.py : à créer, jour 5)
-n8n/workflows/  workflows exportés (vide)
+n8n/            build-workflows.mjs (source des JSON : modifier ici, pas dans l'éditeur n8n) · workflows/ (4 JSON générés, jetons __CONFIG_x__)
+                render-workflows.mjs · config.example.json · config.local.json (ignoré)
 docs/           cahier-des-charges.md · decision-log.md · report-template.md
 ```
 
@@ -98,9 +104,16 @@ docker compose build api
 docker compose run --rm api pytest                     # 86 tests attendus verts
 docker compose run --rm api python scripts/export_schema.py
 docker compose up -d                                   # API :8000 · n8n :5678
+
+# Workflows (n8n monte ./n8n sur /n8n-repo) ; première installation : config.local.json copié de config.example.json,
+# importer puis exécuter wf-setup-google, reporter les deux identifiants dans config.local.json, réimporter.
+node n8n/build-workflows.mjs                           # régénère les JSON après une modification du générateur
+docker compose exec n8n sh -c "node /n8n-repo/render-workflows.mjs && n8n import:workflow --separate --input=/n8n-repo/.rendered"
+docker compose exec n8n sh -c "for id in wfIngestListing01 wfApproveDraft01 wfErrorHandler01; do n8n publish:workflow --id=\$id; done"
+docker compose restart n8n                             # l'import dépublie : republier puis redémarrer
 ```
 
-Points d'accès : `GET /health`, `GET /extraction-tool` (schéma, prompt, versions), `POST /validate-extraction`, `POST /analyze`. Les erreurs de validation renvoient un 422 structuré (`error`, `details[]`) que n8n réinjecte dans le prompt correctif.
+Points d'accès : `GET /health`, `GET /extraction-tool` (schéma, prompt, versions), `POST /validate-extraction`, `POST /analyze`, `POST /report` (analyse + fiche HTML). Les erreurs de validation renvoient un 422 structuré (`error`, `details[]`) que n8n réinjecte dans le prompt correctif.
 
 ---
 
@@ -111,8 +124,8 @@ Points d'accès : `GET /health`, `GET /extraction-tool` (schéma, prompt, versio
 | J1 | Docker, schéma v2, grille de prix, gabarit de fiche, 4 cas annotés, 57 tests | **Fait** (code) |
 | J1 (reste) | `.env`, clé OpenAI, client OAuth Google, annotation de 16 cas | **À faire par l'utilisateur** |
 | J2 | Prompt système (`extraction_prompt.py`), `POST /validate-extraction`, `wf-ingest-listing` (formulaire n8n → OpenAI `gpt-4o` → validation) | **Fait** : 4 cas sur 4 valides ; écarts et instabilité à traiter au J5 |
-| J3 | `finance.py`, chargement de la grille, `/analyze`, branché dans `wf-ingest-listing` | **Fait** : recoupement 13,50 % vérifié ; modèle Google Docs reporté au J4 (client OAuth Google non créé) |
-| J4 | `wf-approve-and-draft`, `wf-error-handler`, nouvelle tentative, journal | |
+| J3 | `finance.py`, chargement de la grille, `/analyze`, branché dans `wf-ingest-listing` | **Fait** : recoupement 13,50 % vérifié |
+| J4 | Fiche Google Doc (`/report`), Suivi et Journal Sheets, `wf-approve-and-draft`, `wf-error-handler`, nouvelle tentative | **Fait et testé le 3 oct.** : fiche, ligne Suivi, brouillon Gmail, refus d'une double validation, erreur provoquée journalisée, 3 tentatives puis arrêt, correction des hypothèses (fiche remplacée au même lien), refus sans loyer, avertissements en français. Piège n8n : un champ numérique vide arrive à `0` (champs optionnels en texte) |
 | J5 | `run_eval.py`, itérations, comparaison `gpt-4o-mini`/`gpt-4o`, `eval/report.md` | |
 | J6 | Page Next.js, démo rejouée, déploiement Vercel, vidéo | |
 | J7 | README, guide, note stratégique, envoi de la candidature | |

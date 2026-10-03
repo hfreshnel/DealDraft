@@ -1,0 +1,206 @@
+{
+  "id": "wfSetupGoogle01",
+  "name": "wf-setup-google",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "a1000000-0000-4000-8000-000000000001",
+      "name": "Start",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.googleapis.com/drive/v3/files",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleDocsOAuth2Api",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "fields",
+              "value": "id,webViewLink"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\"name\":\"AI Deal Analyzer\",\"mimeType\":\"application/vnd.google-apps.folder\"}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "a1000000-0000-4000-8000-000000000002",
+      "name": "Create Drive folder",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        240,
+        0
+      ],
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "rg8JVXA1FJMGCjSk",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.googleapis.com/drive/v3/files",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleDocsOAuth2Api",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "fields",
+              "value": "id,webViewLink"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ name: 'AI Deal Analyzer · suivi des études', mimeType: 'application/vnd.google-apps.spreadsheet', parents: [$json.id] }) }}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "a1000000-0000-4000-8000-000000000003",
+      "name": "Create spreadsheet",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        480,
+        0
+      ],
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "rg8JVXA1FJMGCjSk",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const STUDY_COLUMNS = [\"studyId\",\"createdAt\",\"status\",\"listingTitle\",\"city\",\"propertyType\",\"livingAreaSqm\",\"askingPrice\",\"worksCost\",\"worksPricingMode\",\"furnitureCost\",\"notaryFees\",\"totalBudget\",\"expectedMonthlyRent\",\"grossYieldOnAcquisitionAndWorks\",\"grossYieldOnTotalBudget\",\"analysisStatus\",\"warningCount\",\"docUrl\",\"approvalUrl\",\"decidedAt\",\"reviewerNote\",\"draftId\",\"model\",\"attempts\",\"schemaVersion\",\"promptVersion\",\"executionId\",\"revision\",\"notaryFeeRatePercent\",\"promptTokens\",\"completionTokens\",\"extractionJson\"];\nconst JOURNAL_COLUMNS = [\"loggedAt\",\"executionId\",\"workflow\",\"studyId\",\"outcome\",\"stage\",\"attempts\",\"model\",\"promptTokens\",\"completionTokens\",\"schemaVersion\",\"promptVersion\",\"message\"];\nconst MONEY_COLUMNS = ['askingPrice', 'worksCost', 'furnitureCost', 'notaryFees', 'totalBudget', 'expectedMonthlyRent'];\nconst PERCENT_COLUMNS = ['grossYieldOnAcquisitionAndWorks', 'grossYieldOnTotalBudget'];\nconst STUDY_SHEET_ID = 0;\nconst JOURNAL_SHEET_ID = 1;\nconst headerRow = (columns) => ({\n    values: columns.map((column) => ({ userEnteredValue: { stringValue: column }, userEnteredFormat: { textFormat: { bold: true } } })),\n});\nconst columnFormat = (column, numberFormat) => {\n    const index = STUDY_COLUMNS.indexOf(column);\n    return {\n        repeatCell: {\n            range: { sheetId: STUDY_SHEET_ID, startRowIndex: 1, startColumnIndex: index, endColumnIndex: index + 1 },\n            cell: { userEnteredFormat: { numberFormat } },\n            fields: 'userEnteredFormat.numberFormat',\n        },\n    };\n};\nconst requests = [\n    { updateSpreadsheetProperties: { properties: { locale: 'fr_FR', timeZone: 'Europe/Paris' }, fields: 'locale,timeZone' } },\n    {\n        updateSheetProperties: {\n            properties: { sheetId: STUDY_SHEET_ID, title: 'Suivi', gridProperties: { frozenRowCount: 1, frozenColumnCount: 1, columnCount: STUDY_COLUMNS.length } },\n            fields: 'title,gridProperties.frozenRowCount,gridProperties.frozenColumnCount,gridProperties.columnCount',\n        },\n    },\n    { addSheet: { properties: { sheetId: JOURNAL_SHEET_ID, title: 'Journal', gridProperties: { frozenRowCount: 1, columnCount: JOURNAL_COLUMNS.length } } } },\n    { updateCells: { start: { sheetId: STUDY_SHEET_ID, rowIndex: 0, columnIndex: 0 }, rows: [headerRow(STUDY_COLUMNS)], fields: 'userEnteredValue,userEnteredFormat.textFormat.bold' } },\n    { updateCells: { start: { sheetId: JOURNAL_SHEET_ID, rowIndex: 0, columnIndex: 0 }, rows: [headerRow(JOURNAL_COLUMNS)], fields: 'userEnteredValue,userEnteredFormat.textFormat.bold' } },\n    ...MONEY_COLUMNS.map((column) => columnFormat(column, { type: 'CURRENCY', pattern: '#,##0 \"€\"' })),\n    ...PERCENT_COLUMNS.map((column) => columnFormat(column, { type: 'PERCENT', pattern: '0.00%' })),\n];\nreturn [{ json: { spreadsheetId: $input.first().json.id, batchUpdate: { requests } } }];"
+      },
+      "id": "a1000000-0000-4000-8000-000000000004",
+      "name": "Build sheet layout",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ 'https://sheets.googleapis.com/v4/spreadsheets/' + $json.spreadsheetId + ':batchUpdate' }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleSheetsOAuth2Api",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.batchUpdate) }}",
+        "options": {
+          "timeout": 30000
+        }
+      },
+      "id": "a1000000-0000-4000-8000-000000000005",
+      "name": "Format spreadsheet",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        960,
+        0
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "QhA83KpdlXvciZPk",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const folder = $('Create Drive folder').first().json;\nconst spreadsheet = $('Create spreadsheet').first().json;\nconst result = {\n    googleDriveFolderId: folder.id,\n    googleSpreadsheetId: spreadsheet.id,\n    folderUrl: folder.webViewLink,\n    spreadsheetUrl: spreadsheet.webViewLink,\n    nextStep: 'Copy googleDriveFolderId and googleSpreadsheetId into n8n/config.local.json, then re-import the workflows.',\n};\nconsole.log(JSON.stringify({ event: 'googleSetupDone', ...result }));\nreturn [{ json: result }];"
+      },
+      "id": "a1000000-0000-4000-8000-000000000006",
+      "name": "Setup result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Create Drive folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Drive folder": {
+      "main": [
+        [
+          {
+            "node": "Create spreadsheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create spreadsheet": {
+      "main": [
+        [
+          {
+            "node": "Build sheet layout",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build sheet layout": {
+      "main": [
+        [
+          {
+            "node": "Format spreadsheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format spreadsheet": {
+      "main": [
+        [
+          {
+            "node": "Setup result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

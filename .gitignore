@@ -19,6 +19,10 @@ node_modules/
 # Raw listings before anonymization: never committed
 eval/raw/
 
+# n8n: account-specific ids and workflows rendered with them
+n8n/config.local.json
+n8n/.rendered/
+
 # OS
 .DS_Store
 Thumbs.db

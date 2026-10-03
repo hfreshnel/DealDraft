@@ -2,7 +2,7 @@
 
 > Ce gabarit reprend les rubriques de la fiche projet publiée par Month'immo (type, budget, prix d'achat, coût des travaux, coût de l'ameublement, loyer, rendement, apport).
 > Les champs `{{…}}` correspondent à la réponse de l'endpoint `/analyze` (`AnalysisResult`) et à l'extraction (`ListingExtraction`).
-> Le gabarit Google Docs utilisé par n8n est construit à partir de ce fichier.
+> Le gabarit effectivement utilisé est `api/app/templates/report.html.j2`, rendu par `POST /report` puis converti en Google Doc. Il reprend ces rubriques avec trois écarts (voir `decision-log.md`, jour 4) : une synthèse en tête, un tableau « Le bien » avec l'extrait source de chaque valeur, et le nombre de jetons à la place du coût en euros.
 
 ---
 

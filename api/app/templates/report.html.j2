@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>{{ title }}</title>
+</head>
+<body style="font-family: Arial, sans-serif; font-size: 10pt; color: #202124;">
+
+<p style="background-color: #fde7b0; padding: 6pt;"><b>BROUILLON À VALIDER PAR LE CHASSEUR.</b> Aucun envoi sans validation humaine.{% if isIllustrativeGrid %} Grille de prix au statut « {{ pricingGridStatus }} » : les montants de travaux et d'ameublement sont des valeurs d'exemple, pas un barème.{% endif %}</p>
+
+<h1 style="font-size: 18pt;">Étude de rendement</h1>
+<p>{% if listingTitle %}<b>{{ listingTitle }}</b><br>{% endif %}Référence {{ studyId }} · révision n° {{ revision }} · générée le {{ createdAt }} · statut : <b>{{ statusLabel }}</b></p>
+{% if revisionNote %}
+<p style="background-color: #e8f0fe; padding: 6pt;"><b>Hypothèses corrigées par le chasseur :</b> {{ revisionNote }}. L'extraction des textes n'a pas été relancée.</p>
+{% endif %}
+
+<h2 style="font-size: 13pt;">Synthèse</h2>
+<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse; width: 100%;">
+{% for item in summary %}
+<tr><td style="width: 60%;">{{ item.label }}</td><td><b>{{ item.value }}</b></td></tr>
+{% endfor %}
+</table>
+
+<h2 style="font-size: 13pt;">1. Le bien</h2>
+<p style="color: #5f6368;">Chaque valeur provient d'un passage cité mot pour mot. « non trouvé » signifie que l'information n'est pas écrite dans les textes : elle n'a pas été devinée.</p>
+<table border="1" cellpadding="4" cellspacing="0" style="border-collapse: collapse; width: 100%;">
+<tr style="background-color: #f1f3f4;"><th>Donnée</th><th>Valeur</th><th>Extrait source</th></tr>
+{% for row in propertyRows %}
+<tr>
+<td>{{ row.label }}</td>
+<td>{% if row.found %}{{ row.value }}{% else %}<i style="color: #b3261e;">{{ row.value }}</i>{% endif %}</td>
+<td>{% for excerpt in row.excerpts %}« {{ excerpt.text }} » <i style="color: #5f6368;">({{ excerpt.source }})</i>{% if not loop.last %}<br>{% endif %}{% endfor %}</td>
+</tr>
+{% endfor %}
+</table>
+
+<h2 style="font-size: 13pt;">2. Budget clé en main</h2>
+<table border="1" cellpadding="4" cellspacing="0" style="border-collapse: collapse; width: 100%;">
+{% for row in budgetRows %}
+<tr><td style="width: 60%;">{{ row.label }}</td><td>{{ row.value }}</td></tr>
+{% endfor %}
+<tr style="background-color: #f1f3f4;"><td><b>Sous-total achat, notaire, travaux, ameublement</b></td><td><b>{{ acquisitionAndWorksBase }}</b></td></tr>
+<tr><td>Autres frais (honoraires, divers)</td><td>{{ otherCosts }}</td></tr>
+<tr style="background-color: #f1f3f4;"><td><b>Budget total</b></td><td><b>{{ totalBudget }}</b></td></tr>
+</table>
+<p>{{ worksModeSentence }}{% if worksDuration %} Durée de chantier estimée : environ {{ worksDuration }} mois (ordre de grandeur).{% endif %}</p>
+
+<h2 style="font-size: 13pt;">3. Rendement</h2>
+<table border="1" cellpadding="4" cellspacing="0" style="border-collapse: collapse; width: 100%;">
+<tr><td style="width: 60%;">Loyer mensuel estimé après travaux (saisi par le chasseur)</td><td>{{ expectedMonthlyRent }}</td></tr>
+<tr><td>Loyer annuel</td><td>{{ annualRent }}</td></tr>
+<tr><td>Rendement brut sur achat, notaire, travaux, ameublement</td><td><b>{{ yieldOnAcquisitionAndWorks }}</b></td></tr>
+<tr><td>Rendement brut sur budget total</td><td><b>{{ yieldOnTotalBudget }}</b></td></tr>
+</table>
+<p style="color: #5f6368;">Deux bases sont affichées car la définition du rendement retenue n'est pas confirmée. Rendement mis en avant dans la synthèse : loyer annuel / {{ primaryYieldBase }}.{% if isRentedOrMixed %} Le bien est vendu occupé : le rendement utilise le loyer estimé après travaux, pas le loyer en place.{% endif %}</p>
+
+<h2 style="font-size: 13pt;">4. Financement</h2>
+{% if financingRows %}
+<table border="1" cellpadding="4" cellspacing="0" style="border-collapse: collapse; width: 100%;">
+{% for row in financingRows %}
+<tr><td style="width: 60%;">{{ row.label }}</td><td>{{ row.value }}</td></tr>
+{% endfor %}
+</table>
+{% else %}
+<p>Non calculé : taux de crédit et d'assurance emprunteur non renseignés.</p>
+{% endif %}
+
+<h2 style="font-size: 13pt;">5. Travaux repérés</h2>
+{% if workRows %}
+<table border="1" cellpadding="4" cellspacing="0" style="border-collapse: collapse; width: 100%;">
+<tr style="background-color: #f1f3f4;"><th>Poste</th><th>Quantité</th><th>Chiffré</th><th>Extrait source</th></tr>
+{% for row in workRows %}
+<tr><td>{{ row.label }}</td><td>{{ row.quantity }}</td><td>{{ row.priced }}</td><td>« {{ row.excerpt }} » <i style="color: #5f6368;">({{ row.source }})</i></td></tr>
+{% endfor %}
+</table>
+{% if unpricedWorks %}
+<p>Postes non chiffrés (prix absent de la grille ou quantité non écrite) : {{ unpricedWorks | join(", ") }}.</p>
+{% endif %}
+{% else %}
+<p>Aucun poste de travaux mentionné dans les textes.</p>
+{% endif %}
+
+<h2 style="font-size: 13pt;">6. Points de vigilance</h2>
+<p><b>Relevés dans les textes</b></p>
+{% if riskFlags %}
+<ul>
+{% for flag in riskFlags %}
+<li>{{ flag }}</li>
+{% endfor %}
+</ul>
+{% else %}
+<p>Aucun.</p>
+{% endif %}
+<p><b>Contrôles automatiques</b></p>
+{% if warnings %}
+<ul>
+{% for warning in warnings %}
+<li>{{ warning }}</li>
+{% endfor %}
+</ul>
+{% else %}
+<p>Aucun.</p>
+{% endif %}
+
+<h2 style="font-size: 13pt;">7. Données critiques manquantes</h2>
+{% if missingCriticalFields %}
+<p style="color: #b3261e;">{{ missingCriticalFields | join(", ") }} : à obtenir auprès de l'agent avant de valider.</p>
+{% else %}
+<p>Aucune.</p>
+{% endif %}
+
+<h2 style="font-size: 13pt;">8. Hypothèses utilisées</h2>
+<table border="1" cellpadding="4" cellspacing="0" style="border-collapse: collapse; width: 100%;">
+{% for row in assumptionRows %}
+<tr><td style="width: 60%;">{{ row.label }}</td><td>{{ row.value }}</td></tr>
+{% endfor %}
+</table>
+
+<h2 style="font-size: 13pt;">9. Traçabilité</h2>
+<table border="1" cellpadding="4" cellspacing="0" style="border-collapse: collapse; width: 100%;">
+{% for row in traceRows %}
+<tr><td style="width: 60%;">{{ row.label }}</td><td>{{ row.value }}</td></tr>
+{% endfor %}
+</table>
+<p style="color: #5f6368;">Document généré automatiquement à partir de textes fictifs. Projet de démonstration.</p>
+
+</body>
+</html>

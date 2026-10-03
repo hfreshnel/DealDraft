@@ -136,6 +136,49 @@ Ces hypothèses seront listées dans le README sous le titre « Hypothèses sur 
 | Non vérifié | Acceptation du schéma par le mode strict (`anyOf` avec `null`, objets imbriqués) : à tester au premier appel réel. Support de `gpt-4o` en mode strict à confirmer dans la documentation OpenAI |
 | Comparaison J5 | `gpt-4o-mini` contre `gpt-4o` remplace Haiku contre Sonnet |
 
+### Jour 4 : fiche, validation humaine et brouillon (3 octobre 2026)
+
+**Fiche « Étude de rendement »**
+
+| Choix | Alternative écartée | Justification |
+|---|---|---|
+| La fiche est produite en HTML par l'API (`POST /report`, gabarit `api/app/templates/report.html.j2`), puis Google Drive la convertit en Google Doc | Modèle Google Docs copié, puis balises remplacées par n8n | Le gabarit est versionné dans git et testable sans Google. Les tableaux de longueur variable (travaux, extraits) sont impossibles avec un simple remplacement de balises. Aucun modèle à créer à la main dans le Drive. Limite : l'import Google ne garde qu'une partie du style (couleurs, gras, tableaux) |
+| `/report` recalcule l'analyse au lieu de recevoir celle de `/analyze` | Passer le résultat de `/analyze` au rendu | La fiche ne peut pas afficher des chiffres différents de ceux calculés : une seule source |
+| Synthèse en tête (budget, loyer, rendement, nombre de points de vigilance) | Ordre du gabarit publié (prix, travaux, ameublement...) | Le chasseur décide en quelques secondes s'il lit la suite. Le détail suit l'ordre du gabarit publié |
+| Chaque donnée du bien est affichée avec son extrait mot pour mot et sa source (annonce ou notes) | Extraits en annexe | La relecture se fait ligne par ligne, sans revenir au texte d'origine. C'est la preuve visible que le LLM n'a rien inventé (invariants 1 et 2) |
+| Valeur absente affichée « non trouvé », en rouge | Ligne masquée | Un trou doit se voir. Seuls les champs propres aux biens loués ou aux immeubles (lots, loyer en place, bail) sont masqués s'ils sont vides |
+| Bandeau « brouillon à valider » et statut de la grille en haut de page | Mention en pied de page | Invariants 4 et 5 : impossible de prendre la fiche pour un document final |
+| Coût de l'analyse remplacé par le nombre de jetons | Coût en euros (prévu au gabarit) | Le prix des jetons OpenAI n'est pas sourcé ici. Le coût sera calculé au J5 avec le tarif publié |
+| Financement affiché « non calculé » | Section masquée | Les taux de crédit et d'assurance ne sont pas sourcés (aucune valeur par défaut) ; le dire est plus honnête que de masquer |
+
+**Suivi, validation et brouillon**
+
+| Choix | Alternative écartée | Justification |
+|---|---|---|
+| Validation par un formulaire n8n distinct (`wf-approve-and-draft`), ouvert par un lien pré-rempli stocké dans le Suivi | Déclencheur sur changement de statut dans Sheets | Choix de l'utilisateur. Réaction immédiate, sans scrutation périodique, et plus simple à montrer en vidéo |
+| Le formulaire refuse une étude introuvable, déjà traitée ou incomplète | Laisser tout passer | Un seul brouillon par étude (pas de doublon en cas de double clic). Une étude sans prix ou sans surface ne doit pas partir chez un client avec des chiffres partiels. Le rejet reste toujours possible |
+| Brouillon Gmail uniquement, destinataire fictif `investisseur.demo@example.com` | Envoi direct ; vraie adresse | Invariant 5 : le chasseur envoie lui-même. `example.com` est réservé à la documentation (RFC 2606) : aucun risque d'envoi à un tiers (invariant 8) |
+| La fiche n'est pas partagée automatiquement avec le destinataire | Partage automatique par l'API Drive | Le partage d'un document est un geste à conséquence : il reste humain. Le formulaire le rappelle |
+| Écriture dans Sheets en mode `RAW` | `USER_ENTERED` (mode par défaut) | Un titre d'annonce commençant par `=` serait exécuté comme une formule (injection par texte transféré, invariant 7). Les formats € et % sont posés une fois sur les colonnes à la création |
+| En-têtes de colonnes en camelCase, statuts en français (`À valider`, `Brouillon prêt`, `Rejeté`) | Tout en français | Les en-têtes sont un contrat machine (correspondance automatique des colonnes par n8n). Les statuts sont lus par le chasseur |
+| Référence d'étude `ER-AAAAMMJJ-HHmm-xxxx` | Identifiant d'exécution n8n | Lisible, triable par date, indépendante de n8n |
+| Correction du loyer et du taux de notaire : troisième choix « Corriger les hypothèses » dans le formulaire de validation. La fiche est recalculée sans nouvel appel au LLM et remplacée au même lien ; le statut reste « À valider » | (A) Relancer une analyse complète ; (B) champ « loyer corrigé » appliqué au moment de valider | (A) relance l'extraction, qui peut changer d'autres valeurs (instabilité constatée au J2). (B) ferait valider des chiffres que personne n'a relus. Avec C, le chasseur corrige, relit, puis valide, ce qui suit le scénario du cahier des charges. Choix validé par l'utilisateur |
+| L'extraction validée est conservée dans la colonne `extractionJson` du Suivi | Nouvel appel au LLM ; stockage hors Sheets | Recalcul déterministe et sans coût. Taille de 3 à 5 000 caractères, sous la limite de 50 000 par cellule. Si le schéma change entre-temps, `/report` rejette l'extraction (422) et l'erreur part au Journal |
+| La fiche affiche le numéro de révision et un bandeau « Hypothèses corrigées par le chasseur : loyer 520 € → 570 € » | Remplacement silencieux | Le lecteur sait que la fiche a été modifiée, et ce qui a changé |
+| Des valeurs corrigées saisies avec « Valider » ou « Rejeter » sont refusées | Les ignorer | Un champ rempli puis ignoré en silence ferait croire au chasseur que sa correction est prise en compte |
+| La validation est refusée si le loyer n'est pas saisi | Brouillon avec « rendement à préciser » | Le rendement est l'objet du mail ; le formulaire renvoie vers « Corriger les hypothèses » |
+| Champs numériques optionnels des formulaires (loyer, valeurs corrigées) en texte, analysés par le code (vide = `null`, « 1 200,50 » accepté) | Champ numérique n8n | **Constaté en test** : n8n transforme un champ numérique vide en `0`. Un taux de notaire vide devenait 0 % lors d'une révision, et un loyer vide faisait échouer l'analyse (422). Le taux de notaire de l'ingestion reste numérique car obligatoire |
+
+**Robustesse**
+
+| Choix | Alternative écartée | Justification |
+|---|---|---|
+| Nouvelle tentative : au plus 2 corrections (3 appels), uniquement si le validateur rejette la sortie (422 `validationFailed`) | Réessayer toute erreur | Une erreur de service (API arrêtée, quota) ne se corrige pas en relançant le modèle. Le prompt correctif contient la dernière sortie et les erreurs, balisées comme données ; le contexte ne grossit pas d'une tentative à l'autre |
+| Boucle n8n qui lit `$('Nœud').first()` | Faire transiter tout l'état dans chaque nœud | Vérifié par un test : dans une boucle, `$('Nœud')` lit la dernière exécution du nœud |
+| Erreurs prévues (OpenAI, validation) gérées dans le flux et journalisées ; erreurs imprévues (API, Google) font échouer l'exécution, puis `wf-error-handler` les écrit dans le Journal | Tout capturer avec « continuer en cas d'erreur » | Aucun échec silencieux : une erreur imprévue apparaît comme exécution en échec dans n8n et comme ligne `workflowError` dans le Journal. Limites : le gestionnaire ne se déclenche pas sur les exécutions manuelles (comportement de n8n), et ne peut rien journaliser si Sheets est indisponible (il reste les journaux de n8n) |
+| Identifiants Google (Sheet, dossier) hors git : jetons `__CONFIG_x__` dans les workflows, valeurs dans `n8n/config.local.json` (ignoré), script `n8n/render-workflows.mjs` à l'import | Identifiants en dur dans les workflows commités | Le dépôt reste public sans référence au compte Google ; un seul endroit à modifier |
+| Sheet et dossier Drive créés par un workflow (`wf-setup-google`) | Création à la main | Reproductible : colonnes, formats et onglets identiques à chaque installation |
+
 ## 9. Sources
 
 - https://monthimmo.fr/nos-prestations/

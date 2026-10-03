@@ -10,7 +10,15 @@ from app.excerpt_check import findExcerptProblems
 from app.extraction_prompt import EXTRACTION_SYSTEM_PROMPT, computePromptVersion
 from app.finance import analyze
 from app.pricing import loadWorksPriceGrid
-from app.schemas import AnalysisRequest, AnalysisResult, ExtractionCheckRequest, HealthResponse
+from app.report import renderReport
+from app.schemas import (
+    AnalysisRequest,
+    AnalysisResult,
+    ExtractionCheckRequest,
+    HealthResponse,
+    ReportRequest,
+    ReportResponse,
+)
 from app.tool_schema import buildOpenAiResponseFormat, buildToolDefinition, computeSchemaVersion
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s")
@@ -109,4 +117,16 @@ def postAnalyze(request: AnalysisRequest) -> AnalysisResult:
         return analyze(request, PRICING_GRID)
     except Exception:
         logger.exception("Analysis failed")
+        raise
+
+
+@app.post("/report", response_model=ReportResponse, status_code=status.HTTP_200_OK)
+def postReport(request: ReportRequest) -> ReportResponse:
+    # The analysis is recomputed here so the document can never disagree with the figures it shows.
+    try:
+        analysis = analyze(AnalysisRequest(extraction=request.extraction, assumptions=request.assumptions), PRICING_GRID)
+        title, html = renderReport(request, analysis)
+        return ReportResponse(title=title, html=html, analysis=analysis)
+    except Exception:
+        logger.exception("Report failed")
         raise
