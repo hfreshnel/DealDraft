@@ -1,8 +1,8 @@
 id,category,source,notes,annotation
-listing-001,portal,fictional,Clean portal-style listing; vacant flat; partial works list; no overall condition stated,toConfirm
-listing-002,agentMessage,fictional,Informal agent message plus dictated visit notes; approximate and uncertain figures; ambiguous 'net vendeur',toConfirm
-listing-003,trap,fictional,Multi-lot building; mixed occupancy; two rents that must not be added; works as free text,toConfirm
-listing-004,crossCheck,reconstructed from public case,Studio reconstructed from the public case page; used to cross-check the yield formula,toConfirm
+listing-001,portal,fictional,Clean portal-style listing; vacant flat; partial works list; no overall condition stated,claudeDraft
+listing-002,agentMessage,fictional,Informal agent message plus dictated visit notes; approximate and uncertain figures; ambiguous 'net vendeur',claudeDraft
+listing-003,trap,fictional,Multi-lot building; mixed occupancy; two rents that must not be added; works as free text,claudeDraft
+listing-004,crossCheck,reconstructed from public case,Studio reconstructed from the public case page; used to cross-check the yield formula,claudeDraft
 listing-005,portal,fictional,Vendu loué T3; rent CC; lease end month; monthly charges to yearly; explicit good condition,claudeDraft
 listing-006,portal,fictional,House; structural works give heavyRenovation; quantity in sqm; other category with notes; fees on top,claudeDraft
 listing-007,portal,fictional,Ground floor gives 0; explicit refresh condition; monthly charges to yearly; two works in one excerpt,claudeDraft

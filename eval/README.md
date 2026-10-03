@@ -17,7 +17,7 @@
 | `humanReviewed` | Reviewed and corrected by a human, field by field, against the text |
 | `toConfirm` | Origin not recorded |
 
-`listing-005` to `listing-020` were drafted by Claude (option C, chosen for time). This must be stated in `eval/report.md`, and the scores must be read accordingly. To review a case: read the text first, write down your own answer for the debatable fields, then compare with the JSON, fix it, and set the column to `humanReviewed`.
+All 20 cases were drafted by Claude (`listing-001` to `listing-004` on day 1, the others on day 4, option C chosen for time). This must be stated in `eval/report.md`, and the scores must be read accordingly. To review a case: read the text first, write down your own answer for the debatable fields, then compare with the JSON, fix it, and set the column to `humanReviewed`.
 
 ## Target composition (20 listings)
 
@@ -36,6 +36,10 @@
 4. Every non-null field except `listingTitle` has an excerpt copied verbatim from the text, with its source (`listing` or `visitNotes`).
 5. Every work item has its own verbatim excerpt. Quantity and unit only if written in the text.
 6. Annotate **before** looking at any model output.
-7. Anonymize: no exact address, name or phone number. Real listings stay in `eval/raw/` (git-ignored) until anonymized.
+7. A single approximate value is kept ("autour de 50 000" gives 50000, with a risk flag); a range is not a value ("entre 35 000 et 40 000" gives null).
+8. Category conventions: roof framework ("charpente") is `roofing`; shopfront ("devanture") is `facade`; water heater ("ballon d'eau chaude") is `plumbing`; structural floor or wall repairs are `other` with a note.
+9. A whole-property statement reported from the owner or seller ("pas de travaux d'après le proprio") still sets `overallCondition`, with a risk flag saying it is unverified. "Intérieur à rafraîchir" counts as a whole-property statement.
+10. "HT" on a rent is about VAT, not charges: `rentIncludesCharges` stays null.
+11. Anonymize: no exact address, name or phone number. Real listings stay in `eval/raw/` (git-ignored) until anonymized.
 
 The tests check the contract, the verbatim excerpts and the presence of required excerpts on every file.
