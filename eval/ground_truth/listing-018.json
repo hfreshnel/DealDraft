@@ -1,0 +1,139 @@
+{
+  "listingTitle": null,
+  "city": "Saint-Étienne",
+  "district": "Montaud",
+  "propertyType": "apartment",
+  "livingAreaSqm": 82,
+  "roomCount": 4,
+  "floorNumber": 4,
+  "hasElevator": true,
+  "lotCount": null,
+  "askingPrice": 65000,
+  "agencyFeesIncluded": false,
+  "occupancyStatus": "vacant",
+  "currentMonthlyRent": null,
+  "rentIncludesCharges": null,
+  "leaseEndDate": null,
+  "annualCondoFees": 1320,
+  "annualPropertyTax": 780,
+  "energyClass": "D",
+  "overallCondition": "renovation",
+  "worksItems": [
+    {
+      "category": "flooring",
+      "quantity": null,
+      "unit": null,
+      "note": null,
+      "excerpt": "Bien à rénover entièrement : sols, peinture, cuisine, salle de bain, électricité",
+      "source": "visitNotes"
+    },
+    {
+      "category": "painting",
+      "quantity": null,
+      "unit": null,
+      "note": null,
+      "excerpt": "Bien à rénover entièrement : sols, peinture, cuisine, salle de bain, électricité",
+      "source": "visitNotes"
+    },
+    {
+      "category": "kitchen",
+      "quantity": null,
+      "unit": null,
+      "note": null,
+      "excerpt": "Bien à rénover entièrement : sols, peinture, cuisine, salle de bain, électricité",
+      "source": "visitNotes"
+    },
+    {
+      "category": "bathroom",
+      "quantity": null,
+      "unit": null,
+      "note": null,
+      "excerpt": "Bien à rénover entièrement : sols, peinture, cuisine, salle de bain, électricité",
+      "source": "visitNotes"
+    },
+    {
+      "category": "electricity",
+      "quantity": null,
+      "unit": null,
+      "note": null,
+      "excerpt": "Bien à rénover entièrement : sols, peinture, cuisine, salle de bain, électricité",
+      "source": "visitNotes"
+    }
+  ],
+  "riskFlags": [
+    "Infiltration d'eau au plafond de la chambre 2",
+    "Taxe foncière donnée par mois"
+  ],
+  "sourceExcerpts": [
+    {
+      "field": "city",
+      "excerpt": "St Etienne",
+      "source": "listing"
+    },
+    {
+      "field": "district",
+      "excerpt": "Montaud",
+      "source": "listing"
+    },
+    {
+      "field": "propertyType",
+      "excerpt": "T4",
+      "source": "listing"
+    },
+    {
+      "field": "livingAreaSqm",
+      "excerpt": "82m2",
+      "source": "listing"
+    },
+    {
+      "field": "roomCount",
+      "excerpt": "T4",
+      "source": "listing"
+    },
+    {
+      "field": "floorNumber",
+      "excerpt": "4e etage",
+      "source": "listing"
+    },
+    {
+      "field": "hasElevator",
+      "excerpt": "avec ascensseur",
+      "source": "listing"
+    },
+    {
+      "field": "askingPrice",
+      "excerpt": "prix 65000e",
+      "source": "listing"
+    },
+    {
+      "field": "agencyFeesIncluded",
+      "excerpt": "honoraires en sus",
+      "source": "listing"
+    },
+    {
+      "field": "occupancyStatus",
+      "excerpt": "Bien libre",
+      "source": "listing"
+    },
+    {
+      "field": "annualCondoFees",
+      "excerpt": "copro 110e/mois",
+      "source": "listing"
+    },
+    {
+      "field": "annualPropertyTax",
+      "excerpt": "taxe fonciere 65e/mois",
+      "source": "listing"
+    },
+    {
+      "field": "energyClass",
+      "excerpt": "DPE : D",
+      "source": "visitNotes"
+    },
+    {
+      "field": "overallCondition",
+      "excerpt": "Bien à rénover entièrement",
+      "source": "visitNotes"
+    }
+  ]
+}

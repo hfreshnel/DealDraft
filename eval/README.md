@@ -7,7 +7,17 @@
 | `dataset/listing-XXX.txt` | Listing or agent message, as received | yes |
 | `dataset/listing-XXX.visit.txt` | Visit notes (typed or dictated) | no |
 | `ground_truth/listing-XXX.json` | Hand-annotated expected extraction, same contract as the API | yes |
-| `manifest.csv` | One line per listing: id, category, source, notes | yes |
+| `manifest.csv` | One line per listing: id, category, source, notes, annotation | yes |
+
+## Annotation provenance (`annotation` column)
+
+| Value | Meaning |
+|---|---|
+| `claudeDraft` | Text and first annotation drafted by Claude, not yet reviewed |
+| `humanReviewed` | Reviewed and corrected by a human, field by field, against the text |
+| `toConfirm` | Origin not recorded |
+
+`listing-005` to `listing-020` were drafted by Claude (option C, chosen for time). This must be stated in `eval/report.md`, and the scores must be read accordingly. To review a case: read the text first, write down your own answer for the debatable fields, then compare with the JSON, fix it, and set the column to `humanReviewed`.
 
 ## Target composition (20 listings)
 

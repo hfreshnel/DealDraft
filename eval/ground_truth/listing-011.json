@@ -1,0 +1,107 @@
+{
+  "listingTitle": "Saint-Chamond - T2 env. 45m2 à rénover",
+  "city": "Saint-Chamond",
+  "district": null,
+  "propertyType": "apartment",
+  "livingAreaSqm": 45,
+  "roomCount": 2,
+  "floorNumber": 2,
+  "hasElevator": null,
+  "lotCount": null,
+  "askingPrice": 28000,
+  "agencyFeesIncluded": null,
+  "occupancyStatus": "vacant",
+  "currentMonthlyRent": null,
+  "rentIncludesCharges": null,
+  "leaseEndDate": null,
+  "annualCondoFees": null,
+  "annualPropertyTax": 420,
+  "energyClass": null,
+  "overallCondition": "renovation",
+  "worksItems": [
+    {
+      "category": "electricity",
+      "quantity": null,
+      "unit": null,
+      "note": null,
+      "excerpt": "Tout est à refaire : électricité, sols, cuisine et salle de bain",
+      "source": "listing"
+    },
+    {
+      "category": "flooring",
+      "quantity": null,
+      "unit": null,
+      "note": null,
+      "excerpt": "Tout est à refaire : électricité, sols, cuisine et salle de bain",
+      "source": "listing"
+    },
+    {
+      "category": "kitchen",
+      "quantity": null,
+      "unit": null,
+      "note": null,
+      "excerpt": "Tout est à refaire : électricité, sols, cuisine et salle de bain",
+      "source": "listing"
+    },
+    {
+      "category": "bathroom",
+      "quantity": null,
+      "unit": null,
+      "note": null,
+      "excerpt": "Tout est à refaire : électricité, sols, cuisine et salle de bain",
+      "source": "listing"
+    }
+  ],
+  "riskFlags": [
+    "Surface approximative (env. 45 m²)",
+    "Prix net vendeur : honoraires non précisés",
+    "DPE vierge"
+  ],
+  "sourceExcerpts": [
+    {
+      "field": "city",
+      "excerpt": "Saint-Chamond",
+      "source": "listing"
+    },
+    {
+      "field": "propertyType",
+      "excerpt": "Appartement de type 2",
+      "source": "listing"
+    },
+    {
+      "field": "livingAreaSqm",
+      "excerpt": "env. 45m2",
+      "source": "listing"
+    },
+    {
+      "field": "roomCount",
+      "excerpt": "type 2",
+      "source": "listing"
+    },
+    {
+      "field": "floorNumber",
+      "excerpt": "2ème étage",
+      "source": "listing"
+    },
+    {
+      "field": "askingPrice",
+      "excerpt": "28 000 € net vendeur",
+      "source": "listing"
+    },
+    {
+      "field": "occupancyStatus",
+      "excerpt": "libre",
+      "source": "listing"
+    },
+    {
+      "field": "annualPropertyTax",
+      "excerpt": "Taxe foncière 420 €/an",
+      "source": "listing"
+    },
+    {
+      "field": "overallCondition",
+      "excerpt": "Tout est à refaire",
+      "source": "listing"
+    }
+  ]
+}

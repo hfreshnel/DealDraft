@@ -1,0 +1,110 @@
+{
+  "listingTitle": "Investissement locatif - T3 de 62 m² vendu loué - Saint-Étienne Fauriel",
+  "city": "Saint-Étienne",
+  "district": "Fauriel",
+  "propertyType": "apartment",
+  "livingAreaSqm": 62,
+  "roomCount": 3,
+  "floorNumber": 4,
+  "hasElevator": false,
+  "lotCount": null,
+  "askingPrice": 72000,
+  "agencyFeesIncluded": true,
+  "occupancyStatus": "rented",
+  "currentMonthlyRent": 520,
+  "rentIncludesCharges": true,
+  "leaseEndDate": "2027-08",
+  "annualCondoFees": 1140,
+  "annualPropertyTax": 780,
+  "energyClass": "D",
+  "overallCondition": "good",
+  "worksItems": [],
+  "riskFlags": [],
+  "sourceExcerpts": [
+    {
+      "field": "city",
+      "excerpt": "Saint-Étienne",
+      "source": "listing"
+    },
+    {
+      "field": "district",
+      "excerpt": "Fauriel",
+      "source": "listing"
+    },
+    {
+      "field": "propertyType",
+      "excerpt": "Appartement T3",
+      "source": "listing"
+    },
+    {
+      "field": "livingAreaSqm",
+      "excerpt": "62 m²",
+      "source": "listing"
+    },
+    {
+      "field": "roomCount",
+      "excerpt": "T3",
+      "source": "listing"
+    },
+    {
+      "field": "floorNumber",
+      "excerpt": "4e étage",
+      "source": "listing"
+    },
+    {
+      "field": "hasElevator",
+      "excerpt": "sans ascenseur",
+      "source": "listing"
+    },
+    {
+      "field": "askingPrice",
+      "excerpt": "72 000 €",
+      "source": "listing"
+    },
+    {
+      "field": "agencyFeesIncluded",
+      "excerpt": "FAI",
+      "source": "listing"
+    },
+    {
+      "field": "occupancyStatus",
+      "excerpt": "Vendu loué",
+      "source": "listing"
+    },
+    {
+      "field": "currentMonthlyRent",
+      "excerpt": "loyer de 520 € charges comprises",
+      "source": "listing"
+    },
+    {
+      "field": "rentIncludesCharges",
+      "excerpt": "charges comprises",
+      "source": "listing"
+    },
+    {
+      "field": "leaseEndDate",
+      "excerpt": "bail se terminant en août 2027",
+      "source": "listing"
+    },
+    {
+      "field": "annualCondoFees",
+      "excerpt": "Charges : 95 €/mois",
+      "source": "listing"
+    },
+    {
+      "field": "annualPropertyTax",
+      "excerpt": "Taxe foncière : 780 €",
+      "source": "listing"
+    },
+    {
+      "field": "energyClass",
+      "excerpt": "DPE : D",
+      "source": "listing"
+    },
+    {
+      "field": "overallCondition",
+      "excerpt": "Bon état général, aucun travaux à prévoir",
+      "source": "listing"
+    }
+  ]
+}

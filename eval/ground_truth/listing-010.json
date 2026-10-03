@@ -1,0 +1,100 @@
+{
+  "listingTitle": "Studio meublé à vendre - Saint-Étienne",
+  "city": "Saint-Étienne",
+  "district": null,
+  "propertyType": "studio",
+  "livingAreaSqm": 19,
+  "roomCount": 1,
+  "floorNumber": 5,
+  "hasElevator": false,
+  "lotCount": null,
+  "askingPrice": null,
+  "agencyFeesIncluded": null,
+  "occupancyStatus": "rented",
+  "currentMonthlyRent": 360,
+  "rentIncludesCharges": false,
+  "leaseEndDate": "2027-03-31",
+  "annualCondoFees": 360,
+  "annualPropertyTax": null,
+  "energyClass": null,
+  "overallCondition": null,
+  "worksItems": [
+    {
+      "category": "bathroom",
+      "quantity": null,
+      "unit": null,
+      "note": null,
+      "excerpt": "réfection de la salle d'eau",
+      "source": "listing"
+    },
+    {
+      "category": "plumbing",
+      "quantity": null,
+      "unit": null,
+      "note": null,
+      "excerpt": "remplacement du ballon d'eau chaude",
+      "source": "listing"
+    }
+  ],
+  "riskFlags": [
+    "Prix non communiqué",
+    "DPE non indiqué"
+  ],
+  "sourceExcerpts": [
+    {
+      "field": "city",
+      "excerpt": "Saint-Étienne",
+      "source": "listing"
+    },
+    {
+      "field": "propertyType",
+      "excerpt": "Studio de 19 m²",
+      "source": "listing"
+    },
+    {
+      "field": "livingAreaSqm",
+      "excerpt": "19 m²",
+      "source": "listing"
+    },
+    {
+      "field": "roomCount",
+      "excerpt": "Studio",
+      "source": "listing"
+    },
+    {
+      "field": "floorNumber",
+      "excerpt": "5e et dernier étage",
+      "source": "listing"
+    },
+    {
+      "field": "hasElevator",
+      "excerpt": "sans ascenseur",
+      "source": "listing"
+    },
+    {
+      "field": "occupancyStatus",
+      "excerpt": "vendu loué meublé",
+      "source": "listing"
+    },
+    {
+      "field": "currentMonthlyRent",
+      "excerpt": "Loyer actuel 360 € hors charges",
+      "source": "listing"
+    },
+    {
+      "field": "rentIncludesCharges",
+      "excerpt": "hors charges",
+      "source": "listing"
+    },
+    {
+      "field": "leaseEndDate",
+      "excerpt": "Fin de bail : 31/03/2027",
+      "source": "listing"
+    },
+    {
+      "field": "annualCondoFees",
+      "excerpt": "Charges : 30 €/mois",
+      "source": "listing"
+    }
+  ]
+}

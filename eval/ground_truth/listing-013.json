@@ -1,0 +1,123 @@
+{
+  "listingTitle": null,
+  "city": null,
+  "district": "Crêt de Roch",
+  "propertyType": "apartment",
+  "livingAreaSqm": 51,
+  "roomCount": 3,
+  "floorNumber": 2,
+  "hasElevator": false,
+  "lotCount": null,
+  "askingPrice": 38000,
+  "agencyFeesIncluded": true,
+  "occupancyStatus": "vacant",
+  "currentMonthlyRent": null,
+  "rentIncludesCharges": null,
+  "leaseEndDate": null,
+  "annualCondoFees": 840,
+  "annualPropertyTax": null,
+  "energyClass": "F",
+  "overallCondition": "renovation",
+  "worksItems": [
+    {
+      "category": "windows",
+      "quantity": 4,
+      "unit": "unit",
+      "note": null,
+      "excerpt": "Fenêtres : 4 à remplacer",
+      "source": "visitNotes"
+    },
+    {
+      "category": "flooring",
+      "quantity": 40,
+      "unit": "sqm",
+      "note": null,
+      "excerpt": "Sol séjour + chambres env. 40 m² à refaire",
+      "source": "visitNotes"
+    },
+    {
+      "category": "bathroom",
+      "quantity": null,
+      "unit": null,
+      "note": null,
+      "excerpt": "SDB à créer dans l'ancien cellier",
+      "source": "visitNotes"
+    },
+    {
+      "category": "electricity",
+      "quantity": null,
+      "unit": null,
+      "note": null,
+      "excerpt": "Tableau électrique vétuste à changer",
+      "source": "visitNotes"
+    }
+  ],
+  "riskFlags": [
+    "Surface annoncée (55 m²) différente de la surface mesurée (51 m²)",
+    "Humidité sous la fenêtre de la cuisine",
+    "Ville non précisée (quartier seulement)",
+    "Surface de sol approximative (env. 40 m²)"
+  ],
+  "sourceExcerpts": [
+    {
+      "field": "district",
+      "excerpt": "Crêt de Roch",
+      "source": "listing"
+    },
+    {
+      "field": "propertyType",
+      "excerpt": "T3",
+      "source": "listing"
+    },
+    {
+      "field": "livingAreaSqm",
+      "excerpt": "Surface mesurée 51 m²",
+      "source": "visitNotes"
+    },
+    {
+      "field": "roomCount",
+      "excerpt": "T3",
+      "source": "listing"
+    },
+    {
+      "field": "floorNumber",
+      "excerpt": "2e étage",
+      "source": "listing"
+    },
+    {
+      "field": "hasElevator",
+      "excerpt": "sans ascenseur",
+      "source": "listing"
+    },
+    {
+      "field": "askingPrice",
+      "excerpt": "38 000 €",
+      "source": "listing"
+    },
+    {
+      "field": "agencyFeesIncluded",
+      "excerpt": "FAI",
+      "source": "listing"
+    },
+    {
+      "field": "occupancyStatus",
+      "excerpt": "vendu vide",
+      "source": "listing"
+    },
+    {
+      "field": "annualCondoFees",
+      "excerpt": "Charges copro 70 €/mois",
+      "source": "listing"
+    },
+    {
+      "field": "energyClass",
+      "excerpt": "DPE F",
+      "source": "visitNotes"
+    },
+    {
+      "field": "overallCondition",
+      "excerpt": "Appartement à rénover entièrement",
+      "source": "visitNotes"
+    }
+  ]
+}

@@ -1,0 +1,129 @@
+{
+  "listingTitle": "Maison de ville à rénover entièrement - Firminy",
+  "city": "Firminy",
+  "district": null,
+  "propertyType": "house",
+  "livingAreaSqm": 85,
+  "roomCount": 4,
+  "floorNumber": null,
+  "hasElevator": null,
+  "lotCount": null,
+  "askingPrice": 49000,
+  "agencyFeesIncluded": false,
+  "occupancyStatus": "vacant",
+  "currentMonthlyRent": null,
+  "rentIncludesCharges": null,
+  "leaseEndDate": null,
+  "annualCondoFees": null,
+  "annualPropertyTax": 690,
+  "energyClass": "G",
+  "overallCondition": "heavyRenovation",
+  "worksItems": [
+    {
+      "category": "other",
+      "quantity": null,
+      "unit": null,
+      "note": "Plancher structurel de l'étage à reprendre",
+      "excerpt": "plancher de l'étage effondré en partie",
+      "source": "listing"
+    },
+    {
+      "category": "roofing",
+      "quantity": null,
+      "unit": null,
+      "note": null,
+      "excerpt": "reprise de la charpente",
+      "source": "listing"
+    },
+    {
+      "category": "roofing",
+      "quantity": 60,
+      "unit": "sqm",
+      "note": null,
+      "excerpt": "toiture à refaire (environ 60 m²)",
+      "source": "listing"
+    },
+    {
+      "category": "electricity",
+      "quantity": null,
+      "unit": null,
+      "note": null,
+      "excerpt": "Électricité et plomberie à reprendre entièrement",
+      "source": "listing"
+    },
+    {
+      "category": "plumbing",
+      "quantity": null,
+      "unit": null,
+      "note": null,
+      "excerpt": "Électricité et plomberie à reprendre entièrement",
+      "source": "listing"
+    },
+    {
+      "category": "other",
+      "quantity": null,
+      "unit": null,
+      "note": "Désamiantage des dalles de sol",
+      "excerpt": "Présence d'amiante à traiter dans les dalles de sol",
+      "source": "listing"
+    }
+  ],
+  "riskFlags": [
+    "Plancher de l'étage partiellement effondré",
+    "Présence d'amiante",
+    "Surface de toiture approximative (environ 60 m²)",
+    "DPE G"
+  ],
+  "sourceExcerpts": [
+    {
+      "field": "city",
+      "excerpt": "Firminy",
+      "source": "listing"
+    },
+    {
+      "field": "propertyType",
+      "excerpt": "Maison mitoyenne",
+      "source": "listing"
+    },
+    {
+      "field": "livingAreaSqm",
+      "excerpt": "85 m² habitables",
+      "source": "listing"
+    },
+    {
+      "field": "roomCount",
+      "excerpt": "4 pièces",
+      "source": "listing"
+    },
+    {
+      "field": "askingPrice",
+      "excerpt": "49 000 €",
+      "source": "listing"
+    },
+    {
+      "field": "agencyFeesIncluded",
+      "excerpt": "+ frais d'agence",
+      "source": "listing"
+    },
+    {
+      "field": "occupancyStatus",
+      "excerpt": "Vendue libre",
+      "source": "listing"
+    },
+    {
+      "field": "annualPropertyTax",
+      "excerpt": "Taxe foncière : 690 €",
+      "source": "listing"
+    },
+    {
+      "field": "energyClass",
+      "excerpt": "DPE : G",
+      "source": "listing"
+    },
+    {
+      "field": "overallCondition",
+      "excerpt": "Gros travaux à prévoir : plancher de l'étage effondré en partie",
+      "source": "listing"
+    }
+  ]
+}

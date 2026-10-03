@@ -1,0 +1,111 @@
+{
+  "listingTitle": null,
+  "city": "Saint-Étienne",
+  "district": "Valbenoîte",
+  "propertyType": "studio",
+  "livingAreaSqm": 27,
+  "roomCount": 1,
+  "floorNumber": null,
+  "hasElevator": null,
+  "lotCount": null,
+  "askingPrice": 31000,
+  "agencyFeesIncluded": true,
+  "occupancyStatus": "vacant",
+  "currentMonthlyRent": null,
+  "rentIncludesCharges": null,
+  "leaseEndDate": null,
+  "annualCondoFees": 600,
+  "annualPropertyTax": 420,
+  "energyClass": null,
+  "overallCondition": null,
+  "worksItems": [
+    {
+      "category": "insulation",
+      "quantity": 15,
+      "unit": "sqm",
+      "note": null,
+      "excerpt": "Isolation des murs donnant sur l'extérieur à faire, env. 15 m²",
+      "source": "visitNotes"
+    },
+    {
+      "category": "painting",
+      "quantity": 60,
+      "unit": "sqm",
+      "note": null,
+      "excerpt": "Peinture murs et plafonds env. 60 m²",
+      "source": "visitNotes"
+    },
+    {
+      "category": "entranceDoor",
+      "quantity": 1,
+      "unit": "unit",
+      "note": null,
+      "excerpt": "Porte d'entrée à remplacer (1)",
+      "source": "visitNotes"
+    },
+    {
+      "category": "kitchen",
+      "quantity": null,
+      "unit": null,
+      "note": null,
+      "excerpt": "Kitchenette à changer",
+      "source": "visitNotes"
+    }
+  ],
+  "riskFlags": [
+    "Surfaces de travaux approximatives",
+    "DPE non indiqué"
+  ],
+  "sourceExcerpts": [
+    {
+      "field": "city",
+      "excerpt": "Saint-Étienne",
+      "source": "listing"
+    },
+    {
+      "field": "district",
+      "excerpt": "Valbenoîte",
+      "source": "listing"
+    },
+    {
+      "field": "propertyType",
+      "excerpt": "Studio 27 m²",
+      "source": "listing"
+    },
+    {
+      "field": "livingAreaSqm",
+      "excerpt": "27 m²",
+      "source": "listing"
+    },
+    {
+      "field": "roomCount",
+      "excerpt": "Studio",
+      "source": "listing"
+    },
+    {
+      "field": "askingPrice",
+      "excerpt": "31 000 €",
+      "source": "listing"
+    },
+    {
+      "field": "agencyFeesIncluded",
+      "excerpt": "FAI",
+      "source": "listing"
+    },
+    {
+      "field": "occupancyStatus",
+      "excerpt": "Vide",
+      "source": "listing"
+    },
+    {
+      "field": "annualCondoFees",
+      "excerpt": "Copro 50 €/mois",
+      "source": "listing"
+    },
+    {
+      "field": "annualPropertyTax",
+      "excerpt": "TF 420 €",
+      "source": "listing"
+    }
+  ]
+}

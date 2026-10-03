@@ -1,0 +1,69 @@
+{
+  "listingTitle": null,
+  "city": "Saint-Genest-Lerpt",
+  "district": null,
+  "propertyType": "house",
+  "livingAreaSqm": 70,
+  "roomCount": 3,
+  "floorNumber": null,
+  "hasElevator": null,
+  "lotCount": null,
+  "askingPrice": 95000,
+  "agencyFeesIncluded": true,
+  "occupancyStatus": "vacant",
+  "currentMonthlyRent": null,
+  "rentIncludesCharges": null,
+  "leaseEndDate": null,
+  "annualCondoFees": null,
+  "annualPropertyTax": null,
+  "energyClass": null,
+  "overallCondition": "refresh",
+  "worksItems": [],
+  "riskFlags": [
+    "Surface approximative (70 m² environ)",
+    "Bien vide depuis 2 ans",
+    "Vente dans le cadre d'une succession"
+  ],
+  "sourceExcerpts": [
+    {
+      "field": "city",
+      "excerpt": "Saint-Genest-Lerpt",
+      "source": "listing"
+    },
+    {
+      "field": "propertyType",
+      "excerpt": "petite maison",
+      "source": "listing"
+    },
+    {
+      "field": "livingAreaSqm",
+      "excerpt": "70m2 env",
+      "source": "listing"
+    },
+    {
+      "field": "roomCount",
+      "excerpt": "3 pièces",
+      "source": "listing"
+    },
+    {
+      "field": "askingPrice",
+      "excerpt": "95 000",
+      "source": "listing"
+    },
+    {
+      "field": "agencyFeesIncluded",
+      "excerpt": "frais d'agence inclus",
+      "source": "listing"
+    },
+    {
+      "field": "occupancyStatus",
+      "excerpt": "Maison vide depuis 2 ans",
+      "source": "listing"
+    },
+    {
+      "field": "overallCondition",
+      "excerpt": "intérieur à rafraîchir",
+      "source": "listing"
+    }
+  ]
+}

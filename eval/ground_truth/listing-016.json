@@ -1,0 +1,91 @@
+{
+  "listingTitle": null,
+  "city": "Rive-de-Gier",
+  "district": null,
+  "propertyType": "apartment",
+  "livingAreaSqm": 70,
+  "roomCount": 3,
+  "floorNumber": 3,
+  "hasElevator": true,
+  "lotCount": null,
+  "askingPrice": 50000,
+  "agencyFeesIncluded": null,
+  "occupancyStatus": "ownerOccupied",
+  "currentMonthlyRent": null,
+  "rentIncludesCharges": null,
+  "leaseEndDate": null,
+  "annualCondoFees": 1200,
+  "annualPropertyTax": null,
+  "energyClass": null,
+  "overallCondition": null,
+  "worksItems": [
+    {
+      "category": "kitchen",
+      "quantity": null,
+      "unit": null,
+      "note": null,
+      "excerpt": "Cuisine et sdb à refaire",
+      "source": "listing"
+    },
+    {
+      "category": "bathroom",
+      "quantity": null,
+      "unit": null,
+      "note": null,
+      "excerpt": "Cuisine et sdb à refaire",
+      "source": "listing"
+    }
+  ],
+  "riskFlags": [
+    "Prix approximatif et négociable",
+    "DPE non indiqué",
+    "Taxe foncière non indiquée"
+  ],
+  "sourceExcerpts": [
+    {
+      "field": "city",
+      "excerpt": "Rive-de-Gier",
+      "source": "listing"
+    },
+    {
+      "field": "propertyType",
+      "excerpt": "appart",
+      "source": "listing"
+    },
+    {
+      "field": "livingAreaSqm",
+      "excerpt": "70 m²",
+      "source": "listing"
+    },
+    {
+      "field": "roomCount",
+      "excerpt": "T3",
+      "source": "listing"
+    },
+    {
+      "field": "floorNumber",
+      "excerpt": "3ème",
+      "source": "listing"
+    },
+    {
+      "field": "hasElevator",
+      "excerpt": "avec asc",
+      "source": "listing"
+    },
+    {
+      "field": "askingPrice",
+      "excerpt": "autour de 50 000",
+      "source": "listing"
+    },
+    {
+      "field": "occupancyStatus",
+      "excerpt": "Occupé par le proprio",
+      "source": "listing"
+    },
+    {
+      "field": "annualCondoFees",
+      "excerpt": "Charges 1200/an",
+      "source": "listing"
+    }
+  ]
+}

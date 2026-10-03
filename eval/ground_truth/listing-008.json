@@ -1,0 +1,125 @@
+{
+  "listingTitle": "T2 lumineux 41 m² - Saint-Étienne Carnot",
+  "city": "Saint-Étienne",
+  "district": "Carnot",
+  "propertyType": "apartment",
+  "livingAreaSqm": 41,
+  "roomCount": 2,
+  "floorNumber": 1,
+  "hasElevator": false,
+  "lotCount": null,
+  "askingPrice": 44000,
+  "agencyFeesIncluded": true,
+  "occupancyStatus": "vacant",
+  "currentMonthlyRent": null,
+  "rentIncludesCharges": null,
+  "leaseEndDate": null,
+  "annualCondoFees": 620,
+  "annualPropertyTax": 510,
+  "energyClass": "E",
+  "overallCondition": null,
+  "worksItems": [
+    {
+      "category": "windows",
+      "quantity": 2,
+      "unit": "unit",
+      "note": null,
+      "excerpt": "remplacement de 2 fenêtres",
+      "source": "listing"
+    },
+    {
+      "category": "partitions",
+      "quantity": 4,
+      "unit": "linearMeter",
+      "note": null,
+      "excerpt": "cloison à créer pour séparer la cuisine (environ 4 ml)",
+      "source": "listing"
+    },
+    {
+      "category": "flooring",
+      "quantity": 18,
+      "unit": "sqm",
+      "note": null,
+      "excerpt": "parquet du séjour à vitrifier (18 m²)",
+      "source": "listing"
+    },
+    {
+      "category": "heating",
+      "quantity": null,
+      "unit": null,
+      "note": null,
+      "excerpt": "Chauffage électrique ancien à remplacer",
+      "source": "listing"
+    }
+  ],
+  "riskFlags": [
+    "Longueur de cloison approximative (environ 4 ml)"
+  ],
+  "sourceExcerpts": [
+    {
+      "field": "city",
+      "excerpt": "Saint-Étienne",
+      "source": "listing"
+    },
+    {
+      "field": "district",
+      "excerpt": "Carnot",
+      "source": "listing"
+    },
+    {
+      "field": "propertyType",
+      "excerpt": "À vendre T2",
+      "source": "listing"
+    },
+    {
+      "field": "livingAreaSqm",
+      "excerpt": "41 m²",
+      "source": "listing"
+    },
+    {
+      "field": "roomCount",
+      "excerpt": "T2",
+      "source": "listing"
+    },
+    {
+      "field": "floorNumber",
+      "excerpt": "1er étage",
+      "source": "listing"
+    },
+    {
+      "field": "hasElevator",
+      "excerpt": "sans ascenseur",
+      "source": "listing"
+    },
+    {
+      "field": "askingPrice",
+      "excerpt": "44 000 €",
+      "source": "listing"
+    },
+    {
+      "field": "agencyFeesIncluded",
+      "excerpt": "honoraires inclus",
+      "source": "listing"
+    },
+    {
+      "field": "occupancyStatus",
+      "excerpt": "Appartement libre",
+      "source": "listing"
+    },
+    {
+      "field": "annualCondoFees",
+      "excerpt": "Charges annuelles : 620 €",
+      "source": "listing"
+    },
+    {
+      "field": "annualPropertyTax",
+      "excerpt": "Taxe foncière : 510 €",
+      "source": "listing"
+    },
+    {
+      "field": "energyClass",
+      "excerpt": "DPE : E",
+      "source": "listing"
+    }
+  ]
+}

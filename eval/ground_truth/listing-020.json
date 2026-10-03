@@ -1,0 +1,88 @@
+{
+  "listingTitle": "Murs commerciaux - Saint-Étienne centre-ville",
+  "city": "Saint-Étienne",
+  "district": "centre-ville",
+  "propertyType": "commercial",
+  "livingAreaSqm": 60,
+  "roomCount": null,
+  "floorNumber": 0,
+  "hasElevator": null,
+  "lotCount": null,
+  "askingPrice": 80000,
+  "agencyFeesIncluded": true,
+  "occupancyStatus": "rented",
+  "currentMonthlyRent": null,
+  "rentIncludesCharges": null,
+  "leaseEndDate": null,
+  "annualCondoFees": 300,
+  "annualPropertyTax": 1200,
+  "energyClass": null,
+  "overallCondition": null,
+  "worksItems": [
+    {
+      "category": "facade",
+      "quantity": null,
+      "unit": null,
+      "note": null,
+      "excerpt": "Devanture à rénover",
+      "source": "listing"
+    }
+  ],
+  "riskFlags": [
+    "Loyer donné à l'année (6 000 € HT) : non converti en loyer mensuel",
+    "Prix négociable (72 000 € évoqués)",
+    "Local commercial : hors du modèle de location meublée"
+  ],
+  "sourceExcerpts": [
+    {
+      "field": "city",
+      "excerpt": "Saint-Étienne",
+      "source": "listing"
+    },
+    {
+      "field": "district",
+      "excerpt": "centre-ville",
+      "source": "listing"
+    },
+    {
+      "field": "propertyType",
+      "excerpt": "Local commercial",
+      "source": "listing"
+    },
+    {
+      "field": "livingAreaSqm",
+      "excerpt": "60 m²",
+      "source": "listing"
+    },
+    {
+      "field": "floorNumber",
+      "excerpt": "rez-de-chaussée",
+      "source": "listing"
+    },
+    {
+      "field": "askingPrice",
+      "excerpt": "Prix affiché : 80 000 €",
+      "source": "listing"
+    },
+    {
+      "field": "agencyFeesIncluded",
+      "excerpt": "FAI",
+      "source": "listing"
+    },
+    {
+      "field": "occupancyStatus",
+      "excerpt": "loué à une boulangerie",
+      "source": "listing"
+    },
+    {
+      "field": "annualCondoFees",
+      "excerpt": "Charges : 25 € par mois",
+      "source": "listing"
+    },
+    {
+      "field": "annualPropertyTax",
+      "excerpt": "Taxe foncière : 1 200 €",
+      "source": "listing"
+    }
+  ]
+}

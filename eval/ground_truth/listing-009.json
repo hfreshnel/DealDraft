@@ -1,0 +1,95 @@
+{
+  "listingTitle": "Appartement T4 rénové - Saint-Étienne Bellevue",
+  "city": "Saint-Étienne",
+  "district": "Bellevue",
+  "propertyType": "apartment",
+  "livingAreaSqm": 78,
+  "roomCount": 4,
+  "floorNumber": 3,
+  "hasElevator": true,
+  "lotCount": null,
+  "askingPrice": 98000,
+  "agencyFeesIncluded": true,
+  "occupancyStatus": "ownerOccupied",
+  "currentMonthlyRent": null,
+  "rentIncludesCharges": null,
+  "leaseEndDate": null,
+  "annualCondoFees": 1100,
+  "annualPropertyTax": 950,
+  "energyClass": "C",
+  "overallCondition": "good",
+  "worksItems": [],
+  "riskFlags": [],
+  "sourceExcerpts": [
+    {
+      "field": "city",
+      "excerpt": "Saint-Étienne",
+      "source": "listing"
+    },
+    {
+      "field": "district",
+      "excerpt": "Bellevue",
+      "source": "listing"
+    },
+    {
+      "field": "propertyType",
+      "excerpt": "Appartement T4",
+      "source": "listing"
+    },
+    {
+      "field": "livingAreaSqm",
+      "excerpt": "78 m²",
+      "source": "listing"
+    },
+    {
+      "field": "roomCount",
+      "excerpt": "T4",
+      "source": "listing"
+    },
+    {
+      "field": "floorNumber",
+      "excerpt": "3e étage",
+      "source": "listing"
+    },
+    {
+      "field": "hasElevator",
+      "excerpt": "avec ascenseur",
+      "source": "listing"
+    },
+    {
+      "field": "askingPrice",
+      "excerpt": "98 000 €",
+      "source": "listing"
+    },
+    {
+      "field": "agencyFeesIncluded",
+      "excerpt": "FAI",
+      "source": "listing"
+    },
+    {
+      "field": "occupancyStatus",
+      "excerpt": "occupé par les propriétaires",
+      "source": "listing"
+    },
+    {
+      "field": "annualCondoFees",
+      "excerpt": "1 100 € par an",
+      "source": "listing"
+    },
+    {
+      "field": "annualPropertyTax",
+      "excerpt": "Taxe foncière : 950 €",
+      "source": "listing"
+    },
+    {
+      "field": "energyClass",
+      "excerpt": "DPE : C",
+      "source": "listing"
+    },
+    {
+      "field": "overallCondition",
+      "excerpt": "entièrement refait à neuf",
+      "source": "listing"
+    }
+  ]
+}

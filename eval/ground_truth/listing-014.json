@@ -1,0 +1,103 @@
+{
+  "listingTitle": null,
+  "city": "Saint-Étienne",
+  "district": "Châteaucreux",
+  "propertyType": "studio",
+  "livingAreaSqm": 22,
+  "roomCount": 1,
+  "floorNumber": 0,
+  "hasElevator": null,
+  "lotCount": null,
+  "askingPrice": 26000,
+  "agencyFeesIncluded": false,
+  "occupancyStatus": "rented",
+  "currentMonthlyRent": 340,
+  "rentIncludesCharges": true,
+  "leaseEndDate": "2027-06",
+  "annualCondoFees": null,
+  "annualPropertyTax": 380,
+  "energyClass": "E",
+  "overallCondition": "good",
+  "worksItems": [],
+  "riskFlags": [
+    "État déclaré par le propriétaire, non vérifié",
+    "Logement en rez-de-chaussée sur rue"
+  ],
+  "sourceExcerpts": [
+    {
+      "field": "city",
+      "excerpt": "St-Étienne",
+      "source": "listing"
+    },
+    {
+      "field": "district",
+      "excerpt": "Châteaucreux",
+      "source": "listing"
+    },
+    {
+      "field": "propertyType",
+      "excerpt": "studio 22m2",
+      "source": "listing"
+    },
+    {
+      "field": "livingAreaSqm",
+      "excerpt": "22m2",
+      "source": "listing"
+    },
+    {
+      "field": "roomCount",
+      "excerpt": "studio",
+      "source": "listing"
+    },
+    {
+      "field": "floorNumber",
+      "excerpt": "RDC",
+      "source": "listing"
+    },
+    {
+      "field": "askingPrice",
+      "excerpt": "26k€",
+      "source": "listing"
+    },
+    {
+      "field": "agencyFeesIncluded",
+      "excerpt": "+ 2k de frais d'agence",
+      "source": "listing"
+    },
+    {
+      "field": "occupancyStatus",
+      "excerpt": "loué 340€ cc",
+      "source": "listing"
+    },
+    {
+      "field": "currentMonthlyRent",
+      "excerpt": "loué 340€ cc",
+      "source": "listing"
+    },
+    {
+      "field": "rentIncludesCharges",
+      "excerpt": "340€ cc",
+      "source": "listing"
+    },
+    {
+      "field": "leaseEndDate",
+      "excerpt": "bail jusqu'à fin juin 2027",
+      "source": "listing"
+    },
+    {
+      "field": "annualPropertyTax",
+      "excerpt": "TF 380€",
+      "source": "listing"
+    },
+    {
+      "field": "energyClass",
+      "excerpt": "DPE E",
+      "source": "listing"
+    },
+    {
+      "field": "overallCondition",
+      "excerpt": "Pas de travaux à prévoir",
+      "source": "listing"
+    }
+  ]
+}

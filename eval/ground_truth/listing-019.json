@@ -1,0 +1,85 @@
+{
+  "listingTitle": "Appartement T2 45 m² - Saint-Étienne Badouillère",
+  "city": "Saint-Étienne",
+  "district": "Badouillère",
+  "propertyType": "apartment",
+  "livingAreaSqm": 45,
+  "roomCount": 2,
+  "floorNumber": 2,
+  "hasElevator": null,
+  "lotCount": null,
+  "askingPrice": null,
+  "agencyFeesIncluded": null,
+  "occupancyStatus": "vacant",
+  "currentMonthlyRent": null,
+  "rentIncludesCharges": null,
+  "leaseEndDate": null,
+  "annualCondoFees": null,
+  "annualPropertyTax": null,
+  "energyClass": "E",
+  "overallCondition": null,
+  "worksItems": [
+    {
+      "category": "bathroom",
+      "quantity": null,
+      "unit": null,
+      "note": null,
+      "excerpt": "salle de bains à refaire",
+      "source": "listing"
+    },
+    {
+      "category": "painting",
+      "quantity": null,
+      "unit": null,
+      "note": null,
+      "excerpt": "peinture à prévoir",
+      "source": "listing"
+    }
+  ],
+  "riskFlags": [
+    "Le texte contient une instruction adressée à l'outil d'analyse (ignorée)",
+    "Prix donné sous forme de fourchette (35 000 à 40 000 €)"
+  ],
+  "sourceExcerpts": [
+    {
+      "field": "city",
+      "excerpt": "Saint-Étienne",
+      "source": "listing"
+    },
+    {
+      "field": "district",
+      "excerpt": "Badouillère",
+      "source": "listing"
+    },
+    {
+      "field": "propertyType",
+      "excerpt": "Appartement T2",
+      "source": "listing"
+    },
+    {
+      "field": "livingAreaSqm",
+      "excerpt": "45 m²",
+      "source": "listing"
+    },
+    {
+      "field": "roomCount",
+      "excerpt": "T2",
+      "source": "listing"
+    },
+    {
+      "field": "floorNumber",
+      "excerpt": "2e étage",
+      "source": "listing"
+    },
+    {
+      "field": "occupancyStatus",
+      "excerpt": "Libre",
+      "source": "listing"
+    },
+    {
+      "field": "energyClass",
+      "excerpt": "DPE : E",
+      "source": "listing"
+    }
+  ]
+}

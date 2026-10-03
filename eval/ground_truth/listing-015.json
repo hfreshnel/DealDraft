@@ -1,0 +1,113 @@
+{
+  "listingTitle": null,
+  "city": "Saint-Étienne",
+  "district": "Tarentaize",
+  "propertyType": "apartment",
+  "livingAreaSqm": 38,
+  "roomCount": 2,
+  "floorNumber": 1,
+  "hasElevator": null,
+  "lotCount": null,
+  "askingPrice": 22500,
+  "agencyFeesIncluded": true,
+  "occupancyStatus": "vacant",
+  "currentMonthlyRent": null,
+  "rentIncludesCharges": null,
+  "leaseEndDate": null,
+  "annualCondoFees": null,
+  "annualPropertyTax": null,
+  "energyClass": null,
+  "overallCondition": "heavyRenovation",
+  "worksItems": [
+    {
+      "category": "other",
+      "quantity": null,
+      "unit": null,
+      "note": "Expertise et reprise du mur porteur fissuré",
+      "excerpt": "Fissure importante sur le mur porteur du séjour, à faire expertiser",
+      "source": "visitNotes"
+    },
+    {
+      "category": "other",
+      "quantity": null,
+      "unit": null,
+      "note": "Reprise du plancher de la cuisine",
+      "excerpt": "Plancher de la cuisine qui s'affaisse",
+      "source": "visitNotes"
+    },
+    {
+      "category": "electricity",
+      "quantity": null,
+      "unit": null,
+      "note": null,
+      "excerpt": "Électricité d'origine à refaire",
+      "source": "visitNotes"
+    },
+    {
+      "category": "heating",
+      "quantity": null,
+      "unit": null,
+      "note": null,
+      "excerpt": "Chauffage à installer (aucun aujourd'hui)",
+      "source": "visitNotes"
+    }
+  ],
+  "riskFlags": [
+    "Fissure sur un mur porteur, à faire expertiser",
+    "Plancher de la cuisine affaissé",
+    "État annoncé par le vendeur contredit par la visite",
+    "Surface annoncée 40 m², mesurée 38 m²"
+  ],
+  "sourceExcerpts": [
+    {
+      "field": "city",
+      "excerpt": "Saint-Étienne",
+      "source": "listing"
+    },
+    {
+      "field": "district",
+      "excerpt": "Tarentaize",
+      "source": "listing"
+    },
+    {
+      "field": "propertyType",
+      "excerpt": "T2",
+      "source": "listing"
+    },
+    {
+      "field": "livingAreaSqm",
+      "excerpt": "Mesuré 38 m²",
+      "source": "visitNotes"
+    },
+    {
+      "field": "roomCount",
+      "excerpt": "T2",
+      "source": "listing"
+    },
+    {
+      "field": "floorNumber",
+      "excerpt": "1er étage",
+      "source": "listing"
+    },
+    {
+      "field": "askingPrice",
+      "excerpt": "22 500 €",
+      "source": "listing"
+    },
+    {
+      "field": "agencyFeesIncluded",
+      "excerpt": "honoraires inclus",
+      "source": "listing"
+    },
+    {
+      "field": "occupancyStatus",
+      "excerpt": "Libre",
+      "source": "listing"
+    },
+    {
+      "field": "overallCondition",
+      "excerpt": "Donc rénovation lourde, pas un simple rafraîchissement",
+      "source": "visitNotes"
+    }
+  ]
+}

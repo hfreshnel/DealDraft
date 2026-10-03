@@ -1,0 +1,104 @@
+{
+  "listingTitle": "Studio 24 m² RDC - Saint-Étienne Jacquard - idéal investisseur",
+  "city": "Saint-Étienne",
+  "district": "Jacquard",
+  "propertyType": "studio",
+  "livingAreaSqm": 24,
+  "roomCount": 1,
+  "floorNumber": 0,
+  "hasElevator": null,
+  "lotCount": null,
+  "askingPrice": 29900,
+  "agencyFeesIncluded": true,
+  "occupancyStatus": "vacant",
+  "currentMonthlyRent": null,
+  "rentIncludesCharges": null,
+  "leaseEndDate": null,
+  "annualCondoFees": 456,
+  "annualPropertyTax": null,
+  "energyClass": "F",
+  "overallCondition": "refresh",
+  "worksItems": [
+    {
+      "category": "painting",
+      "quantity": null,
+      "unit": null,
+      "note": null,
+      "excerpt": "peintures et sol à reprendre",
+      "source": "listing"
+    },
+    {
+      "category": "flooring",
+      "quantity": null,
+      "unit": null,
+      "note": null,
+      "excerpt": "peintures et sol à reprendre",
+      "source": "listing"
+    }
+  ],
+  "riskFlags": [
+    "Taxe foncière non indiquée"
+  ],
+  "sourceExcerpts": [
+    {
+      "field": "city",
+      "excerpt": "Saint-Étienne",
+      "source": "listing"
+    },
+    {
+      "field": "district",
+      "excerpt": "Jacquard",
+      "source": "listing"
+    },
+    {
+      "field": "propertyType",
+      "excerpt": "Studio de 24 m²",
+      "source": "listing"
+    },
+    {
+      "field": "livingAreaSqm",
+      "excerpt": "24 m²",
+      "source": "listing"
+    },
+    {
+      "field": "roomCount",
+      "excerpt": "Studio",
+      "source": "listing"
+    },
+    {
+      "field": "floorNumber",
+      "excerpt": "rez-de-chaussée",
+      "source": "listing"
+    },
+    {
+      "field": "askingPrice",
+      "excerpt": "29 900 €",
+      "source": "listing"
+    },
+    {
+      "field": "agencyFeesIncluded",
+      "excerpt": "honoraires inclus",
+      "source": "listing"
+    },
+    {
+      "field": "occupancyStatus",
+      "excerpt": "libre à la vente",
+      "source": "listing"
+    },
+    {
+      "field": "annualCondoFees",
+      "excerpt": "Charges de copropriété : 38 € par mois",
+      "source": "listing"
+    },
+    {
+      "field": "energyClass",
+      "excerpt": "Classe énergie : F",
+      "source": "listing"
+    },
+    {
+      "field": "overallCondition",
+      "excerpt": "Logement à rafraîchir",
+      "source": "listing"
+    }
+  ]
+}
