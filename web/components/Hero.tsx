@@ -5,9 +5,10 @@ export function Hero() {
     return (
         <section className="hero" id="top">
             <div className="wrap">
-                <h1>Le message de l'agent devient une étude de rendement.</h1>
+                <h1>Collez une annonce. Recevez l'étude de rendement.</h1>
                 <p className="lead">
-                    {SITE.name} prépare le brouillon chiffré en quelques secondes. Votre chasseur relit, puis valide.
+                    Annonce, message d'un agent immobilier ou notes de visite : {SITE.name} prépare le brouillon chiffré
+                    en quelques secondes. Vous relisez, vous validez.
                 </p>
                 <VideoFrame youtubeId={SITE.youtubeId} />
             </div>

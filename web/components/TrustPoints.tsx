@@ -1,6 +1,6 @@
 const POINTS = [
     { title: "Chaque chiffre a sa source", text: "Une valeur sans phrase d'origine dans le message est refusée." },
-    { title: "L'IA ne calcule rien", text: "Budget et rendement sortent d'un calcul vérifié, le loyer vient du chasseur." },
+    { title: "L'IA ne calcule rien", text: "Budget et rendement sortent d'un calcul vérifié, le loyer vient de vous." },
     { title: "Rien ne part sans vous", text: "DealDraft prépare un brouillon. L'envoi reste votre décision." },
 ];
 

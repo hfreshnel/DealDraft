@@ -14,8 +14,8 @@ export function ResultsStrip() {
                     ))}
                 </dl>
                 <p className="muted section-lead">
-                    Mesuré sur {EVAL.totalCases} annonces fictives, dont des pièges, avec des réponses attendues relues par
-                    une personne. Le détail est plus bas.
+                    Mesuré sur {EVAL.testCases} cas de test vérifiés par un ingénieur, tirés de {EVAL.totalCases} annonces
+                    fictives dont des pièges. Le détail est plus bas.
                 </p>
             </div>
         </section>

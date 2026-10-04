@@ -1,7 +1,7 @@
 const NEVER = [
     {
         title: "Fixer un prix ou un loyer",
-        text: "Le loyer après travaux est saisi par le chasseur. Les prix de travaux viennent de votre grille, et un poste sans prix reste non chiffré.",
+        text: "Le loyer après travaux, c'est vous qui le saisissez. Les prix de travaux viennent de votre grille, et un poste sans prix reste non chiffré.",
     },
     {
         title: "Faire un calcul",
@@ -9,11 +9,11 @@ const NEVER = [
     },
     {
         title: "Combler un vide",
-        text: "Une information absente du message reste vide et apparaît dans la liste des données à obtenir auprès de l'agent.",
+        text: "Une information absente du message reste vide et apparaît dans la liste des données à obtenir auprès de l'agent immobilier.",
     },
     {
         title: "Envoyer quoi que ce soit",
-        text: "Valider une étude crée un brouillon dans Gmail. C'est le chasseur qui l'ouvre, le relit et l'envoie.",
+        text: "Valider une étude crée un brouillon dans Gmail. C'est vous qui l'ouvrez, le relisez et l'envoyez.",
     },
     {
         title: "Suivre une consigne cachée dans un message",

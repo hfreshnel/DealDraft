@@ -90,7 +90,7 @@ export function ReplayDemo() {
                                     <tr>
                                         <th>Frais de notaire</th>
                                         <td>{formatEuro(analysis.notaryFees)}</td>
-                                        <td className="source">{notaryPercent} %, saisi par le chasseur</td>
+                                        <td className="source">{notaryPercent} %, saisi par vous</td>
                                     </tr>
                                     <tr>
                                         <th>Travaux</th>
@@ -100,7 +100,7 @@ export function ReplayDemo() {
                                     <tr>
                                         <th>Ameublement</th>
                                         <td>{formatEuro(analysis.furnitureCost)}</td>
-                                        <td className="source">saisi par le chasseur</td>
+                                        <td className="source">saisi par vous</td>
                                     </tr>
                                     <tr className="sum">
                                         <th>Budget tout compris</th>
@@ -127,7 +127,7 @@ export function ReplayDemo() {
                                         métrés : les travaux sont estimés au m² selon l'état général, et la fiche le dit.
                                     </li>
                                     <li>Durée de chantier estimée : {String(analysis.estimatedWorksDurationMonths).replace(".", ",")} mois.</li>
-                                    <li>DPE, charges de copropriété et taxe foncière sont à demander à l'agent.</li>
+                                    <li>DPE, charges de copropriété et taxe foncière sont à demander à l'agent immobilier.</li>
                                     <li>
                                         Ce bien est reconstitué d'après une étude publiée qui annonçait 13,5 % : le calcul
                                         retombe sur le même chiffre.
@@ -153,20 +153,20 @@ export function ReplayDemo() {
                                 <h3>Valider</h3>
                                 <p>
                                     Un brouillon Gmail est préparé pour le client : budget, loyer, rendement et lien vers la
-                                    fiche. Le chasseur le relit et l'envoie lui-même.
+                                    fiche. Vous le relisez et l'envoyez vous-même.
                                 </p>
                             </div>
                             <div className="decision">
                                 <h3>Corriger une hypothèse</h3>
                                 <p>
-                                    Le chasseur change le loyer ou le taux de notaire : la fiche est recalculée sans relancer
+                                    Vous changez le loyer ou le taux de notaire : la fiche est recalculée sans relancer
                                     l'IA, au même lien, avec un numéro de révision.
                                 </p>
                             </div>
                             <div className="decision">
                                 <h3>Rejeter</h3>
                                 <p>
-                                    L'étude passe au statut rejeté dans le tableau de suivi, avec la remarque du chasseur. Le
+                                    L'étude passe au statut rejeté dans le tableau de suivi, avec votre remarque. Le
                                     journal garde la trace de chaque décision.
                                 </p>
                             </div>

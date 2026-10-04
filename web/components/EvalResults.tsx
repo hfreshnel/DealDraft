@@ -5,8 +5,8 @@ export function EvalResults() {
     return (
         <div>
             <p className="muted narrow">
-                {EVAL.totalCases} annonces et messages d'agents, dont des pièges : immeuble en plusieurs lots, fourchette de
-                prix, consigne cachée dans le texte. Chaque cas est lu {EVAL.runsPerCase} fois. Les résultats portent sur{" "}
+                {EVAL.totalCases} annonces et messages d'agents immobiliers, dont des pièges : immeuble en plusieurs lots,
+                fourchette de prix, consigne cachée dans le texte. Chaque cas est lu {EVAL.runsPerCase} fois. Les résultats portent sur{" "}
                 {EVAL.testCases} cas tenus à l'écart pendant les réglages.
             </p>
             <table className="results">
@@ -38,11 +38,11 @@ export function EvalResults() {
                 </p>
                 <p>
                     <strong>Point faible connu.</strong> Les travaux de structure décrits en termes vagues sont parfois omis.
-                    La relecture du chasseur reste indispensable sur ce point.
+                    Votre relecture reste indispensable sur ce point.
                 </p>
                 <p className="muted">
                     {reviewed
-                        ? "Les réponses attendues des 6 cas de test ont été relues champ par champ par une personne, sans correction."
+                        ? "Les réponses attendues des 6 cas de test ont été vérifiées champ par champ par un ingénieur, sans correction."
                         : "Référence annotée par IA, relecture humaine en cours : les résultats seront mis à jour."}
                 </p>
             </div>

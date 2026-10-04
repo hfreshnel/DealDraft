@@ -12,9 +12,9 @@ export function ThreeSteps() {
                             <span className="mini-line shorter" />
                         </div>
                         <h3>
-                            <span className="three-number">1</span>Collez le message de l'agent
+                            <span className="three-number">1</span>Collez l'annonce
                         </h3>
-                        <p>Annonce, message ou notes de visite, tels quels.</p>
+                        <p>Annonce en ligne, message d'agent immobilier ou notes de visite, tels quels.</p>
                     </li>
                     <li className="three-step">
                         <div className="mini mini-sheet" aria-hidden="true">

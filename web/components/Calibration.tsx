@@ -9,7 +9,7 @@ const SETTINGS = [
     },
     {
         title: "Vos frais de notaire et de financement",
-        text: "Aucune valeur par défaut. Le chasseur les saisit, ou vous fixez les vôtres une fois pour toutes.",
+        text: "Aucune valeur par défaut : vous les saisissez à chaque étude, ou vous fixez les vôtres une fois pour toutes.",
     },
     {
         title: "Votre gabarit de fiche",

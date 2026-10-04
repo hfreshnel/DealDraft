@@ -1,7 +1,7 @@
 export const SITE = {
     name: "DealDraft",
     description:
-        "DealDraft transforme le message d'un agent immobilier en brouillon d'étude de rendement, relu et validé par votre chasseur.",
+        "Collez une annonce, recevez l'étude de rendement. DealDraft prépare le brouillon chiffré, vous relisez et validez.",
     repoUrl: "",
     youtubeId: "",
     contactEmail: "hfreshnel@gmail.com",

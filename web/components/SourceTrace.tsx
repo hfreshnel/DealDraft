@@ -21,7 +21,7 @@ type Segment = {
 };
 
 const KIND_NOTES: Record<Exclude<RowKind, "excerpt">, string> = {
-    input: "Saisi par le chasseur dans le formulaire : l'IA n'estime jamais un loyer.",
+    input: "Saisi par vous dans le formulaire : l'IA n'estime jamais un loyer.",
     computed: "Calculé par le code, sans IA.",
     missing: "Absent du message : laissé vide plutôt que deviné, et listé comme donnée à demander.",
 };
@@ -120,7 +120,7 @@ export function SourceTrace() {
     return (
         <div className="trace">
             <figure className="trace-message">
-                <figcaption>Message reçu d'un agent partenaire</figcaption>
+                <figcaption>Message reçu d'un agent immobilier</figcaption>
                 <p className="message-body">
                     {segments.map((segment, index) => {
                         if (segment.fields.length === 0) {
