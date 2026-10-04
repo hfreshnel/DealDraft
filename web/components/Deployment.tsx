@@ -17,35 +17,32 @@ const REQUIREMENTS = [
 
 export function Deployment() {
     return (
-        <section className="band" id="installation">
-            <div className="wrap">
-                <h2>Installé chez vous, branché sur vos outils</h2>
-                <div className="requirements">
-                    {REQUIREMENTS.map((item) => (
-                        <div key={item.title} className="requirement">
-                            <h3>{item.title}</h3>
-                            <p>{item.text}</p>
-                        </div>
-                    ))}
-                </div>
-                <div className="install">
-                    <pre className="terminal" aria-label="Commandes d'installation">
-                        <code>{`cp .env.example .env
+        <div>
+            <div className="requirements">
+                {REQUIREMENTS.map((item) => (
+                    <div key={item.title} className="requirement">
+                        <h3>{item.title}</h3>
+                        <p>{item.text}</p>
+                    </div>
+                ))}
+            </div>
+            <div className="install">
+                <pre className="terminal" aria-label="Commandes d'installation">
+                    <code>{`cp .env.example .env
 docker compose up -d
 # importer les workflows, connecter le compte Google
 # ouvrir le formulaire : http://localhost:5678`}</code>
-                    </pre>
-                    <p className="muted">
-                        Le guide détaille chaque étape, de la clé de chiffrement à la connexion Google.
-                        {SITE.repoUrl && (
-                            <>
-                                {" "}
-                                <a href={SITE.repoUrl}>Lire le guide d'installation</a>
-                            </>
-                        )}
-                    </p>
-                </div>
+                </pre>
+                <p className="muted">
+                    Le guide détaille chaque étape, de la clé de chiffrement à la connexion Google.
+                    {SITE.repoUrl && (
+                        <>
+                            {" "}
+                            <a href={SITE.repoUrl}>Lire le guide d'installation</a>
+                        </>
+                    )}
+                </p>
             </div>
-        </section>
+        </div>
     );
 }

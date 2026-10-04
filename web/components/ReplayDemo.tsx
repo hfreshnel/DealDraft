@@ -19,11 +19,9 @@ export function ReplayDemo() {
     const notaryPercent = Math.round(assumptions.notaryFeeRate * 100);
 
     return (
-        <section className="band" id="etude">
-            <div className="wrap">
-                <h2>Une étude complète, pas à pas</h2>
+        <div>
                 <p className="muted narrow">
-                    Le studio du haut de page, traité de bout en bout par {demo.meta.model}. Ce sont les sorties réelles du
+                    Le studio présenté plus haut, traité de bout en bout par {demo.meta.model}. Ce sont les sorties réelles du
                     système, figées pour la démonstration.
                 </p>
 
@@ -175,7 +173,6 @@ export function ReplayDemo() {
                         </div>
                     )}
                 </div>
-            </div>
-        </section>
+        </div>
     );
 }

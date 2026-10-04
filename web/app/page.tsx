@@ -1,12 +1,12 @@
-import { Calibration } from "../components/Calibration";
-import { Deployment } from "../components/Deployment";
-import { EvalResults } from "../components/EvalResults";
-import { Guarantees } from "../components/Guarantees";
+import { ContactBand } from "../components/ContactBand";
+import { Details } from "../components/Details";
 import { Hero } from "../components/Hero";
-import { HowItWorks } from "../components/HowItWorks";
-import { ReplayDemo } from "../components/ReplayDemo";
+import { ResultsStrip } from "../components/ResultsStrip";
 import { SiteFooter } from "../components/SiteFooter";
 import { SiteHeader } from "../components/SiteHeader";
+import { SourceTrace } from "../components/SourceTrace";
+import { ThreeSteps } from "../components/ThreeSteps";
+import { TrustPoints } from "../components/TrustPoints";
 
 export default function HomePage() {
     return (
@@ -14,12 +14,18 @@ export default function HomePage() {
             <SiteHeader />
             <main>
                 <Hero />
-                <HowItWorks />
-                <ReplayDemo />
-                <Guarantees />
-                <EvalResults />
-                <Calibration />
-                <Deployment />
+                <ThreeSteps />
+                <TrustPoints />
+                <section className="band tinted" id="essayez">
+                    <div className="wrap">
+                        <h2>D'où vient chaque chiffre ?</h2>
+                        <p className="muted section-lead">Survolez ou touchez une ligne de la fiche : sa phrase d'origine s'allume dans le message.</p>
+                        <SourceTrace />
+                    </div>
+                </section>
+                <ResultsStrip />
+                <Details />
+                <ContactBand />
             </main>
             <SiteFooter />
         </>

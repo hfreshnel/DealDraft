@@ -1,4 +1,4 @@
-import { SITE } from "../data/site";
+import { CONTACT_HREF, SITE } from "../data/site";
 
 export function SiteHeader() {
     return (
@@ -9,14 +9,11 @@ export function SiteHeader() {
                     {SITE.name}
                 </a>
                 <nav className="header-nav" aria-label="Sections">
-                    <a href="#etude">L'étude complète</a>
-                    <a href="#fiabilite">Fiabilité</a>
-                    <a href="#installation">Installation</a>
-                    {SITE.repoUrl && (
-                        <a className="header-cta" href={SITE.repoUrl}>
-                            Code source
-                        </a>
-                    )}
+                    <a href="#fonctionnement">Fonctionnement</a>
+                    <a href="#resultats">Résultats</a>
+                    <a className="header-cta" href={CONTACT_HREF}>
+                        Demander une démo
+                    </a>
                 </nav>
             </div>
         </header>

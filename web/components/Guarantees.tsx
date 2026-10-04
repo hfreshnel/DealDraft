@@ -23,24 +23,13 @@ const NEVER = [
 
 export function Guarantees() {
     return (
-        <section className="band tinted">
-            <div className="wrap split">
-                <div className="split-intro">
-                    <h2>Ce que l'IA ne fait jamais</h2>
-                    <p className="muted">
-                        Une étude de rendement engage votre parole auprès d'un client. Le rôle de l'IA est donc limité à la
-                        lecture ; tout le reste est contrôlé par du code ou par une personne.
-                    </p>
+        <dl className="never-list">
+            {NEVER.map((item) => (
+                <div key={item.title} className="never-item">
+                    <dt>{item.title}</dt>
+                    <dd>{item.text}</dd>
                 </div>
-                <dl className="never-list">
-                    {NEVER.map((item) => (
-                        <div key={item.title} className="never-item">
-                            <dt>{item.title}</dt>
-                            <dd>{item.text}</dd>
-                        </div>
-                    ))}
-                </dl>
-            </div>
-        </section>
+            ))}
+        </dl>
     );
 }

@@ -19,24 +19,13 @@ const SETTINGS = [
 
 export function Calibration() {
     return (
-        <section className="band tinted">
-            <div className="wrap split">
-                <div className="split-intro">
-                    <h2>Réglé sur vos chiffres, pas sur les nôtres</h2>
-                    <p className="muted">
-                        Quatre réglages se font avec votre équipe à la mise en service. Ils décident de chaque montant qui
-                        apparaît sur une fiche.
-                    </p>
+        <dl className="never-list">
+            {SETTINGS.map((item) => (
+                <div key={item.title} className="never-item">
+                    <dt>{item.title}</dt>
+                    <dd>{item.text}</dd>
                 </div>
-                <dl className="never-list">
-                    {SETTINGS.map((item) => (
-                        <div key={item.title} className="never-item">
-                            <dt>{item.title}</dt>
-                            <dd>{item.text}</dd>
-                        </div>
-                    ))}
-                </dl>
-            </div>
-        </section>
+            ))}
+        </dl>
     );
 }

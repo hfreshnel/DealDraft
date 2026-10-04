@@ -1,8 +1,12 @@
 export const SITE = {
     name: "DealDraft",
     description:
-        "DealDraft transforme les messages d'agents et les annonces en brouillons d'étude de rendement sourcés, relus et validés par vos chasseurs.",
+        "DealDraft transforme le message d'un agent immobilier en brouillon d'étude de rendement, relu et validé par votre chasseur.",
     repoUrl: "",
-    videoUrl: "",
-    legal: "DealDraft est un projet indépendant, sans lien avec Month'immo. Les annonces présentées sont fictives.",
+    youtubeId: "",
+    contactEmail: "hfreshnel@gmail.com",
+    contactSubject: "Démo DealDraft",
+    footerNote: "Annonces de démonstration fictives.",
 };
+
+export const CONTACT_HREF = `mailto:${SITE.contactEmail}?subject=${encodeURIComponent(SITE.contactSubject)}`;

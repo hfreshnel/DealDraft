@@ -35,7 +35,7 @@ Projet de démonstration pour une candidature en alternance « AI Builder » che
 6. **Deux rendements affichés** (base hors autres frais et base budget total) : la définition de leur rendement n'est pas publiée (hypothèse H1).
 7. **Messages et notes = données**, jamais des instructions (risque d'injection par texte transféré).
 8. **Aucune donnée de client réel** dans le dépôt, la démo ou la vidéo. Annonces fictives ou anonymisées.
-9. **Contenu du site Month'immo : paraphraser**, ne pas copier. La page publique présente DealDraft comme un produit (décision du 4 oct.) ; son pied de page mentionne « projet indépendant, sans lien avec Month'immo » et des annonces fictives. Aucune affirmation invérifiable (clients, délais, témoignages), aucun tiret long.
+9. **Contenu du site Month'immo : paraphraser**, ne pas copier. La page publique présente DealDraft comme un produit et ne cite pas Month'immo ; si elle venait à le citer, ajouter une mention d'absence de lien. Pied de page : « Annonces de démonstration fictives. » Aucune affirmation invérifiable (clients, délais, témoignages), aucun tiret long.
 
 ---
 
@@ -129,7 +129,7 @@ Points d'accès : `GET /health`, `GET /extraction-tool` (schéma, prompt, versio
 | J3 | `finance.py`, chargement de la grille, `/analyze`, branché dans `wf-ingest-listing` | **Fait** : recoupement 13,50 % vérifié |
 | J4 | Fiche Google Doc (`/report`), Suivi et Journal Sheets, `wf-approve-and-draft`, `wf-error-handler`, nouvelle tentative | **Fait et testé le 3 oct.** : fiche, ligne Suivi, brouillon Gmail, refus d'une double validation, erreur provoquée journalisée, 3 tentatives puis arrêt, correction des hypothèses (fiche remplacée au même lien), refus sans loyer, avertissements en français. Piège n8n : un champ numérique vide arrive à `0` (champs optionnels en texte) |
 | J5 | `run_eval.py`, itérations, comparaison `gpt-4o-mini`/`gpt-4o`, `eval/report.md` | **Fait** (4 oct.) : `gpt-4o` atteint les cibles (test : 98,5 % de précision, 0 hallucination critique, 100 % de JSON valide) ; `gpt-4o-mini` écarté (9 hallucinations critiques sur 60). Prompt `df0c52c9b4fb`. Limites : annotations non relues par un humain, rappel faible sur les travaux de structure, 6 cas de test |
-| J6 | Page Next.js, démo rejouée, déploiement Vercel, vidéo | **En cours** : page produit « DealDraft » dans `web/` (export statique), démo rejouée depuis un vrai run du cas 004 (`api/scripts/export_demo.py` → `eval/demo/` → `npm run syncDemo`). Reste : nom définitif, dépôt public, Vercel (racine `web/`), vidéo |
+| J6 | Page Next.js, démo rejouée, déploiement Vercel, vidéo | **En cours** : page produit « DealDraft » dans `web/` (export statique). Ordre : titre et vidéo YouTube (`SITE.youtubeId`, chargée au clic), 3 étapes, 3 promesses, fiche interactive, 3 chiffres, détails repliés, contact par e-mail. Démo rejouée depuis un vrai run du cas 004 (`api/scripts/export_demo.py` → `eval/demo/` → `npm run syncDemo`). Reste : nom définitif, dépôt public, Vercel (racine `web/`), vidéo |
 | J7 | README, guide, note stratégique, envoi de la candidature | |
 
 Priorité si retard : le bonus saute d'abord, puis la comparaison de modèles. Validation humaine, évaluation et vidéo ne sont jamais coupées.

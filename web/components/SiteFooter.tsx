@@ -8,7 +8,7 @@ export function SiteFooter() {
                     <span className="wordmark-mark" aria-hidden="true" />
                     {SITE.name}
                 </span>
-                <p>{SITE.legal}</p>
+                <p>{SITE.footerNote}</p>
                 {SITE.repoUrl && <a href={SITE.repoUrl}>Code source</a>}
             </div>
         </footer>

@@ -5,6 +5,11 @@ export const EVAL = {
     testCases: 6,
     totalCases: 20,
     runsPerCase: 3,
+    headline: [
+        { label: "de valeurs justes", value: "98,5 %" },
+        { label: "valeur inventée sur le prix, la surface ou le loyer", value: "0" },
+        { label: "par étude, en coût d'IA", value: "< 0,01 $" },
+    ],
     metrics: [
         { label: "Valeurs justes", target: "90 % au moins", test: "98,5 %", detail: "198 valeurs sur 201", met: true },
         { label: "Valeurs inventées sur prix, surface, loyer, état", target: "aucune", test: "aucune", detail: "18 lectures", met: true },
