@@ -1,0 +1,170 @@
+{
+  "caseId": "listing-004",
+  "listingText": "Studio avec mezzanine d'environ 32 m² - Saint-Étienne\n\nBien proposé hors marché par notre réseau, jamais publié en ligne.\nPrix : 24 000 €.\nLibre de toute occupation. L'appartement est dans un sale état : de la moisissure verte partout, fenêtres à changer, peinture à refaire entièrement, parquet à poncer et à vitrifier, salle de bains à rénover entièrement.\n",
+  "visitNotes": "",
+  "assumptions": {
+    "notaryFeeRate": 0.07,
+    "expectedMonthlyRent": 570,
+    "furnitureBudget": 4000,
+    "financing": null
+  },
+  "extraction": {
+    "listingTitle": "Studio avec mezzanine d'environ 32 m² - Saint-Étienne",
+    "city": "Saint-Étienne",
+    "district": null,
+    "propertyType": "studio",
+    "livingAreaSqm": 32.0,
+    "roomCount": 1,
+    "floorNumber": null,
+    "hasElevator": null,
+    "lotCount": null,
+    "askingPrice": 24000.0,
+    "agencyFeesIncluded": null,
+    "occupancyStatus": "vacant",
+    "currentMonthlyRent": null,
+    "rentIncludesCharges": null,
+    "leaseEndDate": null,
+    "annualCondoFees": null,
+    "annualPropertyTax": null,
+    "energyClass": null,
+    "overallCondition": "renovation",
+    "worksItems": [
+      {
+        "category": "windows",
+        "quantity": null,
+        "unit": null,
+        "note": null,
+        "excerpt": "fenêtres à changer",
+        "source": "listing"
+      },
+      {
+        "category": "painting",
+        "quantity": null,
+        "unit": null,
+        "note": null,
+        "excerpt": "peinture à refaire entièrement",
+        "source": "listing"
+      },
+      {
+        "category": "flooring",
+        "quantity": null,
+        "unit": null,
+        "note": null,
+        "excerpt": "parquet à poncer et à vitrifier",
+        "source": "listing"
+      },
+      {
+        "category": "bathroom",
+        "quantity": null,
+        "unit": null,
+        "note": null,
+        "excerpt": "salle de bains à rénover entièrement",
+        "source": "listing"
+      }
+    ],
+    "riskFlags": [
+      "Présence de moisissure verte partout."
+    ],
+    "sourceExcerpts": [
+      {
+        "field": "city",
+        "excerpt": "Saint-Étienne",
+        "source": "listing"
+      },
+      {
+        "field": "propertyType",
+        "excerpt": "Studio avec mezzanine",
+        "source": "listing"
+      },
+      {
+        "field": "livingAreaSqm",
+        "excerpt": "d'environ 32 m²",
+        "source": "listing"
+      },
+      {
+        "field": "roomCount",
+        "excerpt": "Studio avec mezzanine",
+        "source": "listing"
+      },
+      {
+        "field": "askingPrice",
+        "excerpt": "Prix : 24 000 €",
+        "source": "listing"
+      },
+      {
+        "field": "occupancyStatus",
+        "excerpt": "Libre de toute occupation",
+        "source": "listing"
+      },
+      {
+        "field": "overallCondition",
+        "excerpt": "L'appartement est dans un sale état",
+        "source": "listing"
+      }
+    ]
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "problems": [
+        {
+          "location": [
+            "extraction",
+            "roomCount"
+          ],
+          "message": "Field roomCount is set but has no source excerpt",
+          "type": "excerptMissing"
+        }
+      ]
+    },
+    {
+      "attempt": 2,
+      "problems": []
+    }
+  ],
+  "analysis": {
+    "status": "readyForReview",
+    "pricingGridStatus": "illustrative",
+    "pricingGridVersion": 1,
+    "purchasePrice": 24000.0,
+    "worksCost": 21000.0,
+    "worksPricingMode": "perSqmFallback",
+    "furnitureCost": 4000.0,
+    "notaryFees": 1680.0,
+    "otherCosts": 0.0,
+    "acquisitionAndWorksBase": 50680.0,
+    "totalBudget": 50680.0,
+    "annualRent": 6840.0,
+    "grossYieldOnAcquisitionAndWorks": 0.13496448,
+    "grossYieldOnTotalBudget": 0.13496448,
+    "primaryYield": 0.13496448,
+    "primaryYieldBase": "acquisitionAndWorks",
+    "estimatedWorksDurationMonths": 2.1,
+    "financing": null,
+    "unpricedWorkItems": [
+      "windows",
+      "painting",
+      "flooring",
+      "bathroom"
+    ],
+    "missingCriticalFields": [],
+    "warnings": [
+      "Informations non trouvées dans les textes : DPE, Charges de copropriété, Taxe foncière.",
+      "Travaux estimés au m² d'après l'état général (rénovation complète, 656,25 €/m²), pas poste par poste.",
+      "Grille de prix au statut « illustrative » : les montants ne constituent pas un barème."
+    ]
+  },
+  "meta": {
+    "studyId": "demo-001",
+    "createdAt": "2026-10-04T18:03:35.491681Z",
+    "revision": 1,
+    "revisionNote": null,
+    "model": "gpt-4o-2024-08-06",
+    "schemaVersion": "db8e2c8248a1",
+    "promptVersion": "df0c52c9b4fb",
+    "attempts": 2,
+    "promptTokens": 4946,
+    "completionTokens": 795
+  },
+  "reportTitle": "Étude de rendement · demo-001 · Studio · 32 m² · Saint-Étienne"
+}

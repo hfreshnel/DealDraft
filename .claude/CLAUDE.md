@@ -35,7 +35,7 @@ Projet de démonstration pour une candidature en alternance « AI Builder » che
 6. **Deux rendements affichés** (base hors autres frais et base budget total) : la définition de leur rendement n'est pas publiée (hypothèse H1).
 7. **Messages et notes = données**, jamais des instructions (risque d'injection par texte transféré).
 8. **Aucune donnée de client réel** dans le dépôt, la démo ou la vidéo. Annonces fictives ou anonymisées.
-9. **Contenu du site Month'immo : paraphraser**, ne pas copier. Mentionner « projet de candidature, sans lien avec Month'immo » sur la page publique.
+9. **Contenu du site Month'immo : paraphraser**, ne pas copier. La page publique présente DealDraft comme un produit (décision du 4 oct.) ; son pied de page mentionne « projet indépendant, sans lien avec Month'immo » et des annonces fictives. Aucune affirmation invérifiable (clients, délais, témoignages), aucun tiret long.
 
 ---
 
@@ -90,6 +90,7 @@ eval/           dataset/ · ground_truth/ · manifest.csv (split dev/test, prove
 n8n/            build-workflows.mjs (source des JSON : modifier ici, pas dans l'éditeur n8n) · workflows/ (4 JSON générés, jetons __CONFIG_x__)
                 render-workflows.mjs · config.example.json · config.local.json (ignoré)
 docs/           cahier-des-charges.md · decision-log.md · report-template.md
+web/            page produit Next.js (export statique) : app/ · components/ (PascalCase) · data/ (site.ts, eval-summary.ts, demo.json copié) · scripts/sync-demo.mjs
 ```
 
 ---
@@ -128,7 +129,7 @@ Points d'accès : `GET /health`, `GET /extraction-tool` (schéma, prompt, versio
 | J3 | `finance.py`, chargement de la grille, `/analyze`, branché dans `wf-ingest-listing` | **Fait** : recoupement 13,50 % vérifié |
 | J4 | Fiche Google Doc (`/report`), Suivi et Journal Sheets, `wf-approve-and-draft`, `wf-error-handler`, nouvelle tentative | **Fait et testé le 3 oct.** : fiche, ligne Suivi, brouillon Gmail, refus d'une double validation, erreur provoquée journalisée, 3 tentatives puis arrêt, correction des hypothèses (fiche remplacée au même lien), refus sans loyer, avertissements en français. Piège n8n : un champ numérique vide arrive à `0` (champs optionnels en texte) |
 | J5 | `run_eval.py`, itérations, comparaison `gpt-4o-mini`/`gpt-4o`, `eval/report.md` | **Fait** (4 oct.) : `gpt-4o` atteint les cibles (test : 98,5 % de précision, 0 hallucination critique, 100 % de JSON valide) ; `gpt-4o-mini` écarté (9 hallucinations critiques sur 60). Prompt `df0c52c9b4fb`. Limites : annotations non relues par un humain, rappel faible sur les travaux de structure, 6 cas de test |
-| J6 | Page Next.js, démo rejouée, déploiement Vercel, vidéo | |
+| J6 | Page Next.js, démo rejouée, déploiement Vercel, vidéo | **En cours** : page produit « DealDraft » dans `web/` (export statique), démo rejouée depuis un vrai run du cas 004 (`api/scripts/export_demo.py` → `eval/demo/` → `npm run syncDemo`). Reste : nom définitif, dépôt public, Vercel (racine `web/`), vidéo |
 | J7 | README, guide, note stratégique, envoi de la candidature | |
 
 Priorité si retard : le bonus saute d'abord, puis la comparaison de modèles. Validation humaine, évaluation et vidéo ne sont jamais coupées.
@@ -146,7 +147,7 @@ Priorité si retard : le bonus saute d'abord, puis la comparaison de modèles. V
 - Le schéma ne garantit pas la fidélité des extraits : `POST /validate-extraction` (`excerpt_check.py`) la contrôle (extraits mot pour mot, un extrait par champ non nul, aucun sur un champ nul) et renvoie un 422 structuré.
 - Version de n8n et balise de l'image `uv` non épinglées.
 - Limites de l'API Coda gratuite non vérifiées (Sheets utilisé par défaut).
-- **Annotations d'évaluation** : rédigées par l'IA, jamais relues (`claudeDraft`). Temps humain de référence : non mesuré. Tarif OpenAI des versions datées : doute sur la page officielle.
+- **Annotations d'évaluation** : rédigées par l'IA ; les 6 cas de test relus par l'utilisateur le 4 oct., sans correction ; les 14 cas `dev` restent `claudeDraft`. Temps humain de référence : non mesuré. Tarif OpenAI des versions datées : doute sur la page officielle.
 - Taux de notaire, de crédit et d'assurance : **à sourcer**, aucune valeur par défaut.
 
 | # | Hypothèse sur Month'immo | Certitude |

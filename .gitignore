@@ -26,3 +26,4 @@ n8n/.rendered/
 # OS
 .DS_Store
 Thumbs.db
+out/
