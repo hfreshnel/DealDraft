@@ -31,7 +31,7 @@ Each run writes `runs/<id>/calls.jsonl` (every call, raw output and score), `met
 | `humanReviewed` | Reviewed and corrected by a human, field by field, against the text |
 | `toConfirm` | Origin not recorded |
 
-All 20 cases were drafted by Claude (`listing-001` to `listing-004` on day 1, the others on day 4, option C chosen for time). This must be stated in `eval/report.md`, and the scores must be read accordingly. To review a case: read the text first, write down your own answer for the debatable fields, then compare with the JSON, fix it, and set the column to `humanReviewed`.
+All 20 cases were drafted by Claude (`listing-001` to `listing-004` on day 1, the others on day 4, option C chosen for time). The 6 test cases were reviewed by a human on 2026-10-04 with no correction; the 14 dev cases are still `claudeDraft`. This must be stated in `eval/report.md`, and the scores must be read accordingly. To review a case: read the text first, write down your own answer for the debatable fields, then compare with the JSON, fix it, and set the column to `humanReviewed`.
 
 ## Target composition (20 listings)
 

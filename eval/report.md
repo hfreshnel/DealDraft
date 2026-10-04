@@ -7,7 +7,7 @@
 1. **Verdict : `gpt-4o` atteint les 7 cibles mesurables du cahier des charges** (tableau du chapitre 3), sur 20 annonces fictives annotées. `gpt-4o-mini` ne les atteint pas.
 2. **Modèle retenu : `gpt-4o-2024-08-06`.** `gpt-4o-mini` coûte 16 fois moins (0,0005 $ contre 0,0081 $ par étude) mais invente des valeurs sur des champs critiques (9 fois sur 60 extractions) : ce n'est pas un défaut de forme que la nouvelle tentative corrige.
 3. **L'évaluation a servi** : le premier essai donnait 3 hallucinations sur champs critiques. Six corrections générales du prompt les ont ramenées à 0, confirmé sur 6 cas de test non utilisés pour ajuster le prompt.
-4. **Ce que ce rapport ne prouve pas :** les annotations ont été rédigées par l'IA qui a aussi écrit les textes et le prompt, et aucune n'a encore été relue par un humain. Les 6 cas de test sont un petit échantillon. Les scores mesurent un accord avec ces annotations, pas une vérité indépendante.
+4. **Ce que ce rapport ne prouve pas :** les annotations ont été rédigées par l'IA qui a aussi écrit les textes et le prompt. Les 6 cas de test ont été relus par un humain le 4 octobre, sans correction ; les 14 cas de mise au point ne l'ont pas été. Les 6 cas de test sont un petit échantillon.
 5. **Limite connue non corrigée :** les travaux de structure (plancher effondré, fissure sur mur porteur) sont mal listés (chapitre 6).
 
 ## 2. Méthode
@@ -15,7 +15,7 @@
 | Point | Choix |
 |---|---|
 | Jeu de test | 20 annonces fictives : 8 de portail, 8 messages d'agents (dont 4 avec notes de visite), 3 pièges (immeuble multi-lots, injection de prompt, loyer annuel), 1 cas de recoupement tiré de la fiche publique |
-| Annotations | Rédigées par Claude, **non relues par un humain** (colonne `annotation` du manifeste : `claudeDraft`). Les conventions ont été fixées par l'utilisateur avant le premier appel au modèle. Aucune annotation n'a été modifiée après avoir vu un résultat |
+| Annotations | Rédigées par Claude. Les 6 cas de test ont été relus par un humain le 4 octobre, sans correction (`humanReviewed`) ; les 14 cas de mise au point restent `claudeDraft`. Les conventions ont été fixées par l'utilisateur avant le premier appel au modèle. Aucune annotation n'a été modifiée après avoir vu un résultat |
 | Découpage | 14 cas de mise au point (`dev`), 6 cas de test (`test`) tirés au sort par catégorie avec la graine 20261004 : 001, 004, 006, 014, 015, 019. Le prompt a été ajusté sur `dev` uniquement ; `test` n'a été exécuté qu'une fois, à la fin |
 | Modèles | `gpt-4o-2024-08-06` et `gpt-4o-mini-2024-07-18`, versions datées, `temperature: 0`, mode `json_schema` strict |
 | Exécutions | 3 par cas et par modèle. Seul le 1er essai est noté (pas de nouvelle tentative) |
@@ -97,7 +97,7 @@ Deux observations :
 | Lots à rénover non listés (cas 003) | Le modèle ne liste que la toiture |
 | **Travaux de structure** | Sur les cas de test, rappel de 79 % : dans le cas 006, le plancher effondré est classé `flooring` et la charpente et la toiture sont fusionnées ; dans le cas 015, la fissure sur mur porteur et le plancher affaissé ne sont pas listés. Non corrigé car les cas de test ont été vus : une correction ici fausserait le score. Piste : règle de prompt sur les travaux de structure, à évaluer sur de nouveaux cas |
 | Échantillon | 6 cas de test, 201 champs non nuls. Les 3 exécutions d'un même cas sont corrélées (`temperature: 0`) : l'échantillon effectif est de 6 cas |
-| Annotations | Faites par l'IA, non relues par un humain. Le score mesure un accord avec elles |
+| Annotations | Faites par l'IA ; seuls les 6 cas de test ont été relus par un humain. Le score sur les 20 cas mesure en partie un accord avec des annotations non relues |
 | Points de vigilance | Texte libre, non noté automatiquement. Non évalués dans ce rapport |
 | Tarif | Calculé d'après les prix des alias publiés le 4 octobre ([page de tarifs](https://developers.openai.com/api/docs/pricing)), non vérifié sur la facture. La page affiche aussi des prix plus élevés pour les versions datées, probablement ceux du fine-tuning (certitude d'environ 80 %). Coût total des mesures : environ 1,5 $ estimé |
 | Temps humain | **Non mesuré.** Aucune valeur n'est avancée. Seule observation : une ingestion complète (extraction, fiche Google Doc, ligne de suivi) a pris environ 12 secondes lors d'un essai. La comparaison avec le temps d'un chasseur reste à faire avec lui |
