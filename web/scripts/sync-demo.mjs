@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const copies = [
     ["eval/demo/demo.json", "web/data/demo.json"],
-    ["eval/demo/report.html", "web/public/demo/report.html"],
+    ["eval/demo/report.html", "web/data/demo-report.html"],
 ];
 
 try {

@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import type { ReactNode } from "react";
 import { Calibration } from "./Calibration";
 import { Deployment } from "./Deployment";
@@ -5,8 +7,11 @@ import { EvalResults } from "./EvalResults";
 import { Guarantees } from "./Guarantees";
 import { ReplayDemo } from "./ReplayDemo";
 
+// Read at build time and inlined: static hosts rewrite .html paths, an inline document has no URL to break.
+const REPORT_HTML = readFileSync(join(process.cwd(), "data", "demo-report.html"), "utf8");
+
 const SECTIONS: { id: string; title: string; summary: string; content: ReactNode }[] = [
-    { id: "etude", title: "Une étude complète, pas à pas", summary: "Contrôles, calcul, fiche et décision sur le studio de la démo.", content: <ReplayDemo /> },
+    { id: "etude", title: "Une étude complète, pas à pas", summary: "Contrôles, calcul, fiche et décision sur le studio de la démo.", content: <ReplayDemo reportHtml={REPORT_HTML} /> },
     { id: "evaluation", title: "Résultats détaillés", summary: "Critères, objectifs, choix du modèle et limites connues.", content: <EvalResults /> },
     { id: "garde-fous", title: "Ce que l'IA ne fait jamais", summary: "Les cinq garde-fous qui protègent vos études.", content: <Guarantees /> },
     { id: "reglages", title: "Réglé sur vos chiffres", summary: "Rendement, grille de prix, frais et gabarit de fiche.", content: <Calibration /> },

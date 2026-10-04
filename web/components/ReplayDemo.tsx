@@ -12,7 +12,7 @@ const FIELD_NAMES: Record<string, string> = {
     askingPrice: "prix",
 };
 
-export function ReplayDemo() {
+export function ReplayDemo({ reportHtml }: { reportHtml: string }) {
     const [tab, setTab] = useState(0);
     const { analysis, attempts, assumptions } = demo;
     const rejected = attempts.filter((item) => item.problems.length > 0);
@@ -143,7 +143,7 @@ export function ReplayDemo() {
                                 La fiche telle qu'elle arrive dans Google Drive, avec ses sources, ses avertissements et la
                                 trace du modèle et du prompt utilisés.
                             </p>
-                            <iframe className="report-frame" title="Fiche d'étude de rendement générée" src="/demo/report.html" />
+                            <iframe className="report-frame" title="Fiche d'étude de rendement générée" srcDoc={reportHtml} />
                         </div>
                     )}
 

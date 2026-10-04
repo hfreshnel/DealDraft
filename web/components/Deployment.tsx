@@ -38,7 +38,7 @@ docker compose up -d
                     {SITE.repoUrl && (
                         <>
                             {" "}
-                            <a href={SITE.repoUrl}>Lire le guide d'installation</a>
+                            <a href={`${SITE.repoUrl}#installation`}>Lire le guide d'installation</a>
                         </>
                     )}
                 </p>

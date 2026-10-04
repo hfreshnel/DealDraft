@@ -28,7 +28,7 @@ logger = logging.getLogger("deal-analyzer-api")
 PRICING_DIR = Path(os.environ.get("PRICING_DIR", Path(__file__).resolve().parents[2] / "pricing"))
 PRICING_GRID_FILE = os.environ.get("PRICING_GRID_FILE", "works-grid.example.yaml")
 
-app = FastAPI(title="AI Deal Analyzer API", version="0.1.0")
+app = FastAPI(title="DealDraft API", version="0.1.0")
 
 try:
     SCHEMA_VERSION = computeSchemaVersion()

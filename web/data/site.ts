@@ -2,7 +2,7 @@ export const SITE = {
     name: "DealDraft",
     description:
         "Collez une annonce, recevez l'étude de rendement. DealDraft prépare le brouillon chiffré, vous relisez et validez.",
-    repoUrl: "",
+    repoUrl: "https://github.com/hfreshnel/DealDraft",
     youtubeId: "",
     contactEmail: "hfreshnel@gmail.com",
     contactSubject: "Démo DealDraft",
