@@ -3,7 +3,10 @@
 
 # Claude Code (local settings, cache) but keep CLAUDE.md
 .claude/
-!.claude/CLAUDE.md
+
+# Internal working notes, kept local
+docs/cahier-des-charges.md
+docs/decision-log.md
 
 # Python
 __pycache__/

@@ -183,7 +183,7 @@ schemas/          schéma d'extraction généré
 n8n/              générateur et workflows
 eval/             jeu d'évaluation, vérité terrain, exécutions, rapport
 web/              page de présentation
-docs/             spécification, journal de décision, gabarit de fiche
+docs/             gabarit de la fiche
 ```
 
 ## Feuille de route

@@ -244,7 +244,7 @@ class FinancingAssumptions(BaseModel):
     loanRate: Rate
     insuranceRate: Rate
     loanDurationMonths: Annotated[int, Field(ge=12, le=360)] = 240
-    # Month'immo FAQ: about 10% of the amount invested (purchase + works).
+    # Common turnkey-investment practice, from a published FAQ: about 10% of the amount invested (purchase + works).
     downPaymentRate: Rate = 0.10
 
 

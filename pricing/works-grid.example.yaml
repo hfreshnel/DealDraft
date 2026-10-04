@@ -5,7 +5,7 @@
 #   - every category / condition / property type must be present;
 #   - a null price means "unknown": the work item stays unpriced and the study is flagged incomplete.
 #
-# Only two values below come from a public source (a single case of the company website).
+# Only two values below come from a public source (a single published case study).
 # They are data points, not tariffs. Replace this file with the company's own grid.
 
 gridVersion: 1
@@ -34,11 +34,11 @@ itemPrices:
 fallbackPerSqmByCondition:
   good:            {value: null,   source: null}
   refresh:         {value: null,   source: null}
-  renovation:      {value: 656.25, source: "https://monthimmo.fr/realisations/studio-meuble-mezzanine-32m/ (single case, 21000 EUR for 32 sqm)"}
+  renovation:      {value: 656.25, source: "published case study of a turnkey rental investor, furnished studio of 32 sqm in Saint-Etienne (single case, 21000 EUR for 32 sqm)"}
   heavyRenovation: {value: null,   source: null}
 
 furnitureBudgetByPropertyType:
-  studio:     {value: 4000, source: "https://monthimmo.fr/realisations/studio-meuble-mezzanine-32m/ (single case)"}
+  studio:     {value: 4000, source: "published case study of a turnkey rental investor, furnished studio of 32 sqm in Saint-Etienne (single case)"}
   apartment:  {value: null, source: null}
   house:      {value: null, source: null}
   building:   {value: null, source: null}
@@ -47,4 +47,4 @@ furnitureBudgetByPropertyType:
   other:      {value: null, source: null}
 
 # Rough order of magnitude given by the company FAQ: 10000 EUR of works is about one month of site work.
-worksDurationMonthsPer10kEur: {value: 1.0, source: "https://monthimmo.fr/faq/ (order of magnitude)"}
+worksDurationMonthsPer10kEur: {value: 1.0, source: "published FAQ of a turnkey rental investor (order of magnitude)"}

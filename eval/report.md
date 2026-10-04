@@ -1,6 +1,6 @@
 # Rapport d'évaluation de l'extraction
 
-> Projet de candidature, sans lien avec Month'immo. Annonces fictives. Mesures du 3 et 4 octobre 2026, calculées par `api/scripts/run_eval.py` (données brutes dans `eval/runs/`).
+> Annonces fictives. Mesures du 3 et 4 octobre 2026, calculées par `api/scripts/run_eval.py` (données brutes dans `eval/runs/`).
 
 ## 1. Résumé
 
