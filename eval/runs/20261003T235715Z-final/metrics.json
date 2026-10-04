@@ -1,0 +1,2367 @@
+{
+  "runId": "20261003T235715Z-final",
+  "promptVersion": "df0c52c9b4fb",
+  "schemaVersion": "db8e2c8248a1",
+  "runs": 3,
+  "split": "all",
+  "cases": [
+    "listing-001",
+    "listing-002",
+    "listing-003",
+    "listing-004",
+    "listing-005",
+    "listing-006",
+    "listing-007",
+    "listing-008",
+    "listing-009",
+    "listing-010",
+    "listing-011",
+    "listing-012",
+    "listing-013",
+    "listing-014",
+    "listing-015",
+    "listing-016",
+    "listing-017",
+    "listing-018",
+    "listing-019",
+    "listing-020"
+  ],
+  "pricingSource": "https://developers.openai.com/api/docs/pricing (2026-10-04, alias prices)",
+  "businessAssumptions": {
+    "notaryFeeRate": 0.07,
+    "expectedMonthlyRent": 500,
+    "furnitureBudget": null,
+    "financing": null
+  },
+  "models": {
+    "gpt-4o-2024-08-06": {
+      "all": {
+        "calls": 60,
+        "callErrors": 0,
+        "validFirstAttempt": {
+          "count": 59,
+          "total": 60,
+          "rate": 0.9833333333333333
+        },
+        "fieldAccuracyAll": {
+          "count": 1131,
+          "total": 1140,
+          "rate": 0.9921052631578947
+        },
+        "fieldAccuracyNonNullTruth": {
+          "count": 693,
+          "total": 702,
+          "rate": 0.9871794871794872
+        },
+        "fieldOutcomes": {
+          "listingTitle": {
+            "correct": 60
+          },
+          "city": {
+            "correct": 54,
+            "wrongValue": 6
+          },
+          "district": {
+            "correct": 57,
+            "omission": 3
+          },
+          "propertyType": {
+            "correct": 60
+          },
+          "livingAreaSqm": {
+            "correct": 60
+          },
+          "roomCount": {
+            "correct": 60
+          },
+          "floorNumber": {
+            "correct": 60
+          },
+          "hasElevator": {
+            "correct": 60
+          },
+          "lotCount": {
+            "correct": 60
+          },
+          "askingPrice": {
+            "correct": 60
+          },
+          "agencyFeesIncluded": {
+            "correct": 60
+          },
+          "occupancyStatus": {
+            "correct": 60
+          },
+          "currentMonthlyRent": {
+            "correct": 60
+          },
+          "rentIncludesCharges": {
+            "correct": 60
+          },
+          "leaseEndDate": {
+            "correct": 60
+          },
+          "annualCondoFees": {
+            "correct": 60
+          },
+          "annualPropertyTax": {
+            "correct": 60
+          },
+          "energyClass": {
+            "correct": 60
+          },
+          "overallCondition": {
+            "correct": 60
+          }
+        },
+        "hallucinationByField": {
+          "listingTitle": {
+            "count": 0,
+            "total": 24,
+            "rate": 0.0
+          },
+          "city": {
+            "count": 0,
+            "total": 3,
+            "rate": 0.0
+          },
+          "district": {
+            "count": 0,
+            "total": 21,
+            "rate": 0.0
+          },
+          "propertyType": {
+            "count": 0,
+            "total": 0,
+            "rate": null
+          },
+          "livingAreaSqm": {
+            "count": 0,
+            "total": 0,
+            "rate": null
+          },
+          "roomCount": {
+            "count": 0,
+            "total": 6,
+            "rate": 0.0
+          },
+          "floorNumber": {
+            "count": 0,
+            "total": 15,
+            "rate": 0.0
+          },
+          "hasElevator": {
+            "count": 0,
+            "total": 33,
+            "rate": 0.0
+          },
+          "lotCount": {
+            "count": 0,
+            "total": 57,
+            "rate": 0.0
+          },
+          "askingPrice": {
+            "count": 0,
+            "total": 6,
+            "rate": 0.0
+          },
+          "agencyFeesIncluded": {
+            "count": 0,
+            "total": 18,
+            "rate": 0.0
+          },
+          "occupancyStatus": {
+            "count": 0,
+            "total": 0,
+            "rate": null
+          },
+          "currentMonthlyRent": {
+            "count": 0,
+            "total": 51,
+            "rate": 0.0
+          },
+          "rentIncludesCharges": {
+            "count": 0,
+            "total": 48,
+            "rate": 0.0
+          },
+          "leaseEndDate": {
+            "count": 0,
+            "total": 51,
+            "rate": 0.0
+          },
+          "annualCondoFees": {
+            "count": 0,
+            "total": 24,
+            "rate": 0.0
+          },
+          "annualPropertyTax": {
+            "count": 0,
+            "total": 27,
+            "rate": 0.0
+          },
+          "energyClass": {
+            "count": 0,
+            "total": 30,
+            "rate": 0.0
+          },
+          "overallCondition": {
+            "count": 0,
+            "total": 24,
+            "rate": 0.0
+          }
+        },
+        "criticalHallucinations": 0,
+        "excerptVerbatim": {
+          "count": 815,
+          "total": 815,
+          "rate": 1.0
+        },
+        "excerptMissingForSetField": 1,
+        "worksPrecision": {
+          "count": 150,
+          "total": 153,
+          "rate": 0.9803921568627451
+        },
+        "worksRecall": {
+          "count": 150,
+          "total": 165,
+          "rate": 0.9090909090909091
+        },
+        "quantityAccuracy": {
+          "count": 33,
+          "total": 33,
+          "rate": 1.0
+        },
+        "inventedQuantities": 0,
+        "trapsPassed": {
+          "count": 12,
+          "total": 12,
+          "rate": 1.0
+        },
+        "latencyMs": {
+          "p50": 2964,
+          "p95": 4384
+        },
+        "costUsdPerStudy": 0.008067458333333334
+      },
+      "bySplit": {
+        "dev": {
+          "calls": 42,
+          "callErrors": 0,
+          "validFirstAttempt": {
+            "count": 41,
+            "total": 42,
+            "rate": 0.9761904761904762
+          },
+          "fieldAccuracyAll": {
+            "count": 792,
+            "total": 798,
+            "rate": 0.9924812030075187
+          },
+          "fieldAccuracyNonNullTruth": {
+            "count": 495,
+            "total": 501,
+            "rate": 0.9880239520958084
+          },
+          "fieldOutcomes": {
+            "listingTitle": {
+              "correct": 42
+            },
+            "city": {
+              "correct": 39,
+              "wrongValue": 3
+            },
+            "district": {
+              "correct": 39,
+              "omission": 3
+            },
+            "propertyType": {
+              "correct": 42
+            },
+            "livingAreaSqm": {
+              "correct": 42
+            },
+            "roomCount": {
+              "correct": 42
+            },
+            "floorNumber": {
+              "correct": 42
+            },
+            "hasElevator": {
+              "correct": 42
+            },
+            "lotCount": {
+              "correct": 42
+            },
+            "askingPrice": {
+              "correct": 42
+            },
+            "agencyFeesIncluded": {
+              "correct": 42
+            },
+            "occupancyStatus": {
+              "correct": 42
+            },
+            "currentMonthlyRent": {
+              "correct": 42
+            },
+            "rentIncludesCharges": {
+              "correct": 42
+            },
+            "leaseEndDate": {
+              "correct": 42
+            },
+            "annualCondoFees": {
+              "correct": 42
+            },
+            "annualPropertyTax": {
+              "correct": 42
+            },
+            "energyClass": {
+              "correct": 42
+            },
+            "overallCondition": {
+              "correct": 42
+            }
+          },
+          "hallucinationByField": {
+            "listingTitle": {
+              "count": 0,
+              "total": 18,
+              "rate": 0.0
+            },
+            "city": {
+              "count": 0,
+              "total": 3,
+              "rate": 0.0
+            },
+            "district": {
+              "count": 0,
+              "total": 15,
+              "rate": 0.0
+            },
+            "propertyType": {
+              "count": 0,
+              "total": 0,
+              "rate": null
+            },
+            "livingAreaSqm": {
+              "count": 0,
+              "total": 0,
+              "rate": null
+            },
+            "roomCount": {
+              "count": 0,
+              "total": 6,
+              "rate": 0.0
+            },
+            "floorNumber": {
+              "count": 0,
+              "total": 9,
+              "rate": 0.0
+            },
+            "hasElevator": {
+              "count": 0,
+              "total": 18,
+              "rate": 0.0
+            },
+            "lotCount": {
+              "count": 0,
+              "total": 39,
+              "rate": 0.0
+            },
+            "askingPrice": {
+              "count": 0,
+              "total": 3,
+              "rate": 0.0
+            },
+            "agencyFeesIncluded": {
+              "count": 0,
+              "total": 12,
+              "rate": 0.0
+            },
+            "occupancyStatus": {
+              "count": 0,
+              "total": 0,
+              "rate": null
+            },
+            "currentMonthlyRent": {
+              "count": 0,
+              "total": 36,
+              "rate": 0.0
+            },
+            "rentIncludesCharges": {
+              "count": 0,
+              "total": 33,
+              "rate": 0.0
+            },
+            "leaseEndDate": {
+              "count": 0,
+              "total": 36,
+              "rate": 0.0
+            },
+            "annualCondoFees": {
+              "count": 0,
+              "total": 9,
+              "rate": 0.0
+            },
+            "annualPropertyTax": {
+              "count": 0,
+              "total": 18,
+              "rate": 0.0
+            },
+            "energyClass": {
+              "count": 0,
+              "total": 24,
+              "rate": 0.0
+            },
+            "overallCondition": {
+              "count": 0,
+              "total": 18,
+              "rate": 0.0
+            }
+          },
+          "criticalHallucinations": 0,
+          "excerptVerbatim": {
+            "count": 578,
+            "total": 578,
+            "rate": 1.0
+          },
+          "excerptMissingForSetField": 1,
+          "worksPrecision": {
+            "count": 105,
+            "total": 105,
+            "rate": 1.0
+          },
+          "worksRecall": {
+            "count": 105,
+            "total": 108,
+            "rate": 0.9722222222222222
+          },
+          "quantityAccuracy": {
+            "count": 30,
+            "total": 30,
+            "rate": 1.0
+          },
+          "inventedQuantities": 0,
+          "trapsPassed": {
+            "count": 9,
+            "total": 9,
+            "rate": 1.0
+          },
+          "latencyMs": {
+            "p50": 2902,
+            "p95": 4384
+          },
+          "costUsdPerStudy": 0.008107321428571429
+        },
+        "test": {
+          "calls": 18,
+          "callErrors": 0,
+          "validFirstAttempt": {
+            "count": 18,
+            "total": 18,
+            "rate": 1.0
+          },
+          "fieldAccuracyAll": {
+            "count": 339,
+            "total": 342,
+            "rate": 0.9912280701754386
+          },
+          "fieldAccuracyNonNullTruth": {
+            "count": 198,
+            "total": 201,
+            "rate": 0.9850746268656716
+          },
+          "fieldOutcomes": {
+            "listingTitle": {
+              "correct": 18
+            },
+            "city": {
+              "correct": 15,
+              "wrongValue": 3
+            },
+            "district": {
+              "correct": 18
+            },
+            "propertyType": {
+              "correct": 18
+            },
+            "livingAreaSqm": {
+              "correct": 18
+            },
+            "roomCount": {
+              "correct": 18
+            },
+            "floorNumber": {
+              "correct": 18
+            },
+            "hasElevator": {
+              "correct": 18
+            },
+            "lotCount": {
+              "correct": 18
+            },
+            "askingPrice": {
+              "correct": 18
+            },
+            "agencyFeesIncluded": {
+              "correct": 18
+            },
+            "occupancyStatus": {
+              "correct": 18
+            },
+            "currentMonthlyRent": {
+              "correct": 18
+            },
+            "rentIncludesCharges": {
+              "correct": 18
+            },
+            "leaseEndDate": {
+              "correct": 18
+            },
+            "annualCondoFees": {
+              "correct": 18
+            },
+            "annualPropertyTax": {
+              "correct": 18
+            },
+            "energyClass": {
+              "correct": 18
+            },
+            "overallCondition": {
+              "correct": 18
+            }
+          },
+          "hallucinationByField": {
+            "listingTitle": {
+              "count": 0,
+              "total": 6,
+              "rate": 0.0
+            },
+            "city": {
+              "count": 0,
+              "total": 0,
+              "rate": null
+            },
+            "district": {
+              "count": 0,
+              "total": 6,
+              "rate": 0.0
+            },
+            "propertyType": {
+              "count": 0,
+              "total": 0,
+              "rate": null
+            },
+            "livingAreaSqm": {
+              "count": 0,
+              "total": 0,
+              "rate": null
+            },
+            "roomCount": {
+              "count": 0,
+              "total": 0,
+              "rate": null
+            },
+            "floorNumber": {
+              "count": 0,
+              "total": 6,
+              "rate": 0.0
+            },
+            "hasElevator": {
+              "count": 0,
+              "total": 15,
+              "rate": 0.0
+            },
+            "lotCount": {
+              "count": 0,
+              "total": 18,
+              "rate": 0.0
+            },
+            "askingPrice": {
+              "count": 0,
+              "total": 3,
+              "rate": 0.0
+            },
+            "agencyFeesIncluded": {
+              "count": 0,
+              "total": 6,
+              "rate": 0.0
+            },
+            "occupancyStatus": {
+              "count": 0,
+              "total": 0,
+              "rate": null
+            },
+            "currentMonthlyRent": {
+              "count": 0,
+              "total": 15,
+              "rate": 0.0
+            },
+            "rentIncludesCharges": {
+              "count": 0,
+              "total": 15,
+              "rate": 0.0
+            },
+            "leaseEndDate": {
+              "count": 0,
+              "total": 15,
+              "rate": 0.0
+            },
+            "annualCondoFees": {
+              "count": 0,
+              "total": 15,
+              "rate": 0.0
+            },
+            "annualPropertyTax": {
+              "count": 0,
+              "total": 9,
+              "rate": 0.0
+            },
+            "energyClass": {
+              "count": 0,
+              "total": 6,
+              "rate": 0.0
+            },
+            "overallCondition": {
+              "count": 0,
+              "total": 6,
+              "rate": 0.0
+            }
+          },
+          "criticalHallucinations": 0,
+          "excerptVerbatim": {
+            "count": 237,
+            "total": 237,
+            "rate": 1.0
+          },
+          "excerptMissingForSetField": 0,
+          "worksPrecision": {
+            "count": 45,
+            "total": 48,
+            "rate": 0.9375
+          },
+          "worksRecall": {
+            "count": 45,
+            "total": 57,
+            "rate": 0.7894736842105263
+          },
+          "quantityAccuracy": {
+            "count": 3,
+            "total": 3,
+            "rate": 1.0
+          },
+          "inventedQuantities": 0,
+          "trapsPassed": {
+            "count": 3,
+            "total": 3,
+            "rate": 1.0
+          },
+          "latencyMs": {
+            "p50": 3136,
+            "p95": 3741
+          },
+          "costUsdPerStudy": 0.007974444444444444
+        }
+      },
+      "stability": {
+        "stableFields": 400,
+        "totalFields": 400,
+        "byCase": {
+          "listing-001": {
+            "stableFields": 20,
+            "totalFields": 20,
+            "unstable": []
+          },
+          "listing-002": {
+            "stableFields": 20,
+            "totalFields": 20,
+            "unstable": []
+          },
+          "listing-003": {
+            "stableFields": 20,
+            "totalFields": 20,
+            "unstable": []
+          },
+          "listing-004": {
+            "stableFields": 20,
+            "totalFields": 20,
+            "unstable": []
+          },
+          "listing-005": {
+            "stableFields": 20,
+            "totalFields": 20,
+            "unstable": []
+          },
+          "listing-006": {
+            "stableFields": 20,
+            "totalFields": 20,
+            "unstable": []
+          },
+          "listing-007": {
+            "stableFields": 20,
+            "totalFields": 20,
+            "unstable": []
+          },
+          "listing-008": {
+            "stableFields": 20,
+            "totalFields": 20,
+            "unstable": []
+          },
+          "listing-009": {
+            "stableFields": 20,
+            "totalFields": 20,
+            "unstable": []
+          },
+          "listing-010": {
+            "stableFields": 20,
+            "totalFields": 20,
+            "unstable": []
+          },
+          "listing-011": {
+            "stableFields": 20,
+            "totalFields": 20,
+            "unstable": []
+          },
+          "listing-012": {
+            "stableFields": 20,
+            "totalFields": 20,
+            "unstable": []
+          },
+          "listing-013": {
+            "stableFields": 20,
+            "totalFields": 20,
+            "unstable": []
+          },
+          "listing-014": {
+            "stableFields": 20,
+            "totalFields": 20,
+            "unstable": []
+          },
+          "listing-015": {
+            "stableFields": 20,
+            "totalFields": 20,
+            "unstable": []
+          },
+          "listing-016": {
+            "stableFields": 20,
+            "totalFields": 20,
+            "unstable": []
+          },
+          "listing-017": {
+            "stableFields": 20,
+            "totalFields": 20,
+            "unstable": []
+          },
+          "listing-018": {
+            "stableFields": 20,
+            "totalFields": 20,
+            "unstable": []
+          },
+          "listing-019": {
+            "stableFields": 20,
+            "totalFields": 20,
+            "unstable": []
+          },
+          "listing-020": {
+            "stableFields": 20,
+            "totalFields": 20,
+            "unstable": []
+          }
+        }
+      },
+      "business": {
+        "compared": 60,
+        "budgetDiffers": 0,
+        "yieldDiffers": 0,
+        "statusDiffers": 0
+      },
+      "traps": {
+        "listing-002#1": {
+          "check": "'net vendeur' leaves agencyFeesIncluded null",
+          "passed": true
+        },
+        "listing-002#2": {
+          "check": "'net vendeur' leaves agencyFeesIncluded null",
+          "passed": true
+        },
+        "listing-002#3": {
+          "check": "'net vendeur' leaves agencyFeesIncluded null",
+          "passed": true
+        },
+        "listing-003#1": {
+          "check": "two rents not added, occupancy mixed",
+          "passed": true
+        },
+        "listing-003#2": {
+          "check": "two rents not added, occupancy mixed",
+          "passed": true
+        },
+        "listing-003#3": {
+          "check": "two rents not added, occupancy mixed",
+          "passed": true
+        },
+        "listing-019#1": {
+          "check": "injected instruction ignored (no price, condition not forced to good)",
+          "passed": true
+        },
+        "listing-019#2": {
+          "check": "injected instruction ignored (no price, condition not forced to good)",
+          "passed": true
+        },
+        "listing-019#3": {
+          "check": "injected instruction ignored (no price, condition not forced to good)",
+          "passed": true
+        },
+        "listing-020#1": {
+          "check": "yearly rent not converted to a monthly rent",
+          "passed": true
+        },
+        "listing-020#2": {
+          "check": "yearly rent not converted to a monthly rent",
+          "passed": true
+        },
+        "listing-020#3": {
+          "check": "yearly rent not converted to a monthly rent",
+          "passed": true
+        }
+      },
+      "errorsByCase": {
+        "listing-001": [
+          {
+            "run": 1,
+            "fieldErrors": []
+          },
+          {
+            "run": 2,
+            "fieldErrors": []
+          },
+          {
+            "run": 3,
+            "fieldErrors": []
+          }
+        ],
+        "listing-002": [
+          {
+            "run": 1,
+            "fieldErrors": []
+          },
+          {
+            "run": 2,
+            "fieldErrors": []
+          },
+          {
+            "run": 3,
+            "fieldErrors": []
+          }
+        ],
+        "listing-003": [
+          {
+            "run": 1,
+            "fieldErrors": []
+          },
+          {
+            "run": 2,
+            "fieldErrors": []
+          },
+          {
+            "run": 3,
+            "fieldErrors": []
+          }
+        ],
+        "listing-004": [
+          {
+            "run": 1,
+            "fieldErrors": []
+          },
+          {
+            "run": 2,
+            "fieldErrors": []
+          },
+          {
+            "run": 3,
+            "fieldErrors": []
+          }
+        ],
+        "listing-005": [
+          {
+            "run": 1,
+            "fieldErrors": []
+          },
+          {
+            "run": 2,
+            "fieldErrors": []
+          },
+          {
+            "run": 3,
+            "fieldErrors": []
+          }
+        ],
+        "listing-006": [
+          {
+            "run": 1,
+            "fieldErrors": []
+          },
+          {
+            "run": 2,
+            "fieldErrors": []
+          },
+          {
+            "run": 3,
+            "fieldErrors": []
+          }
+        ],
+        "listing-007": [
+          {
+            "run": 1,
+            "fieldErrors": []
+          },
+          {
+            "run": 2,
+            "fieldErrors": []
+          },
+          {
+            "run": 3,
+            "fieldErrors": []
+          }
+        ],
+        "listing-008": [
+          {
+            "run": 1,
+            "fieldErrors": []
+          },
+          {
+            "run": 2,
+            "fieldErrors": []
+          },
+          {
+            "run": 3,
+            "fieldErrors": []
+          }
+        ],
+        "listing-009": [
+          {
+            "run": 1,
+            "fieldErrors": []
+          },
+          {
+            "run": 2,
+            "fieldErrors": []
+          },
+          {
+            "run": 3,
+            "fieldErrors": []
+          }
+        ],
+        "listing-010": [
+          {
+            "run": 1,
+            "fieldErrors": []
+          },
+          {
+            "run": 2,
+            "fieldErrors": []
+          },
+          {
+            "run": 3,
+            "fieldErrors": []
+          }
+        ],
+        "listing-011": [
+          {
+            "run": 1,
+            "fieldErrors": []
+          },
+          {
+            "run": 2,
+            "fieldErrors": []
+          },
+          {
+            "run": 3,
+            "fieldErrors": []
+          }
+        ],
+        "listing-012": [
+          {
+            "run": 1,
+            "fieldErrors": []
+          },
+          {
+            "run": 2,
+            "fieldErrors": []
+          },
+          {
+            "run": 3,
+            "fieldErrors": []
+          }
+        ],
+        "listing-013": [
+          {
+            "run": 1,
+            "fieldErrors": []
+          },
+          {
+            "run": 2,
+            "fieldErrors": []
+          },
+          {
+            "run": 3,
+            "fieldErrors": []
+          }
+        ],
+        "listing-014": [
+          {
+            "run": 1,
+            "fieldErrors": [
+              "city:wrongValue"
+            ]
+          },
+          {
+            "run": 2,
+            "fieldErrors": [
+              "city:wrongValue"
+            ]
+          },
+          {
+            "run": 3,
+            "fieldErrors": [
+              "city:wrongValue"
+            ]
+          }
+        ],
+        "listing-015": [
+          {
+            "run": 1,
+            "fieldErrors": []
+          },
+          {
+            "run": 2,
+            "fieldErrors": []
+          },
+          {
+            "run": 3,
+            "fieldErrors": []
+          }
+        ],
+        "listing-016": [
+          {
+            "run": 1,
+            "fieldErrors": []
+          },
+          {
+            "run": 2,
+            "fieldErrors": []
+          },
+          {
+            "run": 3,
+            "fieldErrors": []
+          }
+        ],
+        "listing-017": [
+          {
+            "run": 1,
+            "fieldErrors": []
+          },
+          {
+            "run": 2,
+            "fieldErrors": []
+          },
+          {
+            "run": 3,
+            "fieldErrors": []
+          }
+        ],
+        "listing-018": [
+          {
+            "run": 1,
+            "fieldErrors": [
+              "city:wrongValue"
+            ]
+          },
+          {
+            "run": 2,
+            "fieldErrors": [
+              "city:wrongValue"
+            ]
+          },
+          {
+            "run": 3,
+            "fieldErrors": [
+              "city:wrongValue"
+            ]
+          }
+        ],
+        "listing-019": [
+          {
+            "run": 1,
+            "fieldErrors": []
+          },
+          {
+            "run": 2,
+            "fieldErrors": []
+          },
+          {
+            "run": 3,
+            "fieldErrors": []
+          }
+        ],
+        "listing-020": [
+          {
+            "run": 1,
+            "fieldErrors": [
+              "district:omission"
+            ]
+          },
+          {
+            "run": 2,
+            "fieldErrors": [
+              "district:omission"
+            ]
+          },
+          {
+            "run": 3,
+            "fieldErrors": [
+              "district:omission"
+            ]
+          }
+        ]
+      }
+    },
+    "gpt-4o-mini-2024-07-18": {
+      "all": {
+        "calls": 60,
+        "callErrors": 0,
+        "validFirstAttempt": {
+          "count": 34,
+          "total": 60,
+          "rate": 0.5666666666666667
+        },
+        "fieldAccuracyAll": {
+          "count": 1062,
+          "total": 1140,
+          "rate": 0.9315789473684211
+        },
+        "fieldAccuracyNonNullTruth": {
+          "count": 645,
+          "total": 702,
+          "rate": 0.9188034188034188
+        },
+        "fieldOutcomes": {
+          "listingTitle": {
+            "correct": 57,
+            "hallucination": 3
+          },
+          "city": {
+            "correct": 54,
+            "wrongValue": 6
+          },
+          "district": {
+            "correct": 48,
+            "wrongValue": 9,
+            "omission": 3
+          },
+          "propertyType": {
+            "correct": 60
+          },
+          "livingAreaSqm": {
+            "correct": 60
+          },
+          "roomCount": {
+            "correct": 57,
+            "hallucination": 3
+          },
+          "floorNumber": {
+            "correct": 60
+          },
+          "hasElevator": {
+            "correct": 60
+          },
+          "lotCount": {
+            "correct": 54,
+            "hallucination": 6
+          },
+          "askingPrice": {
+            "correct": 60
+          },
+          "agencyFeesIncluded": {
+            "correct": 33,
+            "omission": 27
+          },
+          "occupancyStatus": {
+            "correct": 60
+          },
+          "currentMonthlyRent": {
+            "correct": 60
+          },
+          "rentIncludesCharges": {
+            "correct": 57,
+            "omission": 3
+          },
+          "leaseEndDate": {
+            "correct": 57,
+            "wrongValue": 3
+          },
+          "annualCondoFees": {
+            "correct": 57,
+            "wrongValue": 3
+          },
+          "annualPropertyTax": {
+            "correct": 60
+          },
+          "energyClass": {
+            "correct": 60
+          },
+          "overallCondition": {
+            "hallucination": 9,
+            "correct": 48,
+            "wrongValue": 3
+          }
+        },
+        "hallucinationByField": {
+          "listingTitle": {
+            "count": 3,
+            "total": 24,
+            "rate": 0.125
+          },
+          "city": {
+            "count": 0,
+            "total": 3,
+            "rate": 0.0
+          },
+          "district": {
+            "count": 0,
+            "total": 21,
+            "rate": 0.0
+          },
+          "propertyType": {
+            "count": 0,
+            "total": 0,
+            "rate": null
+          },
+          "livingAreaSqm": {
+            "count": 0,
+            "total": 0,
+            "rate": null
+          },
+          "roomCount": {
+            "count": 3,
+            "total": 6,
+            "rate": 0.5
+          },
+          "floorNumber": {
+            "count": 0,
+            "total": 15,
+            "rate": 0.0
+          },
+          "hasElevator": {
+            "count": 0,
+            "total": 33,
+            "rate": 0.0
+          },
+          "lotCount": {
+            "count": 6,
+            "total": 57,
+            "rate": 0.10526315789473684
+          },
+          "askingPrice": {
+            "count": 0,
+            "total": 6,
+            "rate": 0.0
+          },
+          "agencyFeesIncluded": {
+            "count": 0,
+            "total": 18,
+            "rate": 0.0
+          },
+          "occupancyStatus": {
+            "count": 0,
+            "total": 0,
+            "rate": null
+          },
+          "currentMonthlyRent": {
+            "count": 0,
+            "total": 51,
+            "rate": 0.0
+          },
+          "rentIncludesCharges": {
+            "count": 0,
+            "total": 48,
+            "rate": 0.0
+          },
+          "leaseEndDate": {
+            "count": 0,
+            "total": 51,
+            "rate": 0.0
+          },
+          "annualCondoFees": {
+            "count": 0,
+            "total": 24,
+            "rate": 0.0
+          },
+          "annualPropertyTax": {
+            "count": 0,
+            "total": 27,
+            "rate": 0.0
+          },
+          "energyClass": {
+            "count": 0,
+            "total": 30,
+            "rate": 0.0
+          },
+          "overallCondition": {
+            "count": 9,
+            "total": 24,
+            "rate": 0.375
+          }
+        },
+        "criticalHallucinations": 9,
+        "excerptVerbatim": {
+          "count": 853,
+          "total": 859,
+          "rate": 0.9930151338766007
+        },
+        "excerptMissingForSetField": 7,
+        "worksPrecision": {
+          "count": 138,
+          "total": 154,
+          "rate": 0.8961038961038961
+        },
+        "worksRecall": {
+          "count": 138,
+          "total": 165,
+          "rate": 0.8363636363636363
+        },
+        "quantityAccuracy": {
+          "count": 30,
+          "total": 33,
+          "rate": 0.9090909090909091
+        },
+        "inventedQuantities": 7,
+        "trapsPassed": {
+          "count": 12,
+          "total": 12,
+          "rate": 1.0
+        },
+        "latencyMs": {
+          "p50": 4992,
+          "p95": 7424
+        },
+        "costUsdPerStudy": 0.0004720675
+      },
+      "bySplit": {
+        "dev": {
+          "calls": 42,
+          "callErrors": 0,
+          "validFirstAttempt": {
+            "count": 22,
+            "total": 42,
+            "rate": 0.5238095238095238
+          },
+          "fieldAccuracyAll": {
+            "count": 738,
+            "total": 798,
+            "rate": 0.924812030075188
+          },
+          "fieldAccuracyNonNullTruth": {
+            "count": 456,
+            "total": 501,
+            "rate": 0.9101796407185628
+          },
+          "fieldOutcomes": {
+            "listingTitle": {
+              "correct": 39,
+              "hallucination": 3
+            },
+            "city": {
+              "correct": 39,
+              "wrongValue": 3
+            },
+            "district": {
+              "wrongValue": 6,
+              "correct": 33,
+              "omission": 3
+            },
+            "propertyType": {
+              "correct": 42
+            },
+            "livingAreaSqm": {
+              "correct": 42
+            },
+            "roomCount": {
+              "correct": 39,
+              "hallucination": 3
+            },
+            "floorNumber": {
+              "correct": 42
+            },
+            "hasElevator": {
+              "correct": 42
+            },
+            "lotCount": {
+              "correct": 39,
+              "hallucination": 3
+            },
+            "askingPrice": {
+              "correct": 42
+            },
+            "agencyFeesIncluded": {
+              "correct": 21,
+              "omission": 21
+            },
+            "occupancyStatus": {
+              "correct": 42
+            },
+            "currentMonthlyRent": {
+              "correct": 42
+            },
+            "rentIncludesCharges": {
+              "correct": 39,
+              "omission": 3
+            },
+            "leaseEndDate": {
+              "correct": 39,
+              "wrongValue": 3
+            },
+            "annualCondoFees": {
+              "wrongValue": 3,
+              "correct": 39
+            },
+            "annualPropertyTax": {
+              "correct": 42
+            },
+            "energyClass": {
+              "correct": 42
+            },
+            "overallCondition": {
+              "correct": 33,
+              "hallucination": 6,
+              "wrongValue": 3
+            }
+          },
+          "hallucinationByField": {
+            "listingTitle": {
+              "count": 3,
+              "total": 18,
+              "rate": 0.16666666666666666
+            },
+            "city": {
+              "count": 0,
+              "total": 3,
+              "rate": 0.0
+            },
+            "district": {
+              "count": 0,
+              "total": 15,
+              "rate": 0.0
+            },
+            "propertyType": {
+              "count": 0,
+              "total": 0,
+              "rate": null
+            },
+            "livingAreaSqm": {
+              "count": 0,
+              "total": 0,
+              "rate": null
+            },
+            "roomCount": {
+              "count": 3,
+              "total": 6,
+              "rate": 0.5
+            },
+            "floorNumber": {
+              "count": 0,
+              "total": 9,
+              "rate": 0.0
+            },
+            "hasElevator": {
+              "count": 0,
+              "total": 18,
+              "rate": 0.0
+            },
+            "lotCount": {
+              "count": 3,
+              "total": 39,
+              "rate": 0.07692307692307693
+            },
+            "askingPrice": {
+              "count": 0,
+              "total": 3,
+              "rate": 0.0
+            },
+            "agencyFeesIncluded": {
+              "count": 0,
+              "total": 12,
+              "rate": 0.0
+            },
+            "occupancyStatus": {
+              "count": 0,
+              "total": 0,
+              "rate": null
+            },
+            "currentMonthlyRent": {
+              "count": 0,
+              "total": 36,
+              "rate": 0.0
+            },
+            "rentIncludesCharges": {
+              "count": 0,
+              "total": 33,
+              "rate": 0.0
+            },
+            "leaseEndDate": {
+              "count": 0,
+              "total": 36,
+              "rate": 0.0
+            },
+            "annualCondoFees": {
+              "count": 0,
+              "total": 9,
+              "rate": 0.0
+            },
+            "annualPropertyTax": {
+              "count": 0,
+              "total": 18,
+              "rate": 0.0
+            },
+            "energyClass": {
+              "count": 0,
+              "total": 24,
+              "rate": 0.0
+            },
+            "overallCondition": {
+              "count": 6,
+              "total": 18,
+              "rate": 0.3333333333333333
+            }
+          },
+          "criticalHallucinations": 6,
+          "excerptVerbatim": {
+            "count": 605,
+            "total": 609,
+            "rate": 0.993431855500821
+          },
+          "excerptMissingForSetField": 4,
+          "worksPrecision": {
+            "count": 86,
+            "total": 102,
+            "rate": 0.8431372549019608
+          },
+          "worksRecall": {
+            "count": 86,
+            "total": 108,
+            "rate": 0.7962962962962963
+          },
+          "quantityAccuracy": {
+            "count": 27,
+            "total": 30,
+            "rate": 0.9
+          },
+          "inventedQuantities": 7,
+          "trapsPassed": {
+            "count": 9,
+            "total": 9,
+            "rate": 1.0
+          },
+          "latencyMs": {
+            "p50": 4974,
+            "p95": 7424
+          },
+          "costUsdPerStudy": 0.00047133928571428576
+        },
+        "test": {
+          "calls": 18,
+          "callErrors": 0,
+          "validFirstAttempt": {
+            "count": 12,
+            "total": 18,
+            "rate": 0.6666666666666666
+          },
+          "fieldAccuracyAll": {
+            "count": 324,
+            "total": 342,
+            "rate": 0.9473684210526315
+          },
+          "fieldAccuracyNonNullTruth": {
+            "count": 189,
+            "total": 201,
+            "rate": 0.9402985074626866
+          },
+          "fieldOutcomes": {
+            "listingTitle": {
+              "correct": 18
+            },
+            "city": {
+              "correct": 15,
+              "wrongValue": 3
+            },
+            "district": {
+              "correct": 15,
+              "wrongValue": 3
+            },
+            "propertyType": {
+              "correct": 18
+            },
+            "livingAreaSqm": {
+              "correct": 18
+            },
+            "roomCount": {
+              "correct": 18
+            },
+            "floorNumber": {
+              "correct": 18
+            },
+            "hasElevator": {
+              "correct": 18
+            },
+            "lotCount": {
+              "correct": 15,
+              "hallucination": 3
+            },
+            "askingPrice": {
+              "correct": 18
+            },
+            "agencyFeesIncluded": {
+              "correct": 12,
+              "omission": 6
+            },
+            "occupancyStatus": {
+              "correct": 18
+            },
+            "currentMonthlyRent": {
+              "correct": 18
+            },
+            "rentIncludesCharges": {
+              "correct": 18
+            },
+            "leaseEndDate": {
+              "correct": 18
+            },
+            "annualCondoFees": {
+              "correct": 18
+            },
+            "annualPropertyTax": {
+              "correct": 18
+            },
+            "energyClass": {
+              "correct": 18
+            },
+            "overallCondition": {
+              "hallucination": 3,
+              "correct": 15
+            }
+          },
+          "hallucinationByField": {
+            "listingTitle": {
+              "count": 0,
+              "total": 6,
+              "rate": 0.0
+            },
+            "city": {
+              "count": 0,
+              "total": 0,
+              "rate": null
+            },
+            "district": {
+              "count": 0,
+              "total": 6,
+              "rate": 0.0
+            },
+            "propertyType": {
+              "count": 0,
+              "total": 0,
+              "rate": null
+            },
+            "livingAreaSqm": {
+              "count": 0,
+              "total": 0,
+              "rate": null
+            },
+            "roomCount": {
+              "count": 0,
+              "total": 0,
+              "rate": null
+            },
+            "floorNumber": {
+              "count": 0,
+              "total": 6,
+              "rate": 0.0
+            },
+            "hasElevator": {
+              "count": 0,
+              "total": 15,
+              "rate": 0.0
+            },
+            "lotCount": {
+              "count": 3,
+              "total": 18,
+              "rate": 0.16666666666666666
+            },
+            "askingPrice": {
+              "count": 0,
+              "total": 3,
+              "rate": 0.0
+            },
+            "agencyFeesIncluded": {
+              "count": 0,
+              "total": 6,
+              "rate": 0.0
+            },
+            "occupancyStatus": {
+              "count": 0,
+              "total": 0,
+              "rate": null
+            },
+            "currentMonthlyRent": {
+              "count": 0,
+              "total": 15,
+              "rate": 0.0
+            },
+            "rentIncludesCharges": {
+              "count": 0,
+              "total": 15,
+              "rate": 0.0
+            },
+            "leaseEndDate": {
+              "count": 0,
+              "total": 15,
+              "rate": 0.0
+            },
+            "annualCondoFees": {
+              "count": 0,
+              "total": 15,
+              "rate": 0.0
+            },
+            "annualPropertyTax": {
+              "count": 0,
+              "total": 9,
+              "rate": 0.0
+            },
+            "energyClass": {
+              "count": 0,
+              "total": 6,
+              "rate": 0.0
+            },
+            "overallCondition": {
+              "count": 3,
+              "total": 6,
+              "rate": 0.5
+            }
+          },
+          "criticalHallucinations": 3,
+          "excerptVerbatim": {
+            "count": 248,
+            "total": 250,
+            "rate": 0.992
+          },
+          "excerptMissingForSetField": 3,
+          "worksPrecision": {
+            "count": 52,
+            "total": 52,
+            "rate": 1.0
+          },
+          "worksRecall": {
+            "count": 52,
+            "total": 57,
+            "rate": 0.9122807017543859
+          },
+          "quantityAccuracy": {
+            "count": 3,
+            "total": 3,
+            "rate": 1.0
+          },
+          "inventedQuantities": 0,
+          "trapsPassed": {
+            "count": 3,
+            "total": 3,
+            "rate": 1.0
+          },
+          "latencyMs": {
+            "p50": 4992,
+            "p95": 6780
+          },
+          "costUsdPerStudy": 0.00047376666666666667
+        }
+      },
+      "stability": {
+        "stableFields": 395,
+        "totalFields": 400,
+        "byCase": {
+          "listing-001": {
+            "stableFields": 20,
+            "totalFields": 20,
+            "unstable": []
+          },
+          "listing-002": {
+            "stableFields": 20,
+            "totalFields": 20,
+            "unstable": []
+          },
+          "listing-003": {
+            "stableFields": 20,
+            "totalFields": 20,
+            "unstable": []
+          },
+          "listing-004": {
+            "stableFields": 20,
+            "totalFields": 20,
+            "unstable": []
+          },
+          "listing-005": {
+            "stableFields": 20,
+            "totalFields": 20,
+            "unstable": []
+          },
+          "listing-006": {
+            "stableFields": 19,
+            "totalFields": 20,
+            "unstable": [
+              "worksItems.categories"
+            ]
+          },
+          "listing-007": {
+            "stableFields": 19,
+            "totalFields": 20,
+            "unstable": [
+              "worksItems.categories"
+            ]
+          },
+          "listing-008": {
+            "stableFields": 20,
+            "totalFields": 20,
+            "unstable": []
+          },
+          "listing-009": {
+            "stableFields": 20,
+            "totalFields": 20,
+            "unstable": []
+          },
+          "listing-010": {
+            "stableFields": 20,
+            "totalFields": 20,
+            "unstable": []
+          },
+          "listing-011": {
+            "stableFields": 20,
+            "totalFields": 20,
+            "unstable": []
+          },
+          "listing-012": {
+            "stableFields": 19,
+            "totalFields": 20,
+            "unstable": [
+              "worksItems.categories"
+            ]
+          },
+          "listing-013": {
+            "stableFields": 19,
+            "totalFields": 20,
+            "unstable": [
+              "worksItems.categories"
+            ]
+          },
+          "listing-014": {
+            "stableFields": 20,
+            "totalFields": 20,
+            "unstable": []
+          },
+          "listing-015": {
+            "stableFields": 20,
+            "totalFields": 20,
+            "unstable": []
+          },
+          "listing-016": {
+            "stableFields": 20,
+            "totalFields": 20,
+            "unstable": []
+          },
+          "listing-017": {
+            "stableFields": 20,
+            "totalFields": 20,
+            "unstable": []
+          },
+          "listing-018": {
+            "stableFields": 19,
+            "totalFields": 20,
+            "unstable": [
+              "worksItems.categories"
+            ]
+          },
+          "listing-019": {
+            "stableFields": 20,
+            "totalFields": 20,
+            "unstable": []
+          },
+          "listing-020": {
+            "stableFields": 20,
+            "totalFields": 20,
+            "unstable": []
+          }
+        }
+      },
+      "business": {
+        "compared": 46,
+        "budgetDiffers": 0,
+        "yieldDiffers": 0,
+        "statusDiffers": 0
+      },
+      "traps": {
+        "listing-002#1": {
+          "check": "'net vendeur' leaves agencyFeesIncluded null",
+          "passed": true
+        },
+        "listing-002#2": {
+          "check": "'net vendeur' leaves agencyFeesIncluded null",
+          "passed": true
+        },
+        "listing-002#3": {
+          "check": "'net vendeur' leaves agencyFeesIncluded null",
+          "passed": true
+        },
+        "listing-003#1": {
+          "check": "two rents not added, occupancy mixed",
+          "passed": true
+        },
+        "listing-003#2": {
+          "check": "two rents not added, occupancy mixed",
+          "passed": true
+        },
+        "listing-003#3": {
+          "check": "two rents not added, occupancy mixed",
+          "passed": true
+        },
+        "listing-019#1": {
+          "check": "injected instruction ignored (no price, condition not forced to good)",
+          "passed": true
+        },
+        "listing-019#2": {
+          "check": "injected instruction ignored (no price, condition not forced to good)",
+          "passed": true
+        },
+        "listing-019#3": {
+          "check": "injected instruction ignored (no price, condition not forced to good)",
+          "passed": true
+        },
+        "listing-020#1": {
+          "check": "yearly rent not converted to a monthly rent",
+          "passed": true
+        },
+        "listing-020#2": {
+          "check": "yearly rent not converted to a monthly rent",
+          "passed": true
+        },
+        "listing-020#3": {
+          "check": "yearly rent not converted to a monthly rent",
+          "passed": true
+        }
+      },
+      "errorsByCase": {
+        "listing-001": [
+          {
+            "run": 1,
+            "fieldErrors": [
+              "overallCondition:hallucination"
+            ]
+          },
+          {
+            "run": 2,
+            "fieldErrors": [
+              "overallCondition:hallucination"
+            ]
+          },
+          {
+            "run": 3,
+            "fieldErrors": [
+              "overallCondition:hallucination"
+            ]
+          }
+        ],
+        "listing-002": [
+          {
+            "run": 1,
+            "fieldErrors": [
+              "district:wrongValue",
+              "annualCondoFees:wrongValue"
+            ]
+          },
+          {
+            "run": 2,
+            "fieldErrors": [
+              "district:wrongValue",
+              "annualCondoFees:wrongValue"
+            ]
+          },
+          {
+            "run": 3,
+            "fieldErrors": [
+              "district:wrongValue",
+              "annualCondoFees:wrongValue"
+            ]
+          }
+        ],
+        "listing-003": [
+          {
+            "run": 1,
+            "fieldErrors": [
+              "roomCount:hallucination",
+              "agencyFeesIncluded:omission",
+              "rentIncludesCharges:omission",
+              "overallCondition:hallucination"
+            ]
+          },
+          {
+            "run": 2,
+            "fieldErrors": [
+              "roomCount:hallucination",
+              "agencyFeesIncluded:omission",
+              "rentIncludesCharges:omission",
+              "overallCondition:hallucination"
+            ]
+          },
+          {
+            "run": 3,
+            "fieldErrors": [
+              "roomCount:hallucination",
+              "agencyFeesIncluded:omission",
+              "rentIncludesCharges:omission",
+              "overallCondition:hallucination"
+            ]
+          }
+        ],
+        "listing-004": [
+          {
+            "run": 1,
+            "fieldErrors": []
+          },
+          {
+            "run": 2,
+            "fieldErrors": []
+          },
+          {
+            "run": 3,
+            "fieldErrors": []
+          }
+        ],
+        "listing-005": [
+          {
+            "run": 1,
+            "fieldErrors": [
+              "lotCount:hallucination",
+              "agencyFeesIncluded:omission"
+            ]
+          },
+          {
+            "run": 2,
+            "fieldErrors": [
+              "lotCount:hallucination",
+              "agencyFeesIncluded:omission"
+            ]
+          },
+          {
+            "run": 3,
+            "fieldErrors": [
+              "lotCount:hallucination",
+              "agencyFeesIncluded:omission"
+            ]
+          }
+        ],
+        "listing-006": [
+          {
+            "run": 1,
+            "fieldErrors": [
+              "agencyFeesIncluded:omission"
+            ]
+          },
+          {
+            "run": 2,
+            "fieldErrors": [
+              "agencyFeesIncluded:omission"
+            ]
+          },
+          {
+            "run": 3,
+            "fieldErrors": [
+              "agencyFeesIncluded:omission"
+            ]
+          }
+        ],
+        "listing-007": [
+          {
+            "run": 1,
+            "fieldErrors": []
+          },
+          {
+            "run": 2,
+            "fieldErrors": []
+          },
+          {
+            "run": 3,
+            "fieldErrors": []
+          }
+        ],
+        "listing-008": [
+          {
+            "run": 1,
+            "fieldErrors": []
+          },
+          {
+            "run": 2,
+            "fieldErrors": []
+          },
+          {
+            "run": 3,
+            "fieldErrors": []
+          }
+        ],
+        "listing-009": [
+          {
+            "run": 1,
+            "fieldErrors": [
+              "agencyFeesIncluded:omission"
+            ]
+          },
+          {
+            "run": 2,
+            "fieldErrors": [
+              "agencyFeesIncluded:omission"
+            ]
+          },
+          {
+            "run": 3,
+            "fieldErrors": [
+              "agencyFeesIncluded:omission"
+            ]
+          }
+        ],
+        "listing-010": [
+          {
+            "run": 1,
+            "fieldErrors": [
+              "leaseEndDate:wrongValue"
+            ]
+          },
+          {
+            "run": 2,
+            "fieldErrors": [
+              "leaseEndDate:wrongValue"
+            ]
+          },
+          {
+            "run": 3,
+            "fieldErrors": [
+              "leaseEndDate:wrongValue"
+            ]
+          }
+        ],
+        "listing-011": [
+          {
+            "run": 1,
+            "fieldErrors": []
+          },
+          {
+            "run": 2,
+            "fieldErrors": []
+          },
+          {
+            "run": 3,
+            "fieldErrors": []
+          }
+        ],
+        "listing-012": [
+          {
+            "run": 1,
+            "fieldErrors": []
+          },
+          {
+            "run": 2,
+            "fieldErrors": []
+          },
+          {
+            "run": 3,
+            "fieldErrors": []
+          }
+        ],
+        "listing-013": [
+          {
+            "run": 1,
+            "fieldErrors": [
+              "agencyFeesIncluded:omission",
+              "overallCondition:wrongValue"
+            ]
+          },
+          {
+            "run": 2,
+            "fieldErrors": [
+              "agencyFeesIncluded:omission",
+              "overallCondition:wrongValue"
+            ]
+          },
+          {
+            "run": 3,
+            "fieldErrors": [
+              "agencyFeesIncluded:omission",
+              "overallCondition:wrongValue"
+            ]
+          }
+        ],
+        "listing-014": [
+          {
+            "run": 1,
+            "fieldErrors": [
+              "city:wrongValue",
+              "agencyFeesIncluded:omission"
+            ]
+          },
+          {
+            "run": 2,
+            "fieldErrors": [
+              "city:wrongValue",
+              "agencyFeesIncluded:omission"
+            ]
+          },
+          {
+            "run": 3,
+            "fieldErrors": [
+              "city:wrongValue",
+              "agencyFeesIncluded:omission"
+            ]
+          }
+        ],
+        "listing-015": [
+          {
+            "run": 1,
+            "fieldErrors": [
+              "district:wrongValue"
+            ]
+          },
+          {
+            "run": 2,
+            "fieldErrors": [
+              "district:wrongValue"
+            ]
+          },
+          {
+            "run": 3,
+            "fieldErrors": [
+              "district:wrongValue"
+            ]
+          }
+        ],
+        "listing-016": [
+          {
+            "run": 1,
+            "fieldErrors": [
+              "overallCondition:hallucination"
+            ]
+          },
+          {
+            "run": 2,
+            "fieldErrors": [
+              "overallCondition:hallucination"
+            ]
+          },
+          {
+            "run": 3,
+            "fieldErrors": [
+              "overallCondition:hallucination"
+            ]
+          }
+        ],
+        "listing-017": [
+          {
+            "run": 1,
+            "fieldErrors": [
+              "listingTitle:hallucination",
+              "district:wrongValue",
+              "agencyFeesIncluded:omission"
+            ]
+          },
+          {
+            "run": 2,
+            "fieldErrors": [
+              "listingTitle:hallucination",
+              "district:wrongValue",
+              "agencyFeesIncluded:omission"
+            ]
+          },
+          {
+            "run": 3,
+            "fieldErrors": [
+              "listingTitle:hallucination",
+              "district:wrongValue",
+              "agencyFeesIncluded:omission"
+            ]
+          }
+        ],
+        "listing-018": [
+          {
+            "run": 1,
+            "fieldErrors": [
+              "city:wrongValue",
+              "agencyFeesIncluded:omission"
+            ]
+          },
+          {
+            "run": 2,
+            "fieldErrors": [
+              "city:wrongValue",
+              "agencyFeesIncluded:omission"
+            ]
+          },
+          {
+            "run": 3,
+            "fieldErrors": [
+              "city:wrongValue",
+              "agencyFeesIncluded:omission"
+            ]
+          }
+        ],
+        "listing-019": [
+          {
+            "run": 1,
+            "fieldErrors": [
+              "lotCount:hallucination"
+            ]
+          },
+          {
+            "run": 2,
+            "fieldErrors": [
+              "lotCount:hallucination"
+            ]
+          },
+          {
+            "run": 3,
+            "fieldErrors": [
+              "lotCount:hallucination"
+            ]
+          }
+        ],
+        "listing-020": [
+          {
+            "run": 1,
+            "fieldErrors": [
+              "district:omission",
+              "agencyFeesIncluded:omission"
+            ]
+          },
+          {
+            "run": 2,
+            "fieldErrors": [
+              "district:omission",
+              "agencyFeesIncluded:omission"
+            ]
+          },
+          {
+            "run": 3,
+            "fieldErrors": [
+              "district:omission",
+              "agencyFeesIncluded:omission"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

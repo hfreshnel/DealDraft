@@ -1,21 +1,21 @@
-id,category,source,notes,annotation
-listing-001,portal,fictional,Clean portal-style listing; vacant flat; partial works list; no overall condition stated,claudeDraft
-listing-002,agentMessage,fictional,Informal agent message plus dictated visit notes; approximate and uncertain figures; ambiguous 'net vendeur',claudeDraft
-listing-003,trap,fictional,Multi-lot building; mixed occupancy; two rents that must not be added; works as free text,claudeDraft
-listing-004,crossCheck,reconstructed from public case,Studio reconstructed from the public case page; used to cross-check the yield formula,claudeDraft
-listing-005,portal,fictional,Vendu loué T3; rent CC; lease end month; monthly charges to yearly; explicit good condition,claudeDraft
-listing-006,portal,fictional,House; structural works give heavyRenovation; quantity in sqm; other category with notes; fees on top,claudeDraft
-listing-007,portal,fictional,Ground floor gives 0; explicit refresh condition; monthly charges to yearly; two works in one excerpt,claudeDraft
-listing-008,portal,fictional,Works with quantities in units sqm and linear meters; partial works list gives null condition,claudeDraft
-listing-009,portal,fictional,Owner occupied; renovated flat gives good condition; no works,claudeDraft
-listing-010,portal,fictional,Price on request gives null critical field; rented HC; full lease end date; monthly charges,claudeDraft
-listing-011,portal,fictional,Net vendeur; blank DPE gives null; one excerpt for four works; approximate area,claudeDraft
-listing-012,agentMessage,fictional,House; no headline; approximate area; refresh from interior statement; no itemised works,claudeDraft
-listing-013,agentMessage,fictional,Visit notes override listing area and condition; city not written (district only); quantities from notes,claudeDraft
-listing-014,agentMessage,fictional,Abbreviations (RDC; TF; cc; St-Étienne); price with fees on top; condition stated by owner,claudeDraft
-listing-015,agentMessage,fictional,Visit notes contradict the seller: structural issues give heavyRenovation; measured area overrides,claudeDraft
-listing-016,agentMessage,fictional,Approximate negotiable price kept as written; owner occupied; works on some rooms give null condition,claudeDraft
-listing-017,agentMessage,fictional,Quantities from dictated visit notes (sqm and unit); entrance door and insulation categories,claudeDraft
-listing-018,agentMessage,fictional,Typos and missing accents; monthly property tax to yearly; fees on top; water infiltration,claudeDraft
-listing-019,trap,fictional,Prompt injection in the listing; price range gives null; co-ownership size is not lotCount,claudeDraft
-listing-020,trap,fictional,Commercial premises; yearly rent must not be converted; displayed price vs negotiated price,claudeDraft
+id,category,source,notes,annotation,split
+listing-001,portal,fictional,Clean portal-style listing; vacant flat; partial works list; no overall condition stated,claudeDraft,test
+listing-002,agentMessage,fictional,Informal agent message plus dictated visit notes; approximate and uncertain figures; ambiguous 'net vendeur',claudeDraft,dev
+listing-003,trap,fictional,Multi-lot building; mixed occupancy; two rents that must not be added; works as free text,claudeDraft,dev
+listing-004,crossCheck,reconstructed from public case,Studio reconstructed from the public case page; used to cross-check the yield formula,claudeDraft,test
+listing-005,portal,fictional,Vendu loué T3; rent CC; lease end month; monthly charges to yearly; explicit good condition,claudeDraft,dev
+listing-006,portal,fictional,House; structural works give heavyRenovation; quantity in sqm; other category with notes; fees on top,claudeDraft,test
+listing-007,portal,fictional,Ground floor gives 0; explicit refresh condition; monthly charges to yearly; two works in one excerpt,claudeDraft,dev
+listing-008,portal,fictional,Works with quantities in units sqm and linear meters; partial works list gives null condition,claudeDraft,dev
+listing-009,portal,fictional,Owner occupied; renovated flat gives good condition; no works,claudeDraft,dev
+listing-010,portal,fictional,Price on request gives null critical field; rented HC; full lease end date; monthly charges,claudeDraft,dev
+listing-011,portal,fictional,Net vendeur; blank DPE gives null; one excerpt for four works; approximate area,claudeDraft,dev
+listing-012,agentMessage,fictional,House; no headline; approximate area; refresh from interior statement; no itemised works,claudeDraft,dev
+listing-013,agentMessage,fictional,Visit notes override listing area and condition; city not written (district only); quantities from notes,claudeDraft,dev
+listing-014,agentMessage,fictional,Abbreviations (RDC; TF; cc; St-Étienne); price with fees on top; condition stated by owner,claudeDraft,test
+listing-015,agentMessage,fictional,Visit notes contradict the seller: structural issues give heavyRenovation; measured area overrides,claudeDraft,test
+listing-016,agentMessage,fictional,Approximate negotiable price kept as written; owner occupied; works on some rooms give null condition,claudeDraft,dev
+listing-017,agentMessage,fictional,Quantities from dictated visit notes (sqm and unit); entrance door and insulation categories,claudeDraft,dev
+listing-018,agentMessage,fictional,Typos and missing accents; monthly property tax to yearly; fees on top; water infiltration,claudeDraft,dev
+listing-019,trap,fictional,Prompt injection in the listing; price range gives null; co-ownership size is not lotCount,claudeDraft,test
+listing-020,trap,fictional,Commercial premises; yearly rent must not be converted; displayed price vs negotiated price,claudeDraft,dev

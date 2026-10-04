@@ -179,6 +179,29 @@ Ces hypothèses seront listées dans le README sous le titre « Hypothèses sur 
 | Identifiants Google (Sheet, dossier) hors git : jetons `__CONFIG_x__` dans les workflows, valeurs dans `n8n/config.local.json` (ignoré), script `n8n/render-workflows.mjs` à l'import | Identifiants en dur dans les workflows commités | Le dépôt reste public sans référence au compte Google ; un seul endroit à modifier |
 | Sheet et dossier Drive créés par un workflow (`wf-setup-google`) | Création à la main | Reproductible : colonnes, formats et onglets identiques à chaque installation |
 
+### Jour 5 : évaluation (4 octobre 2026)
+
+| Choix | Alternative écartée | Justification |
+|---|---|---|
+| La requête envoyée au modèle est construite par l'API (`POST /extraction-request`), appelée par n8n et par `run_eval.py` | Reconstruire la requête en Python dans le script | L'évaluation teste exactement ce qui tourne en production. Vérifié : la requête de l'API est identique, octet pour octet, à celle que construisait n8n |
+| Modèles épinglés à une version datée (`gpt-4o-2024-08-06`, `gpt-4o-mini-2024-07-18`), en production comme en évaluation | Alias `gpt-4o` | Un alias peut pointer vers un nouveau modèle et changer les résultats sans prévenir |
+| 14 cas de mise au point, 6 cas de test tirés au sort par catégorie (graine 20261004) : 001, 004, 006, 014, 015, 019 | Ajuster et noter sur les 20 cas | Le prompt, les textes et les annotations viennent du même auteur : noter sur les cas qui ont servi à ajuster le prompt donnerait un score flatteur. Le tirage évite de choisir des cas faciles |
+| Précision donnée deux fois : sur tous les champs, et sur les seuls champs non nuls de la vérité | Un seul taux | Environ 40 % des champs attendus sont nuls : un modèle qui répond souvent `null` aurait une bonne précision globale sans rien extraire |
+| Erreurs classées en hallucination, omission, mauvaise valeur | Un seul taux d'erreur | Une hallucination (valeur inventée) viole l'invariant 2 ; une omission est seulement un manque. Elles n'ont pas le même coût |
+| Points de vigilance non notés automatiquement | Comparaison mot à mot, ou modèle juge | Texte libre : la comparaison mot à mot est fausse, un modèle juge ajoute une source d'erreur et un coût. Ils sont relus à la main sur un échantillon |
+| Impact métier : l'extraction prédite et la vérité passent dans le même calcul (`analyze`, notaire 7 %, loyer 500 €), puis on compte les budgets et rendements qui changent | Précision par champ seule | Une erreur sur l'étage ne change rien, une erreur sur le prix change la décision |
+| Seul le 1er essai est noté | Noter après les nouvelles tentatives | Correspond à la métrique « JSON valide au 1er essai » ; la nouvelle tentative a été testée au J4 |
+| Service Docker `eval` séparé, seul à recevoir `OPENAI_API_KEY` | Clé donnée à l'API | L'API qui tourne en permanence n'a pas besoin de la clé |
+| Prix : tarif des alias (`gpt-4o` 2,50 $ / 10 $, `gpt-4o-mini` 0,15 $ / 0,60 $ par million de jetons) | Tarif affiché pour les versions datées (3,75 $ / 15 $ pour `gpt-4o-2024-08-06`) | La page de tarifs semble montrer pour les versions datées le prix des modèles fine-tunés. Certitude d'environ 80 %, signalée dans le rapport |
+
+**Résultat de l'évaluation et modèle retenu (4 octobre 2026)**
+
+| Choix | Alternative écartée | Justification |
+|---|---|---|
+| `gpt-4o-2024-08-06` retenu pour l'extraction | `gpt-4o-mini-2024-07-18` | 9 hallucinations sur champs critiques sur 60 extractions (0 pour `gpt-4o`) et 7 quantités inventées. Ces erreurs ont une forme valide : la nouvelle tentative ne les voit pas. Le coût n'est pas décisif (0,0081 $ contre 0,0005 $ par étude). Détail dans `eval/report.md` |
+| Six corrections générales du prompt, appliquées après la mesure de référence | Corriger aussi les travaux de structure après le test | Les cas de test avaient été vus : toute correction suivante ne pourrait plus être mesurée honnêtement. Limite écrite dans le rapport |
+| Annotations discutables conservées (« St Etienne », « centre-ville », lots du cas 003) | Les modifier après les résultats | Les modifier après avoir vu les sorties introduirait un biais. Les erreurs sont comptées et expliquées |
+
 ## 9. Sources
 
 - https://monthimmo.fr/nos-prestations/

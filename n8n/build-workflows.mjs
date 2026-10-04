@@ -213,7 +213,8 @@ const CONFIG = {
     googleDriveFolderId: '__CONFIG_googleDriveFolderId__',
     publicBaseUrl: '__CONFIG_publicBaseUrl__',
     approvalFormWebhookId: '${APPROVAL_WEBHOOK_ID}',
-    model: 'gpt-4o',
+    // Pinned snapshot: an alias can move to a new model and change the results silently.
+    model: 'gpt-4o-2024-08-06',
     maxCorrectiveRetries: 2,
 };
 const suffix = Math.random().toString(36).slice(2, 6);
@@ -229,15 +230,21 @@ return [{
     },
 }];
 `),
-        node(P, 'Get extraction config', 'n8n-nodes-base.httpRequest', 4.2, [440, 0], {
-            url: 'http://api:8000/extraction-tool',
+        node(P, 'Get extraction request', 'n8n-nodes-base.httpRequest', 4.2, [440, 0], {
+            method: 'POST',
+            url: 'http://api:8000/extraction-request',
+            sendBody: true,
+            specifyBody: 'json',
+            jsonBody: "={{ JSON.stringify({ listingText: String($('Listing form').first().json.listingText || ''), visitNotes: String($('Listing form').first().json.visitNotes || ''), model: $json.model }) }}",
             options: { timeout: 15000 },
         }),
         code(P, 'Build OpenAI request', [660, 0], `
-const config = $('Config').first().json;
+// The request itself is built by the API (same code as the evaluation script); this node only adds the form context.
 const form = $('Listing form').first().json;
-const extractionConfig = $input.first().json;
-const neutralize = (value) => String(value || '').replace(new RegExp('<(/?)(listing_text|visit_notes)', 'gi'), '&lt;$1$2').trim();
+const extractionRequest = $input.first().json;
+if (!extractionRequest.requestBody) {
+    throw new Error('The API returned no extraction request');
+}
 // Optional amounts are text fields: an empty n8n number field arrives as 0, which would silently become a rent.
 const parseOptionalAmount = (value, name) => {
     const text = String(value === undefined || value === null ? '' : value).replace(/\\s/g, '').replace(',', '.');
@@ -248,28 +255,13 @@ const parseOptionalAmount = (value, name) => {
     }
     return number;
 };
-const expectedMonthlyRent = parseOptionalAmount(form.expectedMonthlyRent, 'expectedMonthlyRent');
-const listingText = neutralize(form.listingText);
-const visitNotes = neutralize(form.visitNotes);
-let userContent = '<listing_text>\\n' + listingText + '\\n</listing_text>';
-if (visitNotes) {
-    userContent += '\\n\\n<visit_notes>\\n' + visitNotes + '\\n</visit_notes>';
-}
 return [{
     json: {
-        requestBody: {
-            model: config.model,
-            temperature: 0,
-            messages: [
-                { role: 'system', content: extractionConfig.systemPrompt },
-                { role: 'user', content: userContent },
-            ],
-            response_format: extractionConfig.responseFormat,
-        },
+        requestBody: extractionRequest.requestBody,
         sourceTexts: { listingText: String(form.listingText || ''), visitNotes: String(form.visitNotes || '') },
-        schemaVersion: extractionConfig.schemaVersion,
-        promptVersion: extractionConfig.promptVersion,
-        expectedMonthlyRent,
+        schemaVersion: extractionRequest.schemaVersion,
+        promptVersion: extractionRequest.promptVersion,
+        expectedMonthlyRent: parseOptionalAmount(form.expectedMonthlyRent, 'expectedMonthlyRent'),
         notaryFeeRatePercent: form.notaryFeeRatePercent,
     },
 }];
@@ -573,8 +565,8 @@ return [{ json: { result: "Échec de l'extraction : aucune étude créée", stud
 `),
     ];
     link(c, 'Listing form', 'Config');
-    link(c, 'Config', 'Get extraction config');
-    link(c, 'Get extraction config', 'Build OpenAI request');
+    link(c, 'Config', 'Get extraction request');
+    link(c, 'Get extraction request', 'Build OpenAI request');
     link(c, 'Build OpenAI request', 'OpenAI extraction');
     link(c, 'OpenAI extraction', 'Parse OpenAI response');
     link(c, 'Parse OpenAI response', 'Extraction received?');

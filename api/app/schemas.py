@@ -318,6 +318,14 @@ class AnalysisResult(BaseModel):
     warnings: list[str]
 
 
+class ExtractionRequestInput(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    listingText: str = Field(min_length=1, max_length=20000)
+    visitNotes: str = Field(default="", max_length=20000)
+    model: str = Field(pattern=r"^[a-z0-9][a-z0-9.\-]{1,63}$")
+
+
 class ReportMeta(BaseModel):
     model_config = ConfigDict(extra="forbid")
 

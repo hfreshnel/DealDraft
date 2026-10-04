@@ -23,6 +23,21 @@ services:
       start_period: 10s
     restart: unless-stopped
 
+  # One-shot evaluation runner: the only service that receives the OpenAI key.
+  # docker compose run --rm eval python scripts/run_eval.py --split dev
+  eval:
+    build: ./api
+    profiles: ["eval"]
+    command: ["python", "scripts/run_eval.py"]
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      EVAL_DIR: /eval
+      PRICING_DIR: /pricing
+    volumes:
+      - ./api:/app
+      - ./eval:/eval
+      - ./pricing:/pricing:ro
+
   n8n:
     image: docker.n8n.io/n8nio/n8n:${N8N_VERSION:?Set N8N_VERSION in .env}
     ports:

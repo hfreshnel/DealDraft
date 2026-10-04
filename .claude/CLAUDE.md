@@ -81,12 +81,12 @@ Ports exposés sur `127.0.0.1` uniquement (API 8000, n8n 5678).
 
 ```
 api/app/        main.py · schemas.py · tool_schema.py · extraction_prompt.py · excerpt_check.py · pricing.py · finance.py · report.py
-                localization.py (libellés FR, format des nombres) · templates/report.html.j2
-api/scripts/    export_schema.py
-api/tests/      test_schemas.py · test_pricing.py
+                localization.py (libellés FR, format des nombres) · evaluation.py (notation) · templates/report.html.j2
+api/scripts/    export_schema.py · run_eval.py
+api/tests/      test_schemas.py · test_pricing.py · test_finance.py · test_excerpt_check.py · test_evaluation.py
 pricing/        works-grid.example.yaml
 schemas/        schéma d'outil généré (jamais édité à la main)
-eval/           dataset/ · ground_truth/ · manifest.csv · README.md      (run_eval.py : à créer, jour 5)
+eval/           dataset/ · ground_truth/ · manifest.csv (split dev/test, provenance) · README.md · runs/
 n8n/            build-workflows.mjs (source des JSON : modifier ici, pas dans l'éditeur n8n) · workflows/ (4 JSON générés, jetons __CONFIG_x__)
                 render-workflows.mjs · config.example.json · config.local.json (ignoré)
 docs/           cahier-des-charges.md · decision-log.md · report-template.md
@@ -101,9 +101,10 @@ cp .env.example .env                                   # renseigner N8N_VERSION 
 docker compose build api
 docker compose run --rm api uv lock                    # écrit api/uv.lock sur l'hôte
 docker compose build api
-docker compose run --rm api pytest                     # 86 tests attendus verts
+docker compose run --rm api pytest                     # 188 tests attendus verts
 docker compose run --rm api python scripts/export_schema.py
 docker compose up -d                                   # API :8000 · n8n :5678
+docker compose --profile eval run --rm eval python scripts/run_eval.py --split dev --runs 3   # clé OPENAI_API_KEY dans .env
 
 # Workflows (n8n monte ./n8n sur /n8n-repo) ; première installation : config.local.json copié de config.example.json,
 # importer puis exécuter wf-setup-google, reporter les deux identifiants dans config.local.json, réimporter.
@@ -113,7 +114,7 @@ docker compose exec n8n sh -c "for id in wfIngestListing01 wfApproveDraft01 wfEr
 docker compose restart n8n                             # l'import dépublie : republier puis redémarrer
 ```
 
-Points d'accès : `GET /health`, `GET /extraction-tool` (schéma, prompt, versions), `POST /validate-extraction`, `POST /analyze`, `POST /report` (analyse + fiche HTML). Les erreurs de validation renvoient un 422 structuré (`error`, `details[]`) que n8n réinjecte dans le prompt correctif.
+Points d'accès : `GET /health`, `GET /extraction-tool` (schéma, prompt, versions), `POST /validate-extraction`, `POST /analyze`, `POST /report` (analyse + fiche HTML), `POST /extraction-request` (requête OpenAI, utilisée par n8n et l'évaluation). Les erreurs de validation renvoient un 422 structuré (`error`, `details[]`) que n8n réinjecte dans le prompt correctif.
 
 ---
 
@@ -126,7 +127,7 @@ Points d'accès : `GET /health`, `GET /extraction-tool` (schéma, prompt, versio
 | J2 | Prompt système (`extraction_prompt.py`), `POST /validate-extraction`, `wf-ingest-listing` (formulaire n8n → OpenAI `gpt-4o` → validation) | **Fait** : 4 cas sur 4 valides ; écarts et instabilité à traiter au J5 |
 | J3 | `finance.py`, chargement de la grille, `/analyze`, branché dans `wf-ingest-listing` | **Fait** : recoupement 13,50 % vérifié |
 | J4 | Fiche Google Doc (`/report`), Suivi et Journal Sheets, `wf-approve-and-draft`, `wf-error-handler`, nouvelle tentative | **Fait et testé le 3 oct.** : fiche, ligne Suivi, brouillon Gmail, refus d'une double validation, erreur provoquée journalisée, 3 tentatives puis arrêt, correction des hypothèses (fiche remplacée au même lien), refus sans loyer, avertissements en français. Piège n8n : un champ numérique vide arrive à `0` (champs optionnels en texte) |
-| J5 | `run_eval.py`, itérations, comparaison `gpt-4o-mini`/`gpt-4o`, `eval/report.md` | |
+| J5 | `run_eval.py`, itérations, comparaison `gpt-4o-mini`/`gpt-4o`, `eval/report.md` | **Fait** (4 oct.) : `gpt-4o` atteint les cibles (test : 98,5 % de précision, 0 hallucination critique, 100 % de JSON valide) ; `gpt-4o-mini` écarté (9 hallucinations critiques sur 60). Prompt `df0c52c9b4fb`. Limites : annotations non relues par un humain, rappel faible sur les travaux de structure, 6 cas de test |
 | J6 | Page Next.js, démo rejouée, déploiement Vercel, vidéo | |
 | J7 | README, guide, note stratégique, envoi de la candidature | |
 
@@ -145,6 +146,7 @@ Priorité si retard : le bonus saute d'abord, puis la comparaison de modèles. V
 - Le schéma ne garantit pas la fidélité des extraits : `POST /validate-extraction` (`excerpt_check.py`) la contrôle (extraits mot pour mot, un extrait par champ non nul, aucun sur un champ nul) et renvoie un 422 structuré.
 - Version de n8n et balise de l'image `uv` non épinglées.
 - Limites de l'API Coda gratuite non vérifiées (Sheets utilisé par défaut).
+- **Annotations d'évaluation** : rédigées par l'IA, jamais relues (`claudeDraft`). Temps humain de référence : non mesuré. Tarif OpenAI des versions datées : doute sur la page officielle.
 - Taux de notaire, de crédit et d'assurance : **à sourcer**, aucune valeur par défaut.
 
 | # | Hypothèse sur Month'immo | Certitude |

@@ -43,7 +43,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const CONFIG = {\n    googleSpreadsheetId: '__CONFIG_googleSpreadsheetId__',\n    googleDriveFolderId: '__CONFIG_googleDriveFolderId__',\n    publicBaseUrl: '__CONFIG_publicBaseUrl__',\n    approvalFormWebhookId: '3e8f5b2a-6c1d-4f7e-9a2b-5d0c1e7a4001',\n    model: 'gpt-4o',\n    maxCorrectiveRetries: 2,\n};\nconst suffix = Math.random().toString(36).slice(2, 6);\nconst studyId = 'ER-' + $now.toFormat('yyyyMMdd-HHmm') + '-' + suffix;\nreturn [{\n    json: {\n        ...CONFIG,\n        studyId,\n        createdAt: $now.toISO(),\n        createdAtDisplay: $now.toFormat('yyyy-MM-dd HH:mm:ss'),\n        approvalUrl: CONFIG.publicBaseUrl + '/form/' + CONFIG.approvalFormWebhookId + '?studyId=' + encodeURIComponent(studyId),\n        spreadsheetUrl: 'https://docs.google.com/spreadsheets/d/' + CONFIG.googleSpreadsheetId,\n    },\n}];"
+        "jsCode": "const CONFIG = {\n    googleSpreadsheetId: '__CONFIG_googleSpreadsheetId__',\n    googleDriveFolderId: '__CONFIG_googleDriveFolderId__',\n    publicBaseUrl: '__CONFIG_publicBaseUrl__',\n    approvalFormWebhookId: '3e8f5b2a-6c1d-4f7e-9a2b-5d0c1e7a4001',\n    // Pinned snapshot: an alias can move to a new model and change the results silently.\n    model: 'gpt-4o-2024-08-06',\n    maxCorrectiveRetries: 2,\n};\nconst suffix = Math.random().toString(36).slice(2, 6);\nconst studyId = 'ER-' + $now.toFormat('yyyyMMdd-HHmm') + '-' + suffix;\nreturn [{\n    json: {\n        ...CONFIG,\n        studyId,\n        createdAt: $now.toISO(),\n        createdAtDisplay: $now.toFormat('yyyy-MM-dd HH:mm:ss'),\n        approvalUrl: CONFIG.publicBaseUrl + '/form/' + CONFIG.approvalFormWebhookId + '?studyId=' + encodeURIComponent(studyId),\n        spreadsheetUrl: 'https://docs.google.com/spreadsheets/d/' + CONFIG.googleSpreadsheetId,\n    },\n}];"
       },
       "id": "5b0e7a64-0000-4000-8000-000000000008",
       "name": "Config",
@@ -56,13 +56,17 @@
     },
     {
       "parameters": {
-        "url": "http://api:8000/extraction-tool",
+        "method": "POST",
+        "url": "http://api:8000/extraction-request",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ listingText: String($('Listing form').first().json.listingText || ''), visitNotes: String($('Listing form').first().json.visitNotes || ''), model: $json.model }) }}",
         "options": {
           "timeout": 15000
         }
       },
       "id": "5b0e7a64-0000-4000-8000-000000000009",
-      "name": "Get extraction config",
+      "name": "Get extraction request",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
@@ -72,7 +76,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const config = $('Config').first().json;\nconst form = $('Listing form').first().json;\nconst extractionConfig = $input.first().json;\nconst neutralize = (value) => String(value || '').replace(new RegExp('<(/?)(listing_text|visit_notes)', 'gi'), '&lt;$1$2').trim();\n// Optional amounts are text fields: an empty n8n number field arrives as 0, which would silently become a rent.\nconst parseOptionalAmount = (value, name) => {\n    const text = String(value === undefined || value === null ? '' : value).replace(/\\s/g, '').replace(',', '.');\n    if (text === '') return null;\n    const number = Number(text);\n    if (!Number.isFinite(number) || number <= 0) {\n        throw new Error(name + ' must be empty or a positive number, got: ' + value);\n    }\n    return number;\n};\nconst expectedMonthlyRent = parseOptionalAmount(form.expectedMonthlyRent, 'expectedMonthlyRent');\nconst listingText = neutralize(form.listingText);\nconst visitNotes = neutralize(form.visitNotes);\nlet userContent = '<listing_text>\\n' + listingText + '\\n</listing_text>';\nif (visitNotes) {\n    userContent += '\\n\\n<visit_notes>\\n' + visitNotes + '\\n</visit_notes>';\n}\nreturn [{\n    json: {\n        requestBody: {\n            model: config.model,\n            temperature: 0,\n            messages: [\n                { role: 'system', content: extractionConfig.systemPrompt },\n                { role: 'user', content: userContent },\n            ],\n            response_format: extractionConfig.responseFormat,\n        },\n        sourceTexts: { listingText: String(form.listingText || ''), visitNotes: String(form.visitNotes || '') },\n        schemaVersion: extractionConfig.schemaVersion,\n        promptVersion: extractionConfig.promptVersion,\n        expectedMonthlyRent,\n        notaryFeeRatePercent: form.notaryFeeRatePercent,\n    },\n}];"
+        "jsCode": "// The request itself is built by the API (same code as the evaluation script); this node only adds the form context.\nconst form = $('Listing form').first().json;\nconst extractionRequest = $input.first().json;\nif (!extractionRequest.requestBody) {\n    throw new Error('The API returned no extraction request');\n}\n// Optional amounts are text fields: an empty n8n number field arrives as 0, which would silently become a rent.\nconst parseOptionalAmount = (value, name) => {\n    const text = String(value === undefined || value === null ? '' : value).replace(/\\s/g, '').replace(',', '.');\n    if (text === '') return null;\n    const number = Number(text);\n    if (!Number.isFinite(number) || number <= 0) {\n        throw new Error(name + ' must be empty or a positive number, got: ' + value);\n    }\n    return number;\n};\nreturn [{\n    json: {\n        requestBody: extractionRequest.requestBody,\n        sourceTexts: { listingText: String(form.listingText || ''), visitNotes: String(form.visitNotes || '') },\n        schemaVersion: extractionRequest.schemaVersion,\n        promptVersion: extractionRequest.promptVersion,\n        expectedMonthlyRent: parseOptionalAmount(form.expectedMonthlyRent, 'expectedMonthlyRent'),\n        notaryFeeRatePercent: form.notaryFeeRatePercent,\n    },\n}];"
       },
       "id": "5b0e7a64-0000-4000-8000-000000000010",
       "name": "Build OpenAI request",
@@ -517,14 +521,14 @@
       "main": [
         [
           {
-            "node": "Get extraction config",
+            "node": "Get extraction request",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Get extraction config": {
+    "Get extraction request": {
       "main": [
         [
           {

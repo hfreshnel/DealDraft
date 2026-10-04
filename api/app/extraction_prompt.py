@@ -1,4 +1,7 @@
 import hashlib
+import re
+
+from app.tool_schema import buildOpenAiResponseFormat
 
 EXTRACTION_SYSTEM_PROMPT = """You extract structured data from French real estate material for a property hunter.
 
@@ -17,18 +20,22 @@ RULES
 1. Extract, never decide. You never estimate a price, a rent or a cost, and you never add up amounts.
 2. A value that the text does not explicitly state is null. An empty worksItems or riskFlags list is [].
 3. Keep approximate values as written ("environ 30 m²" gives 30). Convert shorthand: "28k" = 28000, "400 balles" = 400.
-4. Convert monthly charges or taxes to yearly amounts only when the text gives a monthly figure (x12).
+4. Convert monthly charges or taxes to yearly amounts only when the text gives a monthly figure (x12). An amount
+   already stated per year ("400/an", "par an") is yearly: never multiply it.
 5. "Net vendeur" does not say who pays the agency fees: agencyFeesIncluded stays null.
 6. Several rents in the text (multi-lot building): currentMonthlyRent is null. Never add them. rentIncludesCharges
    may still be set when the text states it for all the rents ("hors charges" = false, "CC" = true).
+   currentMonthlyRent is only a rent stated per month: a rent stated per year stays null, never divided by 12.
 7. overallCondition comes only from an explicit statement about the whole property. A list of partial works alone
    gives null, and so does a statement about only some lots or rooms. Use renovation when the text says the whole
    property needs to be redone ("tout est à reprendre", "dans un sale état"). Use heavyRenovation only when structural works are explicitly mentioned (load-bearing
-   walls, foundations, framework, collapsed floors).
+   walls, foundations, framework, collapsed floors). A list of works, even long, says nothing about the whole
+   property: with only such a list overallCondition stays null.
 8. listingTitle is the headline when the text starts with one (a title line, an ad heading); null for an informal
-   message without headline. lotCount is only the number of lots sold in this sale (whole building sold in bloc).
+   message without headline (its first sentence is not a title). lotCount is only the number of lots sold in this sale (whole building sold in bloc).
    The size of a co-ownership ("copropriété de 18 lots") is not a lotCount: keep it null.
-9. Each work mentioned goes in worksItems with a category from the closed list. Quantity and unit only if written
+9. Each work still to be done goes in worksItems with a category from the closed list. A work already completed
+   ("toiture refaite il y a 10 ans") is not a work item. A water heater ("ballon d'eau chaude") is plumbing. Quantity and unit only if written
    in the text, otherwise both null. Use category "other" only if no category fits, and then fill note.
 10. Excerpts must be copied character for character from the source text, without correction, translation or
     ellipsis ("...") and without joining two separate places of the text. Spelling, accents and punctuation stay
@@ -41,5 +48,33 @@ RULES
 """
 
 
+SOURCE_TAG_PATTERN = re.compile(r"<(/?)(listing_text|visit_notes)", re.IGNORECASE)
+
+
 def computePromptVersion() -> str:
     return hashlib.sha256(EXTRACTION_SYSTEM_PROMPT.encode("utf-8")).hexdigest()[:12]
+
+
+def neutralizeSourceText(value: str) -> str:
+    # A forwarded text must not be able to close its own block and write outside it.
+    return SOURCE_TAG_PATTERN.sub(r"&lt;\1\2", value or "").strip()
+
+
+def buildUserContent(listingText: str, visitNotes: str) -> str:
+    content = f"<listing_text>\n{neutralizeSourceText(listingText)}\n</listing_text>"
+    notes = neutralizeSourceText(visitNotes)
+    if notes:
+        content += f"\n\n<visit_notes>\n{notes}\n</visit_notes>"
+    return content
+
+
+def buildExtractionRequest(listingText: str, visitNotes: str, model: str) -> dict:
+    return {
+        "model": model,
+        "temperature": 0,
+        "messages": [
+            {"role": "system", "content": EXTRACTION_SYSTEM_PROMPT},
+            {"role": "user", "content": buildUserContent(listingText, visitNotes)},
+        ],
+        "response_format": buildOpenAiResponseFormat(),
+    }

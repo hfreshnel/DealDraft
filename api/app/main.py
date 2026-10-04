@@ -7,7 +7,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
 from app.excerpt_check import findExcerptProblems
-from app.extraction_prompt import EXTRACTION_SYSTEM_PROMPT, computePromptVersion
+from app.extraction_prompt import EXTRACTION_SYSTEM_PROMPT, buildExtractionRequest, computePromptVersion
 from app.finance import analyze
 from app.pricing import loadWorksPriceGrid
 from app.report import renderReport
@@ -15,6 +15,7 @@ from app.schemas import (
     AnalysisRequest,
     AnalysisResult,
     ExtractionCheckRequest,
+    ExtractionRequestInput,
     HealthResponse,
     ReportRequest,
     ReportResponse,
@@ -94,6 +95,20 @@ def getExtractionTool() -> dict:
         }
     except Exception:
         logger.exception("Failed to build extraction schema")
+        raise
+
+
+@app.post("/extraction-request")
+def postExtractionRequest(request: ExtractionRequestInput) -> dict:
+    # Single builder of the OpenAI request, shared by n8n and the evaluation script.
+    try:
+        return {
+            "requestBody": buildExtractionRequest(request.listingText, request.visitNotes, request.model),
+            "schemaVersion": SCHEMA_VERSION,
+            "promptVersion": computePromptVersion(),
+        }
+    except Exception:
+        logger.exception("Failed to build the extraction request")
         raise
 
 

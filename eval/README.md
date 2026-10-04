@@ -9,6 +9,20 @@
 | `ground_truth/listing-XXX.json` | Hand-annotated expected extraction, same contract as the API | yes |
 | `manifest.csv` | One line per listing: id, category, source, notes, annotation | yes |
 
+## Dev and test split (`split` column)
+
+6 test cases drawn at random per category (seed 20261004): 2 portal, 2 agent messages, 1 trap, the cross-check case. Prompt changes are tuned on `dev` only; `test` is run once at the end and is the reported score.
+
+## Running the evaluation
+
+```bash
+# OPENAI_API_KEY must be set in .env (only the eval service receives it)
+docker compose --profile eval run --rm eval python scripts/run_eval.py --split dev --runs 3 --label baseline
+docker compose --profile eval run --rm eval python scripts/run_eval.py --split all --runs 3 --label final
+```
+
+Each run writes `runs/<id>/calls.jsonl` (every call, raw output and score), `metrics.json` and `summary.md`.
+
 ## Annotation provenance (`annotation` column)
 
 | Value | Meaning |
