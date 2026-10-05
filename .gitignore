@@ -19,6 +19,9 @@ node_modules/
 .next/
 .vercel/
 
+# Video: generated soundtrack (npm run audio) and renders (out/)
+video/public/audio/
+
 # Raw listings before anonymization: never committed
 eval/raw/
 

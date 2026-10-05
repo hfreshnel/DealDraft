@@ -1,0 +1,35 @@
+{
+    "name": "dealdraft-film",
+    "version": "1.0.0",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "studio": "remotion studio",
+        "audio": "node scripts/synth-audio.ts",
+        "typecheck": "tsc --noEmit",
+        "render": "remotion render DealDraftFilm out/dealdraft-film-son.mp4",
+        "mute": "remotion ffmpeg -y -i out/dealdraft-film-son.mp4 -an -c:v copy out/dealdraft-film-muet.mp4",
+        "poster": "remotion still Poster out/poster.png"
+    },
+    "dependencies": {
+        "@fontsource-variable/jetbrains-mono": "5.3.0",
+        "@fontsource-variable/schibsted-grotesk": "5.3.0",
+        "@remotion/cli": "4.0.532",
+        "@remotion/fonts": "4.0.532",
+        "@remotion/layout-utils": "4.0.532",
+        "@remotion/motion-blur": "4.0.532",
+        "@remotion/noise": "4.0.532",
+        "@remotion/paths": "4.0.532",
+        "@remotion/shapes": "4.0.532",
+        "react": "19.3.0",
+        "react-dom": "19.3.0",
+        "remotion": "4.0.532"
+    },
+    "devDependencies": {
+        "@remotion/bundler": "4.0.532",
+        "@remotion/renderer": "4.0.532",
+        "@types/node": "^26.6.4",
+        "@types/react": "^19.3.0",
+        "typescript": "^7.0.2"
+    }
+}
