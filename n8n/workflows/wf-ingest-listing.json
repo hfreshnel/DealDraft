@@ -10,21 +10,33 @@
         "formFields": {
           "values": [
             {
-              "fieldLabel": "listingText",
+              "fieldName": "listingText",
+              "fieldLabel": "Annonce ou message de l'agent",
               "fieldType": "textarea",
               "requiredField": true
             },
             {
-              "fieldLabel": "visitNotes",
+              "fieldName": "visitNotes",
+              "fieldLabel": "Notes de visite (facultatif)",
               "fieldType": "textarea"
             },
             {
-              "fieldLabel": "expectedMonthlyRent"
+              "fieldName": "expectedMonthlyRent",
+              "fieldLabel": "Loyer mensuel visé après travaux, en € (facultatif, nécessaire au rendement)"
             },
             {
-              "fieldLabel": "notaryFeeRatePercent",
+              "fieldName": "notaryFeeRatePercent",
+              "fieldLabel": "Taux de frais de notaire, en %",
               "fieldType": "number",
               "requiredField": true
+            },
+            {
+              "fieldName": "worksBudget",
+              "fieldLabel": "Montant des travaux estimé, en € (facultatif, remplace la grille de prix)"
+            },
+            {
+              "fieldName": "furnitureBudget",
+              "fieldLabel": "Budget d'ameublement estimé, en € (facultatif, remplace la grille de prix)"
             }
           ]
         },
@@ -34,7 +46,7 @@
       "id": "5b0e7a64-0000-4000-8000-000000000007",
       "name": "Listing form",
       "type": "n8n-nodes-base.formTrigger",
-      "typeVersion": 2.2,
+      "typeVersion": 2.4,
       "position": [
         0,
         0
@@ -76,7 +88,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// The request itself is built by the API (same code as the evaluation script); this node only adds the form context.\nconst form = $('Listing form').first().json;\nconst extractionRequest = $input.first().json;\nif (!extractionRequest.requestBody) {\n    throw new Error('The API returned no extraction request');\n}\n// Optional amounts are text fields: an empty n8n number field arrives as 0, which would silently become a rent.\nconst parseOptionalAmount = (value, name) => {\n    const text = String(value === undefined || value === null ? '' : value).replace(/\\s/g, '').replace(',', '.');\n    if (text === '') return null;\n    const number = Number(text);\n    if (!Number.isFinite(number) || number <= 0) {\n        throw new Error(name + ' must be empty or a positive number, got: ' + value);\n    }\n    return number;\n};\nreturn [{\n    json: {\n        requestBody: extractionRequest.requestBody,\n        sourceTexts: { listingText: String(form.listingText || ''), visitNotes: String(form.visitNotes || '') },\n        schemaVersion: extractionRequest.schemaVersion,\n        promptVersion: extractionRequest.promptVersion,\n        expectedMonthlyRent: parseOptionalAmount(form.expectedMonthlyRent, 'expectedMonthlyRent'),\n        notaryFeeRatePercent: form.notaryFeeRatePercent,\n    },\n}];"
+        "jsCode": "// The request itself is built by the API (same code as the evaluation script); this node only adds the form context.\nconst form = $('Listing form').first().json;\nconst extractionRequest = $input.first().json;\nif (!extractionRequest.requestBody) {\n    throw new Error('The API returned no extraction request');\n}\n// Optional amounts are text fields: an empty n8n number field arrives as 0, which would silently become a rent.\nconst parseOptionalAmount = (value, name, allowZero = false) => {\n    const text = String(value === undefined || value === null ? '' : value).replace(/\\s/g, '').replace(',', '.');\n    if (text === '') return null;\n    const number = Number(text);\n    if (!Number.isFinite(number) || number < 0 || (number === 0 && !allowZero)) {\n        throw new Error(name + ' must be empty or a ' + (allowZero ? 'non-negative' : 'positive') + ' number, got: ' + value);\n    }\n    return number;\n};\nreturn [{\n    json: {\n        requestBody: extractionRequest.requestBody,\n        sourceTexts: { listingText: String(form.listingText || ''), visitNotes: String(form.visitNotes || '') },\n        schemaVersion: extractionRequest.schemaVersion,\n        promptVersion: extractionRequest.promptVersion,\n        expectedMonthlyRent: parseOptionalAmount(form.expectedMonthlyRent, 'expectedMonthlyRent'),\n        notaryFeeRatePercent: form.notaryFeeRatePercent,\n        // A works estimate of 0 is a real answer (nothing to do), unlike a rent of 0.\n        worksBudget: parseOptionalAmount(form.worksBudget, 'worksBudget', true),\n        furnitureBudget: parseOptionalAmount(form.furnitureBudget, 'furnitureBudget', true),\n    },\n}];"
       },
       "id": "5b0e7a64-0000-4000-8000-000000000010",
       "name": "Build OpenAI request",
@@ -301,7 +313,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const config = $('Config').first().json;\nconst validated = $input.first().json;\nconst usage = validated.usageTotal || {};\nconst rent = validated.expectedMonthlyRent;\nreturn [{\n    json: {\n        reportRequest: {\n            extraction: validated.extraction,\n            assumptions: {\n                notaryFeeRate: Number(validated.notaryFeeRatePercent) / 100,\n                expectedMonthlyRent: rent === null || rent === undefined ? null : Number(rent),\n                furnitureBudget: null,\n                financing: null,\n            },\n            meta: {\n                studyId: config.studyId,\n                createdAt: config.createdAt,\n                revision: 1,\n                revisionNote: null,\n                model: validated.model || null,\n                schemaVersion: validated.schemaVersion || null,\n                promptVersion: validated.promptVersion || null,\n                attempts: validated.attempt || null,\n                promptTokens: usage.prompt_tokens ?? null,\n                completionTokens: usage.completion_tokens ?? null,\n            },\n        },\n    },\n}];"
+        "jsCode": "const config = $('Config').first().json;\nconst validated = $input.first().json;\nconst usage = validated.usageTotal || {};\nconst rent = validated.expectedMonthlyRent;\nconst estimates = $('Build OpenAI request').first().json;\nreturn [{\n    json: {\n        reportRequest: {\n            extraction: validated.extraction,\n            assumptions: {\n                notaryFeeRate: Number(validated.notaryFeeRatePercent) / 100,\n                expectedMonthlyRent: rent === null || rent === undefined ? null : Number(rent),\n                worksBudget: estimates.worksBudget,\n                furnitureBudget: estimates.furnitureBudget,\n                financing: null,\n            },\n            meta: {\n                studyId: config.studyId,\n                createdAt: config.createdAt,\n                revision: 1,\n                revisionNote: null,\n                model: validated.model || null,\n                schemaVersion: validated.schemaVersion || null,\n                promptVersion: validated.promptVersion || null,\n                attempts: validated.attempt || null,\n                promptTokens: usage.prompt_tokens ?? null,\n                completionTokens: usage.completion_tokens ?? null,\n            },\n        },\n    },\n}];"
       },
       "id": "5b0e7a64-0000-4000-8000-000000000020",
       "name": "Build report request",
@@ -389,7 +401,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const config = $('Config').first().json;\nconst doc = $input.first().json;\nconst report = $('Analyze and render report').first().json;\nconst validated = $('Validation result').first().json;\nconst analysis = report.analysis;\nconst extraction = validated.extraction;\nif (!doc.id) {\n    throw new Error('Google Drive returned no document id');\n}\nconst cell = (value) => (value === null || value === undefined ? '' : value);\nconst row = {\n    studyId: config.studyId,\n    createdAt: config.createdAtDisplay,\n    status: 'À valider',\n    listingTitle: cell(extraction.listingTitle),\n    city: cell(extraction.city),\n    propertyType: cell(extraction.propertyType),\n    livingAreaSqm: cell(extraction.livingAreaSqm),\n    askingPrice: cell(extraction.askingPrice),\n    worksCost: cell(analysis.worksCost),\n    worksPricingMode: analysis.worksPricingMode,\n    furnitureCost: cell(analysis.furnitureCost),\n    notaryFees: cell(analysis.notaryFees),\n    totalBudget: cell(analysis.totalBudget),\n    expectedMonthlyRent: cell(validated.expectedMonthlyRent),\n    grossYieldOnAcquisitionAndWorks: cell(analysis.grossYieldOnAcquisitionAndWorks),\n    grossYieldOnTotalBudget: cell(analysis.grossYieldOnTotalBudget),\n    analysisStatus: analysis.status,\n    warningCount: analysis.warnings.length + extraction.riskFlags.length,\n    docUrl: doc.webViewLink || 'https://docs.google.com/document/d/' + doc.id + '/edit',\n    approvalUrl: config.approvalUrl,\n    decidedAt: '',\n    reviewerNote: '',\n    draftId: '',\n    model: cell(validated.model),\n    attempts: cell(validated.attempt),\n    schemaVersion: cell(validated.schemaVersion),\n    promptVersion: cell(validated.promptVersion),\n    executionId: $execution.id,\n    revision: 1,\n    notaryFeeRatePercent: Number(validated.notaryFeeRatePercent),\n    promptTokens: cell(validated.usageTotal && validated.usageTotal.prompt_tokens),\n    completionTokens: cell(validated.usageTotal && validated.usageTotal.completion_tokens),\n    // Kept so a revision can recompute the study without calling the LLM again.\n    extractionJson: JSON.stringify(extraction),\n};\nreturn [{ json: row }];"
+        "jsCode": "const config = $('Config').first().json;\nconst doc = $input.first().json;\nconst report = $('Analyze and render report').first().json;\nconst validated = $('Validation result').first().json;\nconst estimates = $('Build OpenAI request').first().json;\nconst analysis = report.analysis;\nconst extraction = validated.extraction;\nif (!doc.id) {\n    throw new Error('Google Drive returned no document id');\n}\nconst cell = (value) => (value === null || value === undefined ? '' : value);\nconst row = {\n    studyId: config.studyId,\n    createdAt: config.createdAtDisplay,\n    status: 'À valider',\n    listingTitle: cell(extraction.listingTitle),\n    city: cell(extraction.city),\n    propertyType: cell(extraction.propertyType),\n    livingAreaSqm: cell(extraction.livingAreaSqm),\n    askingPrice: cell(extraction.askingPrice),\n    worksCost: cell(analysis.worksCost),\n    worksPricingMode: analysis.worksPricingMode,\n    furnitureCost: cell(analysis.furnitureCost),\n    notaryFees: cell(analysis.notaryFees),\n    totalBudget: cell(analysis.totalBudget),\n    expectedMonthlyRent: cell(validated.expectedMonthlyRent),\n    grossYieldOnAcquisitionAndWorks: cell(analysis.grossYieldOnAcquisitionAndWorks),\n    grossYieldOnTotalBudget: cell(analysis.grossYieldOnTotalBudget),\n    analysisStatus: analysis.status,\n    warningCount: analysis.warnings.length + extraction.riskFlags.length,\n    docUrl: doc.webViewLink || 'https://docs.google.com/document/d/' + doc.id + '/edit',\n    approvalUrl: config.approvalUrl,\n    decidedAt: '',\n    reviewerNote: '',\n    draftId: '',\n    model: cell(validated.model),\n    attempts: cell(validated.attempt),\n    schemaVersion: cell(validated.schemaVersion),\n    promptVersion: cell(validated.promptVersion),\n    executionId: $execution.id,\n    revision: 1,\n    notaryFeeRatePercent: Number(validated.notaryFeeRatePercent),\n    // Hunter's estimates, kept apart from the computed amounts so a revision can tell them from grid prices.\n    worksBudget: cell(estimates.worksBudget),\n    furnitureBudget: cell(estimates.furnitureBudget),\n    promptTokens: cell(validated.usageTotal && validated.usageTotal.prompt_tokens),\n    completionTokens: cell(validated.usageTotal && validated.usageTotal.completion_tokens),\n    // Kept so a revision can recompute the study without calling the LLM again.\n    extractionJson: JSON.stringify(extraction),\n};\nreturn [{ json: row }];"
       },
       "id": "5b0e7a64-0000-4000-8000-000000000024",
       "name": "Build study row",
@@ -493,7 +505,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const config = $('Config').first().json;\nif ($('Append study').isExecuted) {\n    const row = $('Build study row').first().json;\n    return [{\n        json: {\n            result: 'Étude créée, à relire puis valider',\n            studyId: config.studyId,\n            analysisStatus: row.analysisStatus,\n            docUrl: row.docUrl,\n            approvalUrl: row.approvalUrl,\n            trackingSheet: config.spreadsheetUrl,\n        },\n    }];\n}\nconst failure = $('Extraction failure result').first().json;\nreturn [{ json: { result: \"Échec de l'extraction : aucune étude créée\", studyId: config.studyId, stage: failure.stage, error: failure.error, attempts: failure.attempt } }];"
+        "jsCode": "const escapeHtml = (value) => String(value === null || value === undefined ? '' : value)\n    .replace(/[&<>\"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;', \"'\": '&#39;' })[ch]);\nconst linkHtml = (url, label) => '<a href=\"' + escapeHtml(url) + '\" target=\"_blank\" rel=\"noopener\">' + escapeHtml(label) + '</a>';\n\nconst config = $('Config').first().json;\nif ($('Append study').isExecuted) {\n    const row = $('Build study row').first().json;\n    const incomplete = row.analysisStatus === 'incomplete'\n        ? \"<p><b>Données critiques manquantes</b> : l'étude ne pourra pas être validée en l'état. Complétez les textes et relancez une analyse.</p>\"\n        : '';\n    return [{\n        json: {\n            result: 'Étude créée, à relire puis valider',\n            studyId: config.studyId,\n            analysisStatus: row.analysisStatus,\n            docUrl: row.docUrl,\n            approvalUrl: row.approvalUrl,\n            trackingSheet: config.spreadsheetUrl,\n            completionTitle: 'Étude créée',\n            completionHtml: '<p>Étude <b>' + escapeHtml(config.studyId) + '</b>, à relire puis valider.</p>' + incomplete\n                + '<p>' + linkHtml(row.docUrl, 'Ouvrir la fiche') + '</p>'\n                + '<p>' + linkHtml(row.approvalUrl, 'Décider : valider, corriger ou rejeter') + '</p>'\n                + '<p>' + linkHtml(config.spreadsheetUrl, 'Tableau de suivi') + '</p>',\n        },\n    }];\n}\nconst failure = $('Extraction failure result').first().json;\nreturn [{\n    json: {\n        result: \"Échec de l'extraction : aucune étude créée\",\n        studyId: config.studyId,\n        stage: failure.stage,\n        error: failure.error,\n        attempts: failure.attempt,\n        completionTitle: 'Aucune étude créée',\n        completionHtml: \"<p>La lecture du texte a échoué après \" + escapeHtml(failure.attempt) + ' tentative(s), étape ' + escapeHtml(failure.stage) + '.</p>'\n            + '<p>' + escapeHtml(String(failure.error || '').slice(0, 300)) + '</p>'\n            + '<p>Détail dans ' + linkHtml(config.spreadsheetUrl, \"l'onglet Journal\") + ', identifiant ' + escapeHtml(config.studyId) + '.</p>',\n    },\n}];"
       },
       "id": "5b0e7a64-0000-4000-8000-000000000028",
       "name": "Form response",
@@ -501,6 +513,23 @@
       "typeVersion": 2,
       "position": [
         3960,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "completion",
+        "respondWith": "text",
+        "completionTitle": "={{ $json.completionTitle }}",
+        "completionMessage": "={{ $json.completionHtml }}",
+        "options": {}
+      },
+      "id": "5b0e7a64-0000-4000-8000-000000000029",
+      "name": "Form ending",
+      "type": "n8n-nodes-base.form",
+      "typeVersion": 2.4,
+      "position": [
+        4180,
         0
       ]
     }
@@ -752,6 +781,17 @@
         [
           {
             "node": "Form response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Form response": {
+      "main": [
+        [
+          {
+            "node": "Form ending",
             "type": "main",
             "index": 0
           }

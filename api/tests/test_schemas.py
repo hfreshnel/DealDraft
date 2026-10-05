@@ -56,6 +56,7 @@ VALID_EXTRACTION = {
 VALID_ASSUMPTIONS = {
     "notaryFeeRate": 0.07,
     "expectedMonthlyRent": 570,
+    "worksBudget": None,
     "furnitureBudget": None,
     "financing": None,
 }
@@ -158,7 +159,7 @@ def test_otherWorkItemWithNoteIsAccepted():
 
 
 def test_assumptionsRequireExplicitNullableValues():
-    for key in ("notaryFeeRate", "expectedMonthlyRent", "furnitureBudget", "financing"):
+    for key in ("notaryFeeRate", "expectedMonthlyRent", "worksBudget", "furnitureBudget", "financing"):
         payload = {name: value for name, value in VALID_ASSUMPTIONS.items() if name != key}
         with pytest.raises(ValidationError):
             AnalysisAssumptions.model_validate(payload)

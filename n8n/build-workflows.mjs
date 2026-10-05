@@ -20,6 +20,7 @@ const STUDY_COLUMNS = [
     'grossYieldOnAcquisitionAndWorks', 'grossYieldOnTotalBudget', 'analysisStatus', 'warningCount', 'docUrl',
     'approvalUrl', 'decidedAt', 'reviewerNote', 'draftId', 'model', 'attempts', 'schemaVersion', 'promptVersion',
     'executionId', 'revision', 'notaryFeeRatePercent', 'promptTokens', 'completionTokens', 'extractionJson',
+    'worksBudget', 'furnitureBudget',
 ];
 const JOURNAL_COLUMNS = [
     'loggedAt', 'executionId', 'workflow', 'studyId', 'outcome', 'stage', 'attempts', 'model', 'promptTokens',
@@ -41,6 +42,22 @@ function node(prefix, name, type, typeVersion, position, parameters, extra = {})
 }
 const code = (prefix, name, position, jsCode) =>
     node(prefix, name, 'n8n-nodes-base.code', 2, position, { jsCode: jsCode.trim() });
+
+// Form triggers 2.2+ ignore the last node's output and show a generic "Form Submitted" page;
+// a Form node in completion mode renders the outcome instead (HTML sanitized by n8n, links allowed).
+const formEnding = (prefix, position) =>
+    node(prefix, 'Form ending', 'n8n-nodes-base.form', 2.4, position, {
+        operation: 'completion',
+        respondWith: 'text',
+        completionTitle: '={{ $json.completionTitle }}',
+        completionMessage: '={{ $json.completionHtml }}',
+        options: {},
+    });
+const HTML_HELPERS = `
+const escapeHtml = (value) => String(value === null || value === undefined ? '' : value)
+    .replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[ch]);
+const linkHtml = (url, label) => '<a href="' + escapeHtml(url) + '" target="_blank" rel="noopener">' + escapeHtml(label) + '</a>';
+`;
 
 function ifNode(prefix, name, position, leftValue, conditionId) {
     return node(prefix, name, 'n8n-nodes-base.if', 2.2, position, {
@@ -116,7 +133,7 @@ function save(fileName, workflow) {
         code(P, 'Build sheet layout', [720, 0], `
 const STUDY_COLUMNS = ${JSON.stringify(STUDY_COLUMNS)};
 const JOURNAL_COLUMNS = ${JSON.stringify(JOURNAL_COLUMNS)};
-const MONEY_COLUMNS = ['askingPrice', 'worksCost', 'furnitureCost', 'notaryFees', 'totalBudget', 'expectedMonthlyRent'];
+const MONEY_COLUMNS = ['askingPrice', 'worksCost', 'furnitureCost', 'notaryFees', 'totalBudget', 'expectedMonthlyRent', 'worksBudget', 'furnitureBudget'];
 const PERCENT_COLUMNS = ['grossYieldOnAcquisitionAndWorks', 'grossYieldOnTotalBudget'];
 const STUDY_SHEET_ID = 0;
 const JOURNAL_SHEET_ID = 1;
@@ -193,15 +210,18 @@ return [{ json: result }];
     const P = '5b0e7a64';
     const c = {};
     const nodes = [
-        node(P, 'Listing form', 'n8n-nodes-base.formTrigger', 2.2, [0, 0], {
+        // Version 2.4+: fieldName is the output key, fieldLabel is only displayed.
+        node(P, 'Listing form', 'n8n-nodes-base.formTrigger', 2.4, [0, 0], {
             formTitle: "Analyse d'annonce",
             formDescription: "Brouillon d'étude de rendement : à relire et valider par le chasseur.",
             formFields: {
                 values: [
-                    { fieldLabel: 'listingText', fieldType: 'textarea', requiredField: true },
-                    { fieldLabel: 'visitNotes', fieldType: 'textarea' },
-                    { fieldLabel: 'expectedMonthlyRent' },
-                    { fieldLabel: 'notaryFeeRatePercent', fieldType: 'number', requiredField: true },
+                    { fieldName: 'listingText', fieldLabel: "Annonce ou message de l'agent", fieldType: 'textarea', requiredField: true },
+                    { fieldName: 'visitNotes', fieldLabel: 'Notes de visite (facultatif)', fieldType: 'textarea' },
+                    { fieldName: 'expectedMonthlyRent', fieldLabel: 'Loyer mensuel visé après travaux, en € (facultatif, nécessaire au rendement)' },
+                    { fieldName: 'notaryFeeRatePercent', fieldLabel: 'Taux de frais de notaire, en %', fieldType: 'number', requiredField: true },
+                    { fieldName: 'worksBudget', fieldLabel: 'Montant des travaux estimé, en € (facultatif, remplace la grille de prix)' },
+                    { fieldName: 'furnitureBudget', fieldLabel: "Budget d'ameublement estimé, en € (facultatif, remplace la grille de prix)" },
                 ],
             },
             responseMode: 'lastNode',
@@ -246,12 +266,12 @@ if (!extractionRequest.requestBody) {
     throw new Error('The API returned no extraction request');
 }
 // Optional amounts are text fields: an empty n8n number field arrives as 0, which would silently become a rent.
-const parseOptionalAmount = (value, name) => {
+const parseOptionalAmount = (value, name, allowZero = false) => {
     const text = String(value === undefined || value === null ? '' : value).replace(/\\s/g, '').replace(',', '.');
     if (text === '') return null;
     const number = Number(text);
-    if (!Number.isFinite(number) || number <= 0) {
-        throw new Error(name + ' must be empty or a positive number, got: ' + value);
+    if (!Number.isFinite(number) || number < 0 || (number === 0 && !allowZero)) {
+        throw new Error(name + ' must be empty or a ' + (allowZero ? 'non-negative' : 'positive') + ' number, got: ' + value);
     }
     return number;
 };
@@ -263,6 +283,9 @@ return [{
         promptVersion: extractionRequest.promptVersion,
         expectedMonthlyRent: parseOptionalAmount(form.expectedMonthlyRent, 'expectedMonthlyRent'),
         notaryFeeRatePercent: form.notaryFeeRatePercent,
+        // A works estimate of 0 is a real answer (nothing to do), unlike a rent of 0.
+        worksBudget: parseOptionalAmount(form.worksBudget, 'worksBudget', true),
+        furnitureBudget: parseOptionalAmount(form.furnitureBudget, 'furnitureBudget', true),
     },
 }];
 `),
@@ -398,6 +421,7 @@ const config = $('Config').first().json;
 const validated = $input.first().json;
 const usage = validated.usageTotal || {};
 const rent = validated.expectedMonthlyRent;
+const estimates = $('Build OpenAI request').first().json;
 return [{
     json: {
         reportRequest: {
@@ -405,7 +429,8 @@ return [{
             assumptions: {
                 notaryFeeRate: Number(validated.notaryFeeRatePercent) / 100,
                 expectedMonthlyRent: rent === null || rent === undefined ? null : Number(rent),
-                furnitureBudget: null,
+                worksBudget: estimates.worksBudget,
+                furnitureBudget: estimates.furnitureBudget,
                 financing: null,
             },
             meta: {
@@ -470,6 +495,7 @@ const config = $('Config').first().json;
 const doc = $input.first().json;
 const report = $('Analyze and render report').first().json;
 const validated = $('Validation result').first().json;
+const estimates = $('Build OpenAI request').first().json;
 const analysis = report.analysis;
 const extraction = validated.extraction;
 if (!doc.id) {
@@ -507,6 +533,9 @@ const row = {
     executionId: $execution.id,
     revision: 1,
     notaryFeeRatePercent: Number(validated.notaryFeeRatePercent),
+    // Hunter's estimates, kept apart from the computed amounts so a revision can tell them from grid prices.
+    worksBudget: cell(estimates.worksBudget),
+    furnitureBudget: cell(estimates.furnitureBudget),
     promptTokens: cell(validated.usageTotal && validated.usageTotal.prompt_tokens),
     completionTokens: cell(validated.usageTotal && validated.usageTotal.completion_tokens),
     // Kept so a revision can recompute the study without calling the LLM again.
@@ -546,9 +575,13 @@ return [{
 `),
         sheetsAppend(P, 'Append journal', [3740, 0], 'Journal'),
         code(P, 'Form response', [3960, 0], `
+${HTML_HELPERS}
 const config = $('Config').first().json;
 if ($('Append study').isExecuted) {
     const row = $('Build study row').first().json;
+    const incomplete = row.analysisStatus === 'incomplete'
+        ? "<p><b>Données critiques manquantes</b> : l'étude ne pourra pas être validée en l'état. Complétez les textes et relancez une analyse.</p>"
+        : '';
     return [{
         json: {
             result: 'Étude créée, à relire puis valider',
@@ -557,12 +590,30 @@ if ($('Append study').isExecuted) {
             docUrl: row.docUrl,
             approvalUrl: row.approvalUrl,
             trackingSheet: config.spreadsheetUrl,
+            completionTitle: 'Étude créée',
+            completionHtml: '<p>Étude <b>' + escapeHtml(config.studyId) + '</b>, à relire puis valider.</p>' + incomplete
+                + '<p>' + linkHtml(row.docUrl, 'Ouvrir la fiche') + '</p>'
+                + '<p>' + linkHtml(row.approvalUrl, 'Décider : valider, corriger ou rejeter') + '</p>'
+                + '<p>' + linkHtml(config.spreadsheetUrl, 'Tableau de suivi') + '</p>',
         },
     }];
 }
 const failure = $('Extraction failure result').first().json;
-return [{ json: { result: "Échec de l'extraction : aucune étude créée", studyId: config.studyId, stage: failure.stage, error: failure.error, attempts: failure.attempt } }];
+return [{
+    json: {
+        result: "Échec de l'extraction : aucune étude créée",
+        studyId: config.studyId,
+        stage: failure.stage,
+        error: failure.error,
+        attempts: failure.attempt,
+        completionTitle: 'Aucune étude créée',
+        completionHtml: "<p>La lecture du texte a échoué après " + escapeHtml(failure.attempt) + ' tentative(s), étape ' + escapeHtml(failure.stage) + '.</p>'
+            + '<p>' + escapeHtml(String(failure.error || '').slice(0, 300)) + '</p>'
+            + '<p>Détail dans ' + linkHtml(config.spreadsheetUrl, "l'onglet Journal") + ', identifiant ' + escapeHtml(config.studyId) + '.</p>',
+    },
+}];
 `),
+        formEnding(P, [4180, 0]),
     ];
     link(c, 'Listing form', 'Config');
     link(c, 'Config', 'Get extraction request');
@@ -588,6 +639,7 @@ return [{ json: { result: "Échec de l'extraction : aucune étude créée", stud
     link(c, 'Append study', 'Build journal entry');
     link(c, 'Build journal entry', 'Append journal');
     link(c, 'Append journal', 'Form response');
+    link(c, 'Form response', 'Form ending');
     save('wf-ingest-listing.json', {
         id: 'wfIngestListing01',
         name: 'wf-ingest-listing',
@@ -603,14 +655,15 @@ return [{ json: { result: "Échec de l'extraction : aucune étude créée", stud
     const P = 'b2000000';
     const c = {};
     const nodes = [
-        node(P, 'Approval form', 'n8n-nodes-base.formTrigger', 2.2, [0, 0], {
+        node(P, 'Approval form', 'n8n-nodes-base.formTrigger', 2.4, [0, 0], {
             formTitle: "Validation d'une étude de rendement",
             formDescription: "Relisez la fiche avant de décider. « Corriger les hypothèses » met la fiche à jour sans la valider. La validation crée un brouillon Gmail : rien n'est envoyé automatiquement.",
             formFields: {
                 values: [
-                    { fieldLabel: 'studyId', requiredField: true },
+                    { fieldName: 'studyId', fieldLabel: "Identifiant de l'étude", requiredField: true },
                     {
-                        fieldLabel: 'decision',
+                        fieldName: 'decision',
+                        fieldLabel: 'Décision',
                         fieldType: 'dropdown',
                         fieldOptions: {
                             values: [
@@ -621,9 +674,11 @@ return [{ json: { result: "Échec de l'extraction : aucune étude créée", stud
                         },
                         requiredField: true,
                     },
-                    { fieldLabel: 'correctedMonthlyRent' },
-                    { fieldLabel: 'correctedNotaryFeeRatePercent' },
-                    { fieldLabel: 'reviewerNote', fieldType: 'textarea' },
+                    { fieldName: 'correctedMonthlyRent', fieldLabel: 'Nouveau loyer mensuel, en € (si correction)' },
+                    { fieldName: 'correctedNotaryFeeRatePercent', fieldLabel: 'Nouveau taux de frais de notaire, en % (si correction)' },
+                    { fieldName: 'correctedWorksBudget', fieldLabel: 'Montant des travaux estimé, en € (si correction, remplace la grille de prix)' },
+                    { fieldName: 'correctedFurnitureBudget', fieldLabel: "Budget d'ameublement estimé, en € (si correction, remplace la grille de prix)" },
+                    { fieldName: 'reviewerNote', fieldLabel: 'Remarque (facultatif)', fieldType: 'textarea' },
                 ],
             },
             responseMode: 'lastNode',
@@ -648,6 +703,8 @@ return [{
         decision: String(form.decision || ''),
         correctedMonthlyRent: toNumber(form.correctedMonthlyRent),
         correctedNotaryFeeRatePercent: toNumber(form.correctedNotaryFeeRatePercent),
+        correctedWorksBudget: toNumber(form.correctedWorksBudget),
+        correctedFurnitureBudget: toNumber(form.correctedFurnitureBudget),
         reviewerNote: String(form.reviewerNote || '').trim().slice(0, 1000),
         decidedAt: $now.toFormat('yyyy-MM-dd HH:mm:ss'),
     },
@@ -670,7 +727,24 @@ const config = $('Config').first().json;
 const rows = $input.all().map((item) => item.json).filter((row) => config.studyId && String(row.studyId || '') === config.studyId);
 const rent = config.correctedMonthlyRent;
 const notary = config.correctedNotaryFeeRatePercent;
-const hasCorrection = rent !== null || notary !== null;
+const works = config.correctedWorksBudget;
+const furniture = config.correctedFurnitureBudget;
+const hasCorrection = rent !== null || notary !== null || works !== null || furniture !== null;
+const isInvalidAmount = (value) => value !== null && (value === 'invalid' || value < 0);
+const isBlank = (value) => value === '' || value === null || value === undefined;
+// Names the actual blocker of an incomplete study, so the hunter knows which fix applies.
+const incompleteMessage = (row) => {
+    const reasons = [];
+    if (isBlank(row.askingPrice)) reasons.push("prix d'achat absent des textes : complétez-les et relancez une analyse");
+    if (isBlank(row.worksCost)) reasons.push('travaux non chiffrés par la grille');
+    if (isBlank(row.furnitureCost)) reasons.push('ameublement non chiffré par la grille');
+    if (reasons.length === 0) {
+        return "Étude incomplète (données critiques manquantes, voir la fiche) : complétez les textes et relancez une analyse.";
+    }
+    const canRevise = !isBlank(row.askingPrice);
+    return 'Étude incomplète : ' + reasons.join(' ; ') + '.'
+        + (canRevise ? ' Choisissez « ' + DECISION_REVISE + ' » et saisissez votre estimation.' : '');
+};
 let action = 'refuse';
 let message = '';
 if (!config.studyId) {
@@ -683,11 +757,13 @@ if (!config.studyId) {
     message = 'Étude déjà traitée (statut : ' + rows[0].status + ').';
 } else if (config.decision === DECISION_REVISE) {
     if (!hasCorrection) {
-        message = 'Indiquez un loyer ou un taux de notaire corrigé.';
+        message = 'Indiquez au moins une valeur corrigée : loyer, taux de notaire, travaux ou ameublement.';
     } else if (rent !== null && (rent === 'invalid' || rent <= 0)) {
         message = 'Loyer corrigé invalide : un montant mensuel positif est attendu.';
     } else if (notary !== null && (notary === 'invalid' || notary < 0 || notary > MAX_NOTARY_FEE_RATE_PERCENT)) {
         message = 'Taux de notaire corrigé invalide : entre 0 et ' + MAX_NOTARY_FEE_RATE_PERCENT + ' % attendu.';
+    } else if (isInvalidAmount(works) || isInvalidAmount(furniture)) {
+        message = 'Montant de travaux ou d\\'ameublement invalide : un montant positif ou nul est attendu.';
     } else if (!rows[0].extractionJson) {
         message = "Extraction non conservée pour cette étude (créée avant l'ajout de la correction) : relancez une analyse.";
     } else {
@@ -701,7 +777,7 @@ if (!config.studyId) {
 } else if (config.decision !== DECISION_APPROVE) {
     message = 'Décision inconnue : ' + config.decision + '.';
 } else if (rows[0].analysisStatus === 'incomplete') {
-    message = "Étude incomplète (données critiques manquantes) : complétez les textes et relancez une analyse plutôt que d'envoyer des chiffres partiels.";
+    message = incompleteMessage(rows[0]);
 } else if (rows[0].expectedMonthlyRent === '' || rows[0].expectedMonthlyRent === null || rows[0].expectedMonthlyRent === undefined) {
     message = 'Loyer estimé non saisi : aucun rendement à présenter. Choisissez « ' + DECISION_REVISE + ' » pour saisir le loyer.';
 } else {
@@ -784,12 +860,24 @@ const notary = check.correctedNotaryFeeRatePercent !== null ? check.correctedNot
 if (notary === null) {
     throw new Error('No notary fee rate stored for ' + check.studyId);
 }
+// Estimates are read from their own columns: worksCost may hold a grid price, which must not become an estimate.
+const previousWorks = asNumber(study.worksBudget);
+const previousFurniture = asNumber(study.furnitureBudget);
+const works = check.correctedWorksBudget !== null ? check.correctedWorksBudget : previousWorks;
+const furniture = check.correctedFurnitureBudget !== null ? check.correctedFurnitureBudget : previousFurniture;
+const estimate = (value) => (value === null ? 'grille de prix' : euros(value));
 const changes = [];
 if (rent !== previousRent) {
     changes.push('loyer mensuel ' + euros(previousRent) + ' → ' + euros(rent));
 }
 if (notary !== previousNotary) {
     changes.push('frais de notaire ' + percent(previousNotary) + ' → ' + percent(notary));
+}
+if (works !== previousWorks) {
+    changes.push('travaux ' + estimate(previousWorks) + ' → ' + estimate(works));
+}
+if (furniture !== previousFurniture) {
+    changes.push('ameublement ' + estimate(previousFurniture) + ' → ' + estimate(furniture));
 }
 const revision = (asNumber(study.revision) || 1) + 1;
 const revisionNote = changes.length > 0 ? changes.join(' ; ') : 'aucune valeur modifiée';
@@ -800,10 +888,18 @@ return [{
         revisionNote,
         rent,
         notary,
+        works,
+        furniture,
         riskFlagCount: (extraction.riskFlags || []).length,
         reportRequest: {
             extraction,
-            assumptions: { notaryFeeRate: notary / 100, expectedMonthlyRent: rent, furnitureBudget: null, financing: null },
+            assumptions: {
+                notaryFeeRate: notary / 100,
+                expectedMonthlyRent: rent,
+                worksBudget: works,
+                furnitureBudget: furniture,
+                financing: null,
+            },
             meta: {
                 studyId: check.studyId,
                 createdAt: $now.toISO(),
@@ -873,8 +969,11 @@ return [{
         revision: revisionRequest.revision,
         expectedMonthlyRent: cell(revisionRequest.rent),
         notaryFeeRatePercent: revisionRequest.notary,
+        worksBudget: cell(revisionRequest.works),
+        furnitureBudget: cell(revisionRequest.furniture),
         notaryFees: cell(analysis.notaryFees),
         worksCost: cell(analysis.worksCost),
+        worksPricingMode: analysis.worksPricingMode,
         furnitureCost: cell(analysis.furnitureCost),
         totalBudget: cell(analysis.totalBudget),
         grossYieldOnAcquisitionAndWorks: cell(analysis.grossYieldOnAcquisitionAndWorks),
@@ -924,15 +1023,21 @@ return [{
 `),
         sheetsAppend(P, 'Append journal', [3080, 300], 'Journal'),
         code(P, 'Form response', [3300, 300], `
+${HTML_HELPERS}
 const check = $('Check study').first().json;
+const docLink = check.study && check.study.docUrl ? '<p>' + linkHtml(check.study.docUrl, 'Ouvrir la fiche') + '</p>' : '';
 if (check.action === 'revise') {
     const revisionRequest = $('Build revision request').first().json;
+    const result = 'Fiche mise à jour (révision n° ' + revisionRequest.revision + ' : ' + revisionRequest.revisionNote + '). Relisez-la, puis revenez valider.';
     return [{
         json: {
-            result: 'Fiche mise à jour (révision n° ' + revisionRequest.revision + ' : ' + revisionRequest.revisionNote + '). Relisez-la, puis revenez valider.',
+            result,
             studyId: check.studyId,
             docUrl: check.study.docUrl,
             approvalUrl: check.study.approvalUrl,
+            completionTitle: 'Fiche mise à jour',
+            completionHtml: '<p>' + escapeHtml(result) + '</p>' + docLink
+                + '<p>' + linkHtml(check.study.approvalUrl, 'Revenir au formulaire de décision') + '</p>',
         },
     }];
 }
@@ -941,8 +1046,18 @@ const RESULTS = {
     reject: 'Étude rejetée.',
     refuse: 'Aucune action : ' + check.message,
 };
-return [{ json: { result: RESULTS[check.action], studyId: check.studyId } }];
+const TITLES = { draft: 'Brouillon créé', reject: 'Étude rejetée', refuse: 'Aucune action' };
+const draftLink = check.action === 'draft' ? '<p>' + linkHtml('https://mail.google.com/mail/#drafts', 'Ouvrir les brouillons Gmail') + '</p>' : '';
+return [{
+    json: {
+        result: RESULTS[check.action],
+        studyId: check.studyId,
+        completionTitle: TITLES[check.action] || 'Décision enregistrée',
+        completionHtml: '<p>' + escapeHtml(RESULTS[check.action]) + '</p>' + docLink + draftLink,
+    },
+}];
 `),
+        formEnding(P, [3520, 300]),
     ];
     link(c, 'Approval form', 'Config');
     link(c, 'Config', 'Find study');
@@ -966,6 +1081,7 @@ return [{ json: { result: RESULTS[check.action], studyId: check.studyId } }];
     link(c, 'Update study', 'Build journal entry');
     link(c, 'Build journal entry', 'Append journal');
     link(c, 'Append journal', 'Form response');
+    link(c, 'Form response', 'Form ending');
     save('wf-approve-and-draft.json', {
         id: 'wfApproveDraft01',
         name: 'wf-approve-and-draft',

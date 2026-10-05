@@ -10,11 +10,13 @@
         "formFields": {
           "values": [
             {
-              "fieldLabel": "studyId",
+              "fieldName": "studyId",
+              "fieldLabel": "Identifiant de l'étude",
               "requiredField": true
             },
             {
-              "fieldLabel": "decision",
+              "fieldName": "decision",
+              "fieldLabel": "Décision",
               "fieldType": "dropdown",
               "fieldOptions": {
                 "values": [
@@ -32,13 +34,24 @@
               "requiredField": true
             },
             {
-              "fieldLabel": "correctedMonthlyRent"
+              "fieldName": "correctedMonthlyRent",
+              "fieldLabel": "Nouveau loyer mensuel, en € (si correction)"
             },
             {
-              "fieldLabel": "correctedNotaryFeeRatePercent"
+              "fieldName": "correctedNotaryFeeRatePercent",
+              "fieldLabel": "Nouveau taux de frais de notaire, en % (si correction)"
             },
             {
-              "fieldLabel": "reviewerNote",
+              "fieldName": "correctedWorksBudget",
+              "fieldLabel": "Montant des travaux estimé, en € (si correction, remplace la grille de prix)"
+            },
+            {
+              "fieldName": "correctedFurnitureBudget",
+              "fieldLabel": "Budget d'ameublement estimé, en € (si correction, remplace la grille de prix)"
+            },
+            {
+              "fieldName": "reviewerNote",
+              "fieldLabel": "Remarque (facultatif)",
               "fieldType": "textarea"
             }
           ]
@@ -46,10 +59,10 @@
         "responseMode": "lastNode",
         "options": {}
       },
-      "id": "b2000000-0000-4000-8000-000000000029",
+      "id": "b2000000-0000-4000-8000-000000000030",
       "name": "Approval form",
       "type": "n8n-nodes-base.formTrigger",
-      "typeVersion": 2.2,
+      "typeVersion": 2.4,
       "position": [
         0,
         0
@@ -58,9 +71,9 @@
     },
     {
       "parameters": {
-        "jsCode": "const CONFIG = {\n    googleSpreadsheetId: '__CONFIG_googleSpreadsheetId__',\n    draftRecipient: '__CONFIG_draftRecipient__',\n};\nconst form = $input.first().json;\n// NaN does not survive between nodes: an unreadable number becomes the string 'invalid'.\nconst toNumber = (value) => {\n    if (value === undefined || value === null || String(value).trim() === '') return null;\n    const number = Number(String(value).replace(/\\s/g, '').replace(',', '.'));\n    return Number.isFinite(number) ? number : 'invalid';\n};\nreturn [{\n    json: {\n        ...CONFIG,\n        studyId: String(form.studyId || '').trim(),\n        decision: String(form.decision || ''),\n        correctedMonthlyRent: toNumber(form.correctedMonthlyRent),\n        correctedNotaryFeeRatePercent: toNumber(form.correctedNotaryFeeRatePercent),\n        reviewerNote: String(form.reviewerNote || '').trim().slice(0, 1000),\n        decidedAt: $now.toFormat('yyyy-MM-dd HH:mm:ss'),\n    },\n}];"
+        "jsCode": "const CONFIG = {\n    googleSpreadsheetId: '__CONFIG_googleSpreadsheetId__',\n    draftRecipient: '__CONFIG_draftRecipient__',\n};\nconst form = $input.first().json;\n// NaN does not survive between nodes: an unreadable number becomes the string 'invalid'.\nconst toNumber = (value) => {\n    if (value === undefined || value === null || String(value).trim() === '') return null;\n    const number = Number(String(value).replace(/\\s/g, '').replace(',', '.'));\n    return Number.isFinite(number) ? number : 'invalid';\n};\nreturn [{\n    json: {\n        ...CONFIG,\n        studyId: String(form.studyId || '').trim(),\n        decision: String(form.decision || ''),\n        correctedMonthlyRent: toNumber(form.correctedMonthlyRent),\n        correctedNotaryFeeRatePercent: toNumber(form.correctedNotaryFeeRatePercent),\n        correctedWorksBudget: toNumber(form.correctedWorksBudget),\n        correctedFurnitureBudget: toNumber(form.correctedFurnitureBudget),\n        reviewerNote: String(form.reviewerNote || '').trim().slice(0, 1000),\n        decidedAt: $now.toFormat('yyyy-MM-dd HH:mm:ss'),\n    },\n}];"
       },
-      "id": "b2000000-0000-4000-8000-000000000030",
+      "id": "b2000000-0000-4000-8000-000000000031",
       "name": "Config",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -92,7 +105,7 @@
         },
         "options": {}
       },
-      "id": "b2000000-0000-4000-8000-000000000031",
+      "id": "b2000000-0000-4000-8000-000000000032",
       "name": "Find study",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
@@ -110,9 +123,9 @@
     },
     {
       "parameters": {
-        "jsCode": "const DECISION_APPROVE = 'Valider et créer le brouillon';\nconst DECISION_REVISE = 'Corriger les hypothèses';\nconst DECISION_REJECT = 'Rejeter';\nconst STATUS_PENDING = 'À valider';\nconst MAX_NOTARY_FEE_RATE_PERCENT = 20;\nconst config = $('Config').first().json;\nconst rows = $input.all().map((item) => item.json).filter((row) => config.studyId && String(row.studyId || '') === config.studyId);\nconst rent = config.correctedMonthlyRent;\nconst notary = config.correctedNotaryFeeRatePercent;\nconst hasCorrection = rent !== null || notary !== null;\nlet action = 'refuse';\nlet message = '';\nif (!config.studyId) {\n    message = 'Référence vide.';\n} else if (rows.length === 0) {\n    message = 'Étude introuvable : ' + config.studyId + '.';\n} else if (rows.length > 1) {\n    message = 'Référence présente plusieurs fois dans le suivi : ' + config.studyId + '.';\n} else if (rows[0].status !== STATUS_PENDING) {\n    message = 'Étude déjà traitée (statut : ' + rows[0].status + ').';\n} else if (config.decision === DECISION_REVISE) {\n    if (!hasCorrection) {\n        message = 'Indiquez un loyer ou un taux de notaire corrigé.';\n    } else if (rent !== null && (rent === 'invalid' || rent <= 0)) {\n        message = 'Loyer corrigé invalide : un montant mensuel positif est attendu.';\n    } else if (notary !== null && (notary === 'invalid' || notary < 0 || notary > MAX_NOTARY_FEE_RATE_PERCENT)) {\n        message = 'Taux de notaire corrigé invalide : entre 0 et ' + MAX_NOTARY_FEE_RATE_PERCENT + ' % attendu.';\n    } else if (!rows[0].extractionJson) {\n        message = \"Extraction non conservée pour cette étude (créée avant l'ajout de la correction) : relancez une analyse.\";\n    } else {\n        action = 'revise';\n    }\n} else if (hasCorrection) {\n    // Corrected values are only applied by a revision, never silently ignored.\n    message = 'Des valeurs corrigées ont été saisies : choisissez « ' + DECISION_REVISE + ' », relisez la fiche, puis validez.';\n} else if (config.decision === DECISION_REJECT) {\n    action = 'reject';\n} else if (config.decision !== DECISION_APPROVE) {\n    message = 'Décision inconnue : ' + config.decision + '.';\n} else if (rows[0].analysisStatus === 'incomplete') {\n    message = \"Étude incomplète (données critiques manquantes) : complétez les textes et relancez une analyse plutôt que d'envoyer des chiffres partiels.\";\n} else if (rows[0].expectedMonthlyRent === '' || rows[0].expectedMonthlyRent === null || rows[0].expectedMonthlyRent === undefined) {\n    message = 'Loyer estimé non saisi : aucun rendement à présenter. Choisissez « ' + DECISION_REVISE + ' » pour saisir le loyer.';\n} else {\n    action = 'draft';\n}\nconsole.log(JSON.stringify({ event: 'approvalChecked', studyId: config.studyId, action, message }));\nreturn [{ json: { ...config, action, message, study: rows[0] || null } }];"
+        "jsCode": "const DECISION_APPROVE = 'Valider et créer le brouillon';\nconst DECISION_REVISE = 'Corriger les hypothèses';\nconst DECISION_REJECT = 'Rejeter';\nconst STATUS_PENDING = 'À valider';\nconst MAX_NOTARY_FEE_RATE_PERCENT = 20;\nconst config = $('Config').first().json;\nconst rows = $input.all().map((item) => item.json).filter((row) => config.studyId && String(row.studyId || '') === config.studyId);\nconst rent = config.correctedMonthlyRent;\nconst notary = config.correctedNotaryFeeRatePercent;\nconst works = config.correctedWorksBudget;\nconst furniture = config.correctedFurnitureBudget;\nconst hasCorrection = rent !== null || notary !== null || works !== null || furniture !== null;\nconst isInvalidAmount = (value) => value !== null && (value === 'invalid' || value < 0);\nconst isBlank = (value) => value === '' || value === null || value === undefined;\n// Names the actual blocker of an incomplete study, so the hunter knows which fix applies.\nconst incompleteMessage = (row) => {\n    const reasons = [];\n    if (isBlank(row.askingPrice)) reasons.push(\"prix d'achat absent des textes : complétez-les et relancez une analyse\");\n    if (isBlank(row.worksCost)) reasons.push('travaux non chiffrés par la grille');\n    if (isBlank(row.furnitureCost)) reasons.push('ameublement non chiffré par la grille');\n    if (reasons.length === 0) {\n        return \"Étude incomplète (données critiques manquantes, voir la fiche) : complétez les textes et relancez une analyse.\";\n    }\n    const canRevise = !isBlank(row.askingPrice);\n    return 'Étude incomplète : ' + reasons.join(' ; ') + '.'\n        + (canRevise ? ' Choisissez « ' + DECISION_REVISE + ' » et saisissez votre estimation.' : '');\n};\nlet action = 'refuse';\nlet message = '';\nif (!config.studyId) {\n    message = 'Référence vide.';\n} else if (rows.length === 0) {\n    message = 'Étude introuvable : ' + config.studyId + '.';\n} else if (rows.length > 1) {\n    message = 'Référence présente plusieurs fois dans le suivi : ' + config.studyId + '.';\n} else if (rows[0].status !== STATUS_PENDING) {\n    message = 'Étude déjà traitée (statut : ' + rows[0].status + ').';\n} else if (config.decision === DECISION_REVISE) {\n    if (!hasCorrection) {\n        message = 'Indiquez au moins une valeur corrigée : loyer, taux de notaire, travaux ou ameublement.';\n    } else if (rent !== null && (rent === 'invalid' || rent <= 0)) {\n        message = 'Loyer corrigé invalide : un montant mensuel positif est attendu.';\n    } else if (notary !== null && (notary === 'invalid' || notary < 0 || notary > MAX_NOTARY_FEE_RATE_PERCENT)) {\n        message = 'Taux de notaire corrigé invalide : entre 0 et ' + MAX_NOTARY_FEE_RATE_PERCENT + ' % attendu.';\n    } else if (isInvalidAmount(works) || isInvalidAmount(furniture)) {\n        message = 'Montant de travaux ou d\\'ameublement invalide : un montant positif ou nul est attendu.';\n    } else if (!rows[0].extractionJson) {\n        message = \"Extraction non conservée pour cette étude (créée avant l'ajout de la correction) : relancez une analyse.\";\n    } else {\n        action = 'revise';\n    }\n} else if (hasCorrection) {\n    // Corrected values are only applied by a revision, never silently ignored.\n    message = 'Des valeurs corrigées ont été saisies : choisissez « ' + DECISION_REVISE + ' », relisez la fiche, puis validez.';\n} else if (config.decision === DECISION_REJECT) {\n    action = 'reject';\n} else if (config.decision !== DECISION_APPROVE) {\n    message = 'Décision inconnue : ' + config.decision + '.';\n} else if (rows[0].analysisStatus === 'incomplete') {\n    message = incompleteMessage(rows[0]);\n} else if (rows[0].expectedMonthlyRent === '' || rows[0].expectedMonthlyRent === null || rows[0].expectedMonthlyRent === undefined) {\n    message = 'Loyer estimé non saisi : aucun rendement à présenter. Choisissez « ' + DECISION_REVISE + ' » pour saisir le loyer.';\n} else {\n    action = 'draft';\n}\nconsole.log(JSON.stringify({ event: 'approvalChecked', studyId: config.studyId, action, message }));\nreturn [{ json: { ...config, action, message, study: rows[0] || null } }];"
       },
-      "id": "b2000000-0000-4000-8000-000000000032",
+      "id": "b2000000-0000-4000-8000-000000000033",
       "name": "Check study",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -146,7 +159,7 @@
         },
         "options": {}
       },
-      "id": "b2000000-0000-4000-8000-000000000033",
+      "id": "b2000000-0000-4000-8000-000000000034",
       "name": "Create draft?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -159,7 +172,7 @@
       "parameters": {
         "jsCode": "const check = $input.first().json;\nconst study = check.study;\nconst escapeHtml = (value) => String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\"/g, '&quot;');\nconst asNumber = (value) => (typeof value === 'number' ? value : (value !== '' && value !== null && value !== undefined && !Number.isNaN(Number(value)) ? Number(value) : null));\nconst euros = (value) => {\n    const number = asNumber(value);\n    return number === null ? 'à préciser' : new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 0 }).format(number) + ' €';\n};\nconst percent = (value) => {\n    const number = asNumber(value);\n    return number === null ? 'à préciser' : new Intl.NumberFormat('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(number * 100) + ' %';\n};\nconst PROPERTY_TYPE_LABELS = { studio: 'Studio', apartment: 'Appartement', house: 'Maison', building: 'Immeuble', office: 'Bureaux', commercial: 'Local commercial', other: 'Bien' };\nconst description = [PROPERTY_TYPE_LABELS[study.propertyType] || 'Bien', study.livingAreaSqm ? study.livingAreaSqm + ' m²' : '', study.city || ''].filter(Boolean).join(' · ');\nconst html = [\n    '<p>Bonjour,</p>',\n    \"<p>Voici l'étude de rendement du bien que nous vous proposons : <b>\" + escapeHtml(description) + '</b>.</p>',\n    '<ul>',\n    '<li>Budget total clé en main : ' + euros(study.totalBudget) + '</li>',\n    '<li>Loyer mensuel estimé après travaux : ' + euros(study.expectedMonthlyRent) + '</li>',\n    '<li>Rendement brut estimé : ' + percent(study.grossYieldOnAcquisitionAndWorks) + '</li>',\n    '</ul>',\n    '<p>Le détail (travaux, hypothèses, points de vigilance) est dans l\\'étude : <a href=\"' + escapeHtml(study.docUrl) + '\">ouvrir l\\'étude de rendement</a>.</p>',\n    '<p>Ces montants sont des estimations, à confirmer par les devis et le notaire. Je reste disponible pour en parler.</p>',\n    '<p>Bien cordialement,</p>',\n].join('\\n');\nreturn [{ json: { ...check, draft: { to: check.draftRecipient, subject: 'Étude de rendement · ' + description, html } } }];"
       },
-      "id": "b2000000-0000-4000-8000-000000000034",
+      "id": "b2000000-0000-4000-8000-000000000035",
       "name": "Build draft",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -178,7 +191,7 @@
           "sendTo": "={{ $json.draft.to }}"
         }
       },
-      "id": "b2000000-0000-4000-8000-000000000035",
+      "id": "b2000000-0000-4000-8000-000000000036",
       "name": "Create Gmail draft",
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.1,
@@ -197,7 +210,7 @@
       "parameters": {
         "jsCode": "const check = $('Check study').first().json;\nconst draft = $input.first().json;\nif (!draft.id) {\n    throw new Error('Gmail returned no draft id');\n}\nreturn [{ json: { studyId: check.studyId, status: 'Brouillon prêt', decidedAt: check.decidedAt, reviewerNote: check.reviewerNote, draftId: draft.id } }];"
       },
-      "id": "b2000000-0000-4000-8000-000000000036",
+      "id": "b2000000-0000-4000-8000-000000000037",
       "name": "Mark draft ready",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -231,7 +244,7 @@
         },
         "options": {}
       },
-      "id": "b2000000-0000-4000-8000-000000000037",
+      "id": "b2000000-0000-4000-8000-000000000038",
       "name": "Reject?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -244,7 +257,7 @@
       "parameters": {
         "jsCode": "const check = $input.first().json;\nreturn [{ json: { studyId: check.studyId, status: 'Rejeté', decidedAt: check.decidedAt, reviewerNote: check.reviewerNote, draftId: '' } }];"
       },
-      "id": "b2000000-0000-4000-8000-000000000038",
+      "id": "b2000000-0000-4000-8000-000000000039",
       "name": "Mark rejected",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -278,7 +291,7 @@
         },
         "options": {}
       },
-      "id": "b2000000-0000-4000-8000-000000000039",
+      "id": "b2000000-0000-4000-8000-000000000040",
       "name": "Revise?",
       "type": "n8n-nodes-base.if",
       "typeVersion": 2.2,
@@ -289,9 +302,9 @@
     },
     {
       "parameters": {
-        "jsCode": "const check = $input.first().json;\nconst study = check.study;\nconst asNumber = (value) => (typeof value === 'number' ? value : (value !== '' && value !== null && value !== undefined && !Number.isNaN(Number(value)) ? Number(value) : null));\nconst euros = (value) => (value === null ? 'non saisi' : new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 0 }).format(value) + ' €');\nconst percent = (value) => (value === null ? 'inconnu' : new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 2 }).format(value) + ' %');\nlet extraction;\ntry {\n    extraction = JSON.parse(study.extractionJson);\n} catch (error) {\n    throw new Error('Stored extraction of ' + check.studyId + ' is not valid JSON: ' + error.message);\n}\nconst docMatch = String(study.docUrl || '').match(/\\/document\\/d\\/([^/?#]+)/);\nif (!docMatch) {\n    throw new Error('No Google Doc id in the docUrl of ' + check.studyId);\n}\nconst previousRent = asNumber(study.expectedMonthlyRent);\nconst previousNotary = asNumber(study.notaryFeeRatePercent);\nconst rent = check.correctedMonthlyRent !== null ? check.correctedMonthlyRent : previousRent;\nconst notary = check.correctedNotaryFeeRatePercent !== null ? check.correctedNotaryFeeRatePercent : previousNotary;\nif (notary === null) {\n    throw new Error('No notary fee rate stored for ' + check.studyId);\n}\nconst changes = [];\nif (rent !== previousRent) {\n    changes.push('loyer mensuel ' + euros(previousRent) + ' → ' + euros(rent));\n}\nif (notary !== previousNotary) {\n    changes.push('frais de notaire ' + percent(previousNotary) + ' → ' + percent(notary));\n}\nconst revision = (asNumber(study.revision) || 1) + 1;\nconst revisionNote = changes.length > 0 ? changes.join(' ; ') : 'aucune valeur modifiée';\nreturn [{\n    json: {\n        docId: docMatch[1],\n        revision,\n        revisionNote,\n        rent,\n        notary,\n        riskFlagCount: (extraction.riskFlags || []).length,\n        reportRequest: {\n            extraction,\n            assumptions: { notaryFeeRate: notary / 100, expectedMonthlyRent: rent, furnitureBudget: null, financing: null },\n            meta: {\n                studyId: check.studyId,\n                createdAt: $now.toISO(),\n                revision,\n                revisionNote,\n                model: study.model || null,\n                schemaVersion: study.schemaVersion || null,\n                promptVersion: study.promptVersion || null,\n                attempts: asNumber(study.attempts),\n                promptTokens: asNumber(study.promptTokens),\n                completionTokens: asNumber(study.completionTokens),\n            },\n        },\n    },\n}];"
+        "jsCode": "const check = $input.first().json;\nconst study = check.study;\nconst asNumber = (value) => (typeof value === 'number' ? value : (value !== '' && value !== null && value !== undefined && !Number.isNaN(Number(value)) ? Number(value) : null));\nconst euros = (value) => (value === null ? 'non saisi' : new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 0 }).format(value) + ' €');\nconst percent = (value) => (value === null ? 'inconnu' : new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 2 }).format(value) + ' %');\nlet extraction;\ntry {\n    extraction = JSON.parse(study.extractionJson);\n} catch (error) {\n    throw new Error('Stored extraction of ' + check.studyId + ' is not valid JSON: ' + error.message);\n}\nconst docMatch = String(study.docUrl || '').match(/\\/document\\/d\\/([^/?#]+)/);\nif (!docMatch) {\n    throw new Error('No Google Doc id in the docUrl of ' + check.studyId);\n}\nconst previousRent = asNumber(study.expectedMonthlyRent);\nconst previousNotary = asNumber(study.notaryFeeRatePercent);\nconst rent = check.correctedMonthlyRent !== null ? check.correctedMonthlyRent : previousRent;\nconst notary = check.correctedNotaryFeeRatePercent !== null ? check.correctedNotaryFeeRatePercent : previousNotary;\nif (notary === null) {\n    throw new Error('No notary fee rate stored for ' + check.studyId);\n}\n// Estimates are read from their own columns: worksCost may hold a grid price, which must not become an estimate.\nconst previousWorks = asNumber(study.worksBudget);\nconst previousFurniture = asNumber(study.furnitureBudget);\nconst works = check.correctedWorksBudget !== null ? check.correctedWorksBudget : previousWorks;\nconst furniture = check.correctedFurnitureBudget !== null ? check.correctedFurnitureBudget : previousFurniture;\nconst estimate = (value) => (value === null ? 'grille de prix' : euros(value));\nconst changes = [];\nif (rent !== previousRent) {\n    changes.push('loyer mensuel ' + euros(previousRent) + ' → ' + euros(rent));\n}\nif (notary !== previousNotary) {\n    changes.push('frais de notaire ' + percent(previousNotary) + ' → ' + percent(notary));\n}\nif (works !== previousWorks) {\n    changes.push('travaux ' + estimate(previousWorks) + ' → ' + estimate(works));\n}\nif (furniture !== previousFurniture) {\n    changes.push('ameublement ' + estimate(previousFurniture) + ' → ' + estimate(furniture));\n}\nconst revision = (asNumber(study.revision) || 1) + 1;\nconst revisionNote = changes.length > 0 ? changes.join(' ; ') : 'aucune valeur modifiée';\nreturn [{\n    json: {\n        docId: docMatch[1],\n        revision,\n        revisionNote,\n        rent,\n        notary,\n        works,\n        furniture,\n        riskFlagCount: (extraction.riskFlags || []).length,\n        reportRequest: {\n            extraction,\n            assumptions: {\n                notaryFeeRate: notary / 100,\n                expectedMonthlyRent: rent,\n                worksBudget: works,\n                furnitureBudget: furniture,\n                financing: null,\n            },\n            meta: {\n                studyId: check.studyId,\n                createdAt: $now.toISO(),\n                revision,\n                revisionNote,\n                model: study.model || null,\n                schemaVersion: study.schemaVersion || null,\n                promptVersion: study.promptVersion || null,\n                attempts: asNumber(study.attempts),\n                promptTokens: asNumber(study.promptTokens),\n                completionTokens: asNumber(study.completionTokens),\n            },\n        },\n    },\n}];"
       },
-      "id": "b2000000-0000-4000-8000-000000000040",
+      "id": "b2000000-0000-4000-8000-000000000041",
       "name": "Build revision request",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -311,7 +324,7 @@
           "timeout": 15000
         }
       },
-      "id": "b2000000-0000-4000-8000-000000000041",
+      "id": "b2000000-0000-4000-8000-000000000042",
       "name": "Analyze and render report",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -324,7 +337,7 @@
       "parameters": {
         "jsCode": "const report = $input.first().json;\nif (!report.html || !report.analysis) {\n    throw new Error('The report endpoint returned no document');\n}\n// Same multipart upload as at creation: Drive converts the HTML and replaces the content of the existing Google Doc.\nconst boundary = 'dealAnalyzer' + Math.random().toString(36).slice(2);\nconst multipartBody = '--' + boundary + '\\r\\nContent-Type: application/json; charset=UTF-8\\r\\n\\r\\n' + JSON.stringify({ name: report.title })\n    + '\\r\\n--' + boundary + '\\r\\nContent-Type: text/html; charset=UTF-8\\r\\n\\r\\n' + report.html\n    + '\\r\\n--' + boundary + '--';\nreturn [{ json: { contentType: 'multipart/related; boundary=' + boundary, multipartBody } }];"
       },
-      "id": "b2000000-0000-4000-8000-000000000042",
+      "id": "b2000000-0000-4000-8000-000000000043",
       "name": "Build Drive update",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -360,7 +373,7 @@
           "timeout": 30000
         }
       },
-      "id": "b2000000-0000-4000-8000-000000000043",
+      "id": "b2000000-0000-4000-8000-000000000044",
       "name": "Replace Google Doc content",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
@@ -377,9 +390,9 @@
     },
     {
       "parameters": {
-        "jsCode": "const check = $('Check study').first().json;\nconst revisionRequest = $('Build revision request').first().json;\nconst analysis = $('Analyze and render report').first().json.analysis;\nconst doc = $input.first().json;\nif (doc.mimeType !== 'application/vnd.google-apps.document') {\n    throw new Error('Drive did not keep the file as a Google Doc: ' + doc.mimeType);\n}\nconst cell = (value) => (value === null || value === undefined ? '' : value);\nreturn [{\n    json: {\n        studyId: check.studyId,\n        revision: revisionRequest.revision,\n        expectedMonthlyRent: cell(revisionRequest.rent),\n        notaryFeeRatePercent: revisionRequest.notary,\n        notaryFees: cell(analysis.notaryFees),\n        worksCost: cell(analysis.worksCost),\n        furnitureCost: cell(analysis.furnitureCost),\n        totalBudget: cell(analysis.totalBudget),\n        grossYieldOnAcquisitionAndWorks: cell(analysis.grossYieldOnAcquisitionAndWorks),\n        grossYieldOnTotalBudget: cell(analysis.grossYieldOnTotalBudget),\n        analysisStatus: analysis.status,\n        warningCount: analysis.warnings.length + revisionRequest.riskFlagCount,\n        reviewerNote: check.reviewerNote,\n    },\n}];"
+        "jsCode": "const check = $('Check study').first().json;\nconst revisionRequest = $('Build revision request').first().json;\nconst analysis = $('Analyze and render report').first().json.analysis;\nconst doc = $input.first().json;\nif (doc.mimeType !== 'application/vnd.google-apps.document') {\n    throw new Error('Drive did not keep the file as a Google Doc: ' + doc.mimeType);\n}\nconst cell = (value) => (value === null || value === undefined ? '' : value);\nreturn [{\n    json: {\n        studyId: check.studyId,\n        revision: revisionRequest.revision,\n        expectedMonthlyRent: cell(revisionRequest.rent),\n        notaryFeeRatePercent: revisionRequest.notary,\n        worksBudget: cell(revisionRequest.works),\n        furnitureBudget: cell(revisionRequest.furniture),\n        notaryFees: cell(analysis.notaryFees),\n        worksCost: cell(analysis.worksCost),\n        worksPricingMode: analysis.worksPricingMode,\n        furnitureCost: cell(analysis.furnitureCost),\n        totalBudget: cell(analysis.totalBudget),\n        grossYieldOnAcquisitionAndWorks: cell(analysis.grossYieldOnAcquisitionAndWorks),\n        grossYieldOnTotalBudget: cell(analysis.grossYieldOnTotalBudget),\n        analysisStatus: analysis.status,\n        warningCount: analysis.warnings.length + revisionRequest.riskFlagCount,\n        reviewerNote: check.reviewerNote,\n    },\n}];"
       },
-      "id": "b2000000-0000-4000-8000-000000000044",
+      "id": "b2000000-0000-4000-8000-000000000045",
       "name": "Mark revised",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -413,7 +426,7 @@
           "cellFormat": "RAW"
         }
       },
-      "id": "b2000000-0000-4000-8000-000000000045",
+      "id": "b2000000-0000-4000-8000-000000000046",
       "name": "Update study",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
@@ -432,7 +445,7 @@
       "parameters": {
         "jsCode": "const check = $('Check study').first().json;\nconst OUTCOMES = { draft: 'draftCreated', reject: 'studyRejected', revise: 'studyRevised', refuse: 'approvalRefused' };\nlet message = check.message;\nif (check.action === 'draft') {\n    message = 'Gmail draft ' + $('Mark draft ready').first().json.draftId + ' for ' + check.draftRecipient;\n} else if (check.action === 'reject') {\n    message = check.reviewerNote || 'Rejected without note';\n} else if (check.action === 'revise') {\n    const revisionRequest = $('Build revision request').first().json;\n    message = 'Revision ' + revisionRequest.revision + ': ' + revisionRequest.revisionNote;\n}\nreturn [{\n    json: {\n        loggedAt: $now.toFormat('yyyy-MM-dd HH:mm:ss'),\n        executionId: $execution.id,\n        workflow: $workflow.name,\n        studyId: check.studyId,\n        outcome: OUTCOMES[check.action],\n        stage: '',\n        attempts: '',\n        model: '',\n        promptTokens: '',\n        completionTokens: '',\n        schemaVersion: '',\n        promptVersion: '',\n        message: String(message).slice(0, 500),\n    },\n}];"
       },
-      "id": "b2000000-0000-4000-8000-000000000046",
+      "id": "b2000000-0000-4000-8000-000000000047",
       "name": "Build journal entry",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -465,7 +478,7 @@
           "useAppend": true
         }
       },
-      "id": "b2000000-0000-4000-8000-000000000047",
+      "id": "b2000000-0000-4000-8000-000000000048",
       "name": "Append journal",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
@@ -482,14 +495,31 @@
     },
     {
       "parameters": {
-        "jsCode": "const check = $('Check study').first().json;\nif (check.action === 'revise') {\n    const revisionRequest = $('Build revision request').first().json;\n    return [{\n        json: {\n            result: 'Fiche mise à jour (révision n° ' + revisionRequest.revision + ' : ' + revisionRequest.revisionNote + '). Relisez-la, puis revenez valider.',\n            studyId: check.studyId,\n            docUrl: check.study.docUrl,\n            approvalUrl: check.study.approvalUrl,\n        },\n    }];\n}\nconst RESULTS = {\n    draft: 'Brouillon Gmail créé. Partagez la fiche avec le destinataire, relisez puis envoyez le brouillon vous-même.',\n    reject: 'Étude rejetée.',\n    refuse: 'Aucune action : ' + check.message,\n};\nreturn [{ json: { result: RESULTS[check.action], studyId: check.studyId } }];"
+        "jsCode": "const escapeHtml = (value) => String(value === null || value === undefined ? '' : value)\n    .replace(/[&<>\"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '\"': '&quot;', \"'\": '&#39;' })[ch]);\nconst linkHtml = (url, label) => '<a href=\"' + escapeHtml(url) + '\" target=\"_blank\" rel=\"noopener\">' + escapeHtml(label) + '</a>';\n\nconst check = $('Check study').first().json;\nconst docLink = check.study && check.study.docUrl ? '<p>' + linkHtml(check.study.docUrl, 'Ouvrir la fiche') + '</p>' : '';\nif (check.action === 'revise') {\n    const revisionRequest = $('Build revision request').first().json;\n    const result = 'Fiche mise à jour (révision n° ' + revisionRequest.revision + ' : ' + revisionRequest.revisionNote + '). Relisez-la, puis revenez valider.';\n    return [{\n        json: {\n            result,\n            studyId: check.studyId,\n            docUrl: check.study.docUrl,\n            approvalUrl: check.study.approvalUrl,\n            completionTitle: 'Fiche mise à jour',\n            completionHtml: '<p>' + escapeHtml(result) + '</p>' + docLink\n                + '<p>' + linkHtml(check.study.approvalUrl, 'Revenir au formulaire de décision') + '</p>',\n        },\n    }];\n}\nconst RESULTS = {\n    draft: 'Brouillon Gmail créé. Partagez la fiche avec le destinataire, relisez puis envoyez le brouillon vous-même.',\n    reject: 'Étude rejetée.',\n    refuse: 'Aucune action : ' + check.message,\n};\nconst TITLES = { draft: 'Brouillon créé', reject: 'Étude rejetée', refuse: 'Aucune action' };\nconst draftLink = check.action === 'draft' ? '<p>' + linkHtml('https://mail.google.com/mail/#drafts', 'Ouvrir les brouillons Gmail') + '</p>' : '';\nreturn [{\n    json: {\n        result: RESULTS[check.action],\n        studyId: check.studyId,\n        completionTitle: TITLES[check.action] || 'Décision enregistrée',\n        completionHtml: '<p>' + escapeHtml(RESULTS[check.action]) + '</p>' + docLink + draftLink,\n    },\n}];"
       },
-      "id": "b2000000-0000-4000-8000-000000000048",
+      "id": "b2000000-0000-4000-8000-000000000049",
       "name": "Form response",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
         3300,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "completion",
+        "respondWith": "text",
+        "completionTitle": "={{ $json.completionTitle }}",
+        "completionMessage": "={{ $json.completionHtml }}",
+        "options": {}
+      },
+      "id": "b2000000-0000-4000-8000-000000000050",
+      "name": "Form ending",
+      "type": "n8n-nodes-base.form",
+      "typeVersion": 2.4,
+      "position": [
+        3520,
         300
       ]
     }
@@ -719,6 +749,17 @@
         [
           {
             "node": "Form response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Form response": {
+      "main": [
+        [
+          {
+            "node": "Form ending",
             "type": "main",
             "index": 0
           }

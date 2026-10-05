@@ -159,7 +159,7 @@ export function ReplayDemo({ reportHtml }: { reportHtml: string }) {
                             <div className="decision">
                                 <h3>Corriger une hypothèse</h3>
                                 <p>
-                                    Vous changez le loyer ou le taux de notaire : la fiche est recalculée sans relancer
+                                    Vous changez le loyer, le taux de notaire, les travaux ou l'ameublement : la fiche est recalculée sans relancer
                                     l'IA, au même lien, avec un numéro de révision.
                                 </p>
                             </div>

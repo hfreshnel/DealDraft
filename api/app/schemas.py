@@ -254,6 +254,8 @@ class AnalysisAssumptions(BaseModel):
     # Required but nullable: the caller must state explicitly that a value is unknown.
     notaryFeeRate: Rate
     expectedMonthlyRent: PositiveFloat | None
+    # Hunter's own estimates: when given, they replace the grid prices.
+    worksBudget: NonNegativeFloat | None
     furnitureBudget: NonNegativeFloat | None
     financing: FinancingAssumptions | None
 
@@ -279,6 +281,7 @@ class AnalysisStatus(str, Enum):
 class WorksPricingMode(str, Enum):
     ITEMIZED = "itemized"
     PER_SQM_FALLBACK = "perSqmFallback"
+    HUNTER_ESTIMATE = "hunterEstimate"
     NONE = "none"
 
 

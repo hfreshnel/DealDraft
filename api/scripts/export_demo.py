@@ -25,7 +25,7 @@ MODEL = "gpt-4o-2024-08-06"
 CASE_ID = "listing-004"
 MAX_ATTEMPTS = 3
 # Hunter-side assumptions of the public reference case (rent and furniture as published, notary rate to source).
-ASSUMPTIONS = {"notaryFeeRate": 0.07, "expectedMonthlyRent": 570, "furnitureBudget": 4000, "financing": None}
+ASSUMPTIONS = {"notaryFeeRate": 0.07, "expectedMonthlyRent": 570, "worksBudget": None, "furnitureBudget": 4000, "financing": None}
 
 
 def extractWithRetries(client: httpx.Client, listingText: str, visitNotes: str) -> tuple[dict, list[dict], dict]:

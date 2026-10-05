@@ -62,8 +62,10 @@ def priceWorkItems(extraction: ListingExtraction, grid: WorksPriceGrid) -> tuple
 
 
 def computeWorks(
-    extraction: ListingExtraction, grid: WorksPriceGrid, warnings: list[str]
+    extraction: ListingExtraction, assumptions: AnalysisAssumptions, grid: WorksPriceGrid, warnings: list[str]
 ) -> tuple[float | None, WorksPricingMode, list[WorkCategory]]:
+    if assumptions.worksBudget is not None:
+        return assumptions.worksBudget, WorksPricingMode.HUNTER_ESTIMATE, []
     pricedTotal, unpriced = priceWorkItems(extraction, grid)
     if extraction.worksItems and not unpriced:
         return pricedTotal, WorksPricingMode.ITEMIZED, []
@@ -173,7 +175,7 @@ def analyze(request: AnalysisRequest, grid: WorksPriceGrid) -> AnalysisResult:
 
     purchasePrice = extraction.askingPrice
     notaryFees = purchasePrice * assumptions.notaryFeeRate if purchasePrice is not None else None
-    worksCost, worksMode, unpriced = computeWorks(extraction, grid, warnings)
+    worksCost, worksMode, unpriced = computeWorks(extraction, assumptions, grid, warnings)
     furnitureCost = computeFurniture(extraction, assumptions, grid)
 
     baseComponents = {

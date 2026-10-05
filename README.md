@@ -14,10 +14,41 @@ DealDraft transforme une annonce immobilière, un message d'agent ou des notes d
 2. **DealDraft prépare l'étude** : prix, surface, occupation, état, travaux repérés, données manquantes, budget, rendement, durée de chantier. La fiche est créée dans Google Drive et ajoutée au tableau de suivi.
 3. **Vous décidez** :
    - **Valider** crée un brouillon Gmail pour votre client ;
-   - **Corriger** une hypothèse (loyer, frais de notaire) recalcule la fiche au même lien, sans relancer l'IA ;
+   - **Corriger** une hypothèse (loyer, frais de notaire, travaux, ameublement) recalcule la fiche au même lien, sans relancer l'IA ;
    - **Rejeter** classe l'étude, avec votre remarque.
 
 De l'envoi du formulaire à la fiche dans Drive, une étude prend environ 12 secondes en test.
+
+## Guide d'utilisation
+
+**1. Ouvrir le formulaire d'analyse.** Une fois DealDraft installé, il se trouve à l'adresse `http://localhost:5678/form/9c1f6f1e-6a0b-4a52-8d7a-2b6c1e5d1001`. Gardez-la en favori.
+
+**2. Coller les textes.**
+- *Annonce ou message de l'agent* : le texte tel que vous l'avez reçu, sans le réécrire. Chaque valeur de la fiche sera reliée à une phrase de ce texte.
+- *Notes de visite* (facultatif) : ce que vous avez constaté sur place, en vrac. Les travaux repérés ici sont marqués comme venant de la visite.
+
+**3. Saisir les hypothèses.**
+- *Loyer mensuel visé après travaux* : c'est votre estimation, DealDraft n'en propose jamais. Sans loyer, la fiche est créée mais n'affiche aucun rendement et ne peut pas être validée.
+- *Taux de frais de notaire* : obligatoire, en pourcentage du prix d'achat.
+- *Montant des travaux* et *budget d'ameublement* (facultatifs) : votre estimation après visite. Laissés vides, ils sont chiffrés par la grille de prix quand elle le permet ; saisis, ils la remplacent et la fiche les signale comme estimés par vous. Un montant de 0 est accepté.
+
+**4. Lire la fiche.** Après l'envoi, une page d'attente s'affiche pendant l'analyse, puis trois liens : la fiche Google Docs, le formulaire de décision et le tableau de suivi. En relisant, regardez en priorité :
+- **les deux rendements** : l'un rapporte le loyer annuel à l'achat, au notaire, aux travaux et à l'ameublement ; l'autre au budget total, frais annexes compris. Retenez celui qui correspond à votre méthode ;
+- **les postes non chiffrés** : un poste de travaux sans prix dans la grille reste sans montant, il n'est pas estimé à votre place ;
+- **les points de vigilance** : risques et incohérences relevés dans les textes ;
+- **les données critiques manquantes** : ce que le texte ne dit pas, à obtenir de l'agent avant de conclure ;
+- **le statut de la grille de prix** : tant que la grille d'exemple est utilisée, la fiche l'indique.
+
+**5. Retrouver l'étude.** Chaque étude ajoute une ligne à l'onglet Suivi du Google Sheet, au statut « À valider », avec son identifiant, le lien vers la fiche et le lien vers le formulaire de décision, où l'identifiant est déjà rempli.
+
+**6. Décider.**
+- **Valider et créer le brouillon** : un brouillon Gmail est créé. Partagez la fiche avec votre client, relisez le brouillon et envoyez-le vous-même. Une étude ne se valide qu'une fois.
+- **Corriger les hypothèses** : saisissez un nouveau loyer, taux de notaire, montant de travaux ou budget d'ameublement. La fiche est recalculée au même lien, sans nouvel appel à l'IA, et reste à valider.
+- **Rejeter** : l'étude est classée, avec votre remarque.
+
+La page qui suit l'envoi confirme l'action effectuée, ou explique pourquoi aucune action n'a eu lieu. Une étude au budget incomplet ne peut pas être validée : si ce sont les travaux ou l'ameublement qui ne sont pas chiffrés, corrigez les hypothèses avec votre estimation ; s'il manque une donnée du texte, comme le prix, complétez les textes et relancez une analyse.
+
+**7. En cas de problème.** Chaque erreur est inscrite dans l'onglet Journal du Google Sheet, avec l'étape concernée. Si les étapes Google échouent toutes, reconnectez l'identifiant Google dans n8n : tant que l'application OAuth est en mode test, Google fait expirer l'autorisation au bout de 7 jours.
 
 ## Pourquoi s'y fier
 
@@ -137,7 +168,7 @@ Le formulaire d'entrée est alors disponible sur `http://localhost:5678/form/9c1
 | Libellés et formats | `api/app/localization.py` | Libellés français, format des nombres et des montants. |
 | Espace Google | `n8n/config.local.json` | Dossier Drive, Google Sheet, destinataire des brouillons, URL publique de n8n. Fichier local, jamais commité. |
 
-Hypothèses saisies à chaque étude : loyer mensuel visé après travaux, taux de frais de notaire, budget d'ameublement, financement. Aucune n'a de valeur par défaut : une valeur inconnue reste inconnue sur la fiche. Seuls deux paramètres ont un défaut documenté : un apport de 10 % et une vacance locative d'un mois par an.
+Hypothèses saisies à chaque étude : loyer mensuel visé après travaux, taux de frais de notaire, montant des travaux, budget d'ameublement, financement. Aucune n'a de valeur par défaut : une valeur inconnue reste inconnue sur la fiche. Seuls deux paramètres ont un défaut documenté : un apport de 10 % et une vacance locative d'un mois par an.
 
 La fiche affiche deux rendements bruts : sur la base achat, notaire, travaux et ameublement, et sur le budget total avec les autres frais. Choisissez celui qui correspond à votre pratique ; l'autre peut rester en information.
 
@@ -157,7 +188,7 @@ Documentation interactive : `http://localhost:8000/docs`.
 ## Développement
 
 ```bash
-docker compose run --rm api pytest                              # 188 tests
+docker compose run --rm api pytest                              # 190 tests
 docker compose run --rm api python scripts/export_schema.py     # régénère schemas/ après une modification du contrat
 node n8n/build-workflows.mjs                                    # régénère n8n/workflows/ après une modification du générateur
 docker compose --profile eval run --rm eval python scripts/run_eval.py --split dev --runs 3

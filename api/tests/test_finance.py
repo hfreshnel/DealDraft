@@ -10,6 +10,7 @@ from fastapi.testclient import TestClient
 from app.finance import analyze
 from app.main import app
 from app.pricing import WorksPriceGrid, loadWorksPriceGrid
+from app.report import statusLabel
 from app.schemas import (
     AnalysisRequest,
     AnalysisStatus,
@@ -29,7 +30,7 @@ def loadTruth(caseId: str) -> dict:
 
 
 def makeAssumptions(**overrides) -> dict:
-    base = {"notaryFeeRate": 0.07, "expectedMonthlyRent": 570, "furnitureBudget": None, "financing": None}
+    base = {"notaryFeeRate": 0.07, "expectedMonthlyRent": 570, "worksBudget": None, "furnitureBudget": None, "financing": None}
     return {**base, **overrides}
 
 
@@ -139,6 +140,29 @@ def test_noWorksPriceMeansNoBudgetAndNoYield(grid):
     assert result.primaryYield is None
     assert result.status is AnalysisStatus.INCOMPLETE
     assert WorkCategory.BATHROOM in result.unpricedWorkItems
+    assert statusLabel(result) == "Incomplet : budget non calculé, montant inconnu : travaux"
+
+
+def test_hunterEstimatesReplaceTheGrid(grid):
+    truth = loadTruth("004")
+    truth["overallCondition"] = "heavyRenovation"
+    truth["propertyType"] = "apartment"
+    result = analyze(makeRequest(truth, worksBudget=30000, furnitureBudget=5000), grid)
+    assert result.worksPricingMode is WorksPricingMode.HUNTER_ESTIMATE
+    assert result.worksCost == 30000
+    assert result.furnitureCost == 5000
+    assert result.unpricedWorkItems == []
+    assert result.acquisitionAndWorksBase == pytest.approx(24000 + 1680 + 30000 + 5000)
+    assert result.status is AnalysisStatus.READY_FOR_REVIEW
+    assert statusLabel(result) == "Prêt à relire"
+
+
+def test_zeroWorksEstimateIsAValue(grid):
+    truth = loadTruth("004")
+    truth["overallCondition"] = "heavyRenovation"
+    result = analyze(makeRequest(truth, worksBudget=0), grid)
+    assert result.worksCost == 0
+    assert result.status is AnalysisStatus.READY_FOR_REVIEW
 
 
 def test_unknownFurnitureBlocksTheBudget(grid):

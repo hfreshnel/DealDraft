@@ -37,7 +37,7 @@ MAX_WAIT_S = 30
 REQUEST_TIMEOUT_S = 120
 MAX_CALLS_DEFAULT = 200
 # Same assumptions for prediction and truth: any budget or yield gap comes from the extraction alone.
-BUSINESS_ASSUMPTIONS = {"notaryFeeRate": 0.07, "expectedMonthlyRent": 500, "furnitureBudget": None, "financing": None}
+BUSINESS_ASSUMPTIONS = {"notaryFeeRate": 0.07, "expectedMonthlyRent": 500, "worksBudget": None, "furnitureBudget": None, "financing": None}
 BUDGET_TOLERANCE = 0.01
 YIELD_TOLERANCE_POINTS = 0.002
 

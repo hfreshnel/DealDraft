@@ -37,16 +37,17 @@ WORKS_MODE_SENTENCES = {
     WorksPricingMode.PER_SQM_FALLBACK: (
         "Travaux estimés au m² d'après l'état général : les postes listés ne sont pas chiffrés un par un."
     ),
-    WorksPricingMode.NONE: "Travaux non chiffrés : aucun prix de la grille ne s'applique.",
+    WorksPricingMode.HUNTER_ESTIMATE: "Travaux : montant global estimé par le chasseur, la grille de prix n'est pas utilisée.",
+    WorksPricingMode.NONE: (
+        "Travaux non chiffrés : aucun prix de la grille ne s'applique. "
+        "Saisissez votre estimation avec « Corriger les hypothèses »."
+    ),
 }
 YIELD_BASE_LABELS = {
     YieldBase.ACQUISITION_AND_WORKS: "achat + notaire + travaux + ameublement",
     YieldBase.TOTAL_BUDGET: "budget total, autres frais compris",
 }
-STATUS_LABELS = {
-    AnalysisStatus.READY_FOR_REVIEW: "Prêt à relire",
-    AnalysisStatus.INCOMPLETE: "Incomplet : données critiques manquantes",
-}
+BUDGET_COMPONENT_LABELS = {"purchasePrice": "prix d'achat", "worksCost": "travaux", "furnitureCost": "ameublement"}
 
 ENVIRONMENT = Environment(
     loader=FileSystemLoader(TEMPLATE_DIR),
@@ -158,10 +159,31 @@ def buildTitle(request: ReportRequest) -> str:
 
 def furnitureOrigin(request: ReportRequest, analysis: AnalysisResult) -> str:
     if request.assumptions.furnitureBudget is not None:
-        return "saisi"
+        return "estimé par le chasseur"
     if analysis.furnitureCost is not None:
         return "grille, selon le type de bien"
     return "inconnu"
+
+
+def worksOrigin(analysis: AnalysisResult) -> str:
+    if analysis.worksPricingMode is WorksPricingMode.HUNTER_ESTIMATE:
+        return "Travaux (estimés par le chasseur)"
+    if analysis.worksPricingMode is WorksPricingMode.NONE:
+        return "Travaux"
+    return "Travaux (grille de prix)"
+
+
+# The status names the actual blocker: a missing extracted field and an unpriced budget line call for different fixes.
+def statusLabel(analysis: AnalysisResult) -> str:
+    if analysis.status is AnalysisStatus.READY_FOR_REVIEW:
+        return "Prêt à relire"
+    reasons = []
+    if analysis.missingCriticalFields:
+        reasons.append("données critiques manquantes")
+    unknown = [label for field, label in BUDGET_COMPONENT_LABELS.items() if getattr(analysis, field) is None]
+    if unknown:
+        reasons.append("budget non calculé, montant inconnu : " + ", ".join(unknown))
+    return "Incomplet : " + " ; ".join(reasons) if reasons else "Incomplet"
 
 
 def buildView(request: ReportRequest, analysis: AnalysisResult) -> dict:
@@ -176,7 +198,7 @@ def buildView(request: ReportRequest, analysis: AnalysisResult) -> dict:
         "createdAt": meta.createdAt.strftime("%d/%m/%Y à %H:%M"),
         "revision": meta.revision,
         "revisionNote": meta.revisionNote,
-        "statusLabel": STATUS_LABELS[analysis.status],
+        "statusLabel": statusLabel(analysis),
         "isIllustrativeGrid": analysis.pricingGridStatus != "validated",
         "pricingGridStatus": analysis.pricingGridStatus,
         "pricingGridVersion": analysis.pricingGridVersion,
@@ -199,7 +221,7 @@ def buildView(request: ReportRequest, analysis: AnalysisResult) -> dict:
                 "label": f"Frais de notaire ({formatPercent(assumptions.notaryFeeRate)} du prix)",
                 "value": formatEuros(analysis.notaryFees),
             },
-            {"label": "Travaux", "value": formatEuros(analysis.worksCost)},
+            {"label": worksOrigin(analysis), "value": formatEuros(analysis.worksCost)},
             {
                 "label": f"Ameublement ({furnitureOrigin(request, analysis)})",
                 "value": formatEuros(analysis.furnitureCost),
@@ -236,6 +258,18 @@ def buildView(request: ReportRequest, analysis: AnalysisResult) -> dict:
         "assumptionRows": [
             {"label": "Taux de frais de notaire", "value": f"{formatPercent(assumptions.notaryFeeRate)} (saisi)"},
             {"label": "Loyer mensuel après travaux", "value": f"{formatEuros(assumptions.expectedMonthlyRent, 'non saisi')} (saisi par le chasseur)"},
+            {
+                "label": "Montant des travaux",
+                "value": "non saisi, grille de prix"
+                if assumptions.worksBudget is None
+                else f"{formatEuros(assumptions.worksBudget)} (saisi par le chasseur)",
+            },
+            {
+                "label": "Budget d'ameublement",
+                "value": "non saisi, grille de prix"
+                if assumptions.furnitureBudget is None
+                else f"{formatEuros(assumptions.furnitureBudget)} (saisi par le chasseur)",
+            },
             {"label": "Autres frais (honoraires, divers)", "value": formatEuros(assumptions.otherCosts)},
             {"label": "Rendement affiché", "value": f"loyer annuel / {YIELD_BASE_LABELS[analysis.primaryYieldBase]}"},
             {
